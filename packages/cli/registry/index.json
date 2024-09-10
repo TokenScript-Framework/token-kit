@@ -1,0 +1,12 @@
+[
+  {
+    "name": "token-card",
+    "files": ["ui/token-card/token-card.tsx"],
+    "type": "components:ui"
+  },
+  {
+    "name": "token-thumbnail",
+    "files": ["ui/token-thumbnail/token-thumbnial.tsx"],
+    "type": "components:ui"
+  }
+]
