@@ -1,5 +1,5 @@
 {
-  "name": "token-kit",
+  "name": "@token-kit/ui",
   "version": "1.0.0",
   "description": "kit for smart token",
   "type": "module",
