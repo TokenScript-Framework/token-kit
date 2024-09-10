@@ -1,7 +1,7 @@
-import path from "path"
-import { describe, expect, test } from "vitest"
+import path from "path";
+import { describe, expect, test } from "vitest";
 
-import { getProjectType } from "../../src/utils/get-project-info"
+import { getProjectType } from "../../src/utils/get-project-info";
 
 describe("get project type", async () => {
   test.each([
@@ -31,7 +31,7 @@ describe("get project type", async () => {
     },
   ])(`getProjectType($name) -> $type`, async ({ name, type }) => {
     expect(
-      await getProjectType(path.resolve(__dirname, `../fixtures/${name}`))
-    ).toBe(type)
-  })
-})
+      await getProjectType(path.resolve(__dirname, `../fixtures/${name}`)),
+    ).toBe(type);
+  });
+});

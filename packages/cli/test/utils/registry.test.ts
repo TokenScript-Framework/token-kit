@@ -1,6 +1,6 @@
-import { expect, test } from "vitest"
+import { expect, test } from "vitest";
 
-import { resolveTree } from "../../src/utils/registry"
+import { resolveTree } from "../../src/utils/registry";
 
 test("resolve tree", async () => {
   const index = [
@@ -36,35 +36,35 @@ test("resolve tree", async () => {
       files: ["example-card.tsx"],
       registryDependencies: ["button", "dialog", "input"],
     },
-  ]
+  ];
 
   expect(
-    (await resolveTree(index, ["button"])).map((entry) => entry.name).sort()
-  ).toEqual(["button"])
+    (await resolveTree(index, ["button"])).map((entry) => entry.name).sort(),
+  ).toEqual(["button"]);
 
   expect(
-    (await resolveTree(index, ["dialog"])).map((entry) => entry.name).sort()
-  ).toEqual(["button", "dialog"])
+    (await resolveTree(index, ["dialog"])).map((entry) => entry.name).sort(),
+  ).toEqual(["button", "dialog"]);
 
   expect(
     (await resolveTree(index, ["alert-dialog", "dialog"]))
       .map((entry) => entry.name)
-      .sort()
-  ).toEqual(["alert-dialog", "button", "dialog"])
+      .sort(),
+  ).toEqual(["alert-dialog", "button", "dialog"]);
 
   expect(
     (await resolveTree(index, ["example-card"]))
       .map((entry) => entry.name)
-      .sort()
-  ).toEqual(["button", "dialog", "example-card", "input"])
+      .sort(),
+  ).toEqual(["button", "dialog", "example-card", "input"]);
 
   expect(
-    (await resolveTree(index, ["foo"])).map((entry) => entry.name).sort()
-  ).toEqual([])
+    (await resolveTree(index, ["foo"])).map((entry) => entry.name).sort(),
+  ).toEqual([]);
 
   expect(
     (await resolveTree(index, ["button", "foo"]))
       .map((entry) => entry.name)
-      .sort()
-  ).toEqual(["button"])
-})
+      .sort(),
+  ).toEqual(["button"]);
+});

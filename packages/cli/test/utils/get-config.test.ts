@@ -1,15 +1,15 @@
-import path from "path"
-import { expect, test } from "vitest"
+import path from "path";
+import { expect, test } from "vitest";
 
-import { getConfig, getRawConfig } from "../../src/utils/get-config"
+import { getConfig, getRawConfig } from "../../src/utils/get-config";
 
 test("get raw config", async () => {
   expect(
-    await getRawConfig(path.resolve(__dirname, "../fixtures/config-none"))
-  ).toEqual(null)
+    await getRawConfig(path.resolve(__dirname, "../fixtures/config-none")),
+  ).toEqual(null);
 
   expect(
-    await getRawConfig(path.resolve(__dirname, "../fixtures/config-partial"))
+    await getRawConfig(path.resolve(__dirname, "../fixtures/config-partial")),
   ).toEqual({
     style: "default",
     tailwind: {
@@ -24,24 +24,24 @@ test("get raw config", async () => {
       components: "@/components",
       utils: "@/lib/utils",
     },
-  })
+  });
 
   expect(
-    getRawConfig(path.resolve(__dirname, "../fixtures/config-invalid"))
-  ).rejects.toThrowError()
-})
+    getRawConfig(path.resolve(__dirname, "../fixtures/config-invalid")),
+  ).rejects.toThrowError();
+});
 
 test("get config", async () => {
   expect(
-    await getConfig(path.resolve(__dirname, "../fixtures/config-none"))
-  ).toEqual(null)
+    await getConfig(path.resolve(__dirname, "../fixtures/config-none")),
+  ).toEqual(null);
 
   expect(
-    getConfig(path.resolve(__dirname, "../fixtures/config-invalid"))
-  ).rejects.toThrowError()
+    getConfig(path.resolve(__dirname, "../fixtures/config-invalid")),
+  ).rejects.toThrowError();
 
   expect(
-    await getConfig(path.resolve(__dirname, "../fixtures/config-partial"))
+    await getConfig(path.resolve(__dirname, "../fixtures/config-partial")),
   ).toEqual({
     style: "default",
     tailwind: {
@@ -60,29 +60,29 @@ test("get config", async () => {
       tailwindConfig: path.resolve(
         __dirname,
         "../fixtures/config-partial",
-        "tailwind.config.ts"
+        "tailwind.config.ts",
       ),
       tailwindCss: path.resolve(
         __dirname,
         "../fixtures/config-partial",
-        "./src/assets/css/tailwind.css"
+        "./src/assets/css/tailwind.css",
       ),
       components: path.resolve(
         __dirname,
         "../fixtures/config-partial",
-        "./components"
+        "./components",
       ),
       utils: path.resolve(
         __dirname,
         "../fixtures/config-partial",
-        "./lib/utils"
+        "./lib/utils",
       ),
       ui: path.resolve(__dirname, "../fixtures/config-partial", "./components"),
     },
-  })
+  });
 
   expect(
-    await getConfig(path.resolve(__dirname, "../fixtures/config-full"))
+    await getConfig(path.resolve(__dirname, "../fixtures/config-full")),
   ).toEqual({
     style: "new-york",
     rsc: false,
@@ -102,33 +102,33 @@ test("get config", async () => {
       tailwindConfig: path.resolve(
         __dirname,
         "../fixtures/config-full",
-        "tailwind.config.ts"
+        "tailwind.config.ts",
       ),
       tailwindCss: path.resolve(
         __dirname,
         "../fixtures/config-full",
-        "./src/app/globals.css"
+        "./src/app/globals.css",
       ),
       components: path.resolve(
         __dirname,
         "../fixtures/config-full",
-        "./src/components"
+        "./src/components",
       ),
       ui: path.resolve(
         __dirname,
         "../fixtures/config-full",
-        "./src/components"
+        "./src/components",
       ),
       utils: path.resolve(
         __dirname,
         "../fixtures/config-full",
-        "./src/lib/utils"
+        "./src/lib/utils",
       ),
     },
-  })
+  });
 
   expect(
-    await getConfig(path.resolve(__dirname, "../fixtures/config-jsx"))
+    await getConfig(path.resolve(__dirname, "../fixtures/config-jsx")),
   ).toEqual({
     style: "default",
     tailwind: {
@@ -147,20 +147,20 @@ test("get config", async () => {
       tailwindConfig: path.resolve(
         __dirname,
         "../fixtures/config-jsx",
-        "tailwind.config.js"
+        "tailwind.config.js",
       ),
       tailwindCss: path.resolve(
         __dirname,
         "../fixtures/config-jsx",
-        "./src/assets/css/tailwind.css"
+        "./src/assets/css/tailwind.css",
       ),
       components: path.resolve(
         __dirname,
         "../fixtures/config-jsx",
-        "./components"
+        "./components",
       ),
       ui: path.resolve(__dirname, "../fixtures/config-jsx", "./components"),
       utils: path.resolve(__dirname, "../fixtures/config-jsx", "./lib/utils"),
     },
-  })
-})
+  });
+});

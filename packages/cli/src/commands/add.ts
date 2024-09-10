@@ -1,23 +1,23 @@
-import { existsSync, promises as fs } from "fs"
-import path from "path"
-import { getConfig } from "@/src/utils/get-config"
-import { getPackageManager } from "@/src/utils/get-package-manager"
-import { handleError } from "@/src/utils/handle-error"
-import { logger } from "@/src/utils/logger"
+import { existsSync, promises as fs } from "fs";
+import path from "path";
+import { getConfig } from "@/src/utils/get-config";
+import { getPackageManager } from "@/src/utils/get-package-manager";
+import { handleError } from "@/src/utils/handle-error";
+import { logger } from "@/src/utils/logger";
 import {
   fetchTree,
   getItemTargetPath,
   getRegistryBaseColor,
   getRegistryIndex,
   resolveTree,
-} from "@/src/utils/registry"
-import { transform } from "@/src/utils/transformers"
-import chalk from "chalk"
-import { Command } from "commander"
-import { execa } from "execa"
-import ora from "ora"
-import prompts from "prompts"
-import { z } from "zod"
+} from "@/src/utils/registry";
+import { transform } from "@/src/utils/transformers";
+import chalk from "chalk";
+import { Command } from "commander";
+import { execa } from "execa";
+import ora from "ora";
+import prompts from "prompts";
+import { z } from "zod";
 
 const addOptionsSchema = z.object({
   components: z.array(z.string()).optional(),
@@ -26,7 +26,7 @@ const addOptionsSchema = z.object({
   cwd: z.string(),
   all: z.boolean(),
   path: z.string().optional(),
-})
+});
 
 export const add = new Command()
   .name("add")
@@ -37,7 +37,7 @@ export const add = new Command()
   .option(
     "-c, --cwd <cwd>",
     "the working directory. defaults to the current directory.",
-    process.cwd()
+    process.cwd(),
   )
   .option("-a, --all", "add all available components", false)
   .option("-p, --path <path>", "the path to add the component to.")
@@ -46,30 +46,30 @@ export const add = new Command()
       const options = addOptionsSchema.parse({
         components,
         ...opts,
-      })
+      });
 
-      const cwd = path.resolve(options.cwd)
+      const cwd = path.resolve(options.cwd);
 
       if (!existsSync(cwd)) {
-        logger.error(`The path ${cwd} does not exist. Please try again.`)
-        process.exit(1)
+        logger.error(`The path ${cwd} does not exist. Please try again.`);
+        process.exit(1);
       }
 
-      const config = await getConfig(cwd)
+      const config = await getConfig(cwd);
       if (!config) {
         logger.warn(
           `Configuration is missing. Please run ${chalk.green(
-            `init`
-          )} to create a components.json file.`
-        )
-        process.exit(1)
+            `init`,
+          )} to create a components.json file.`,
+        );
+        process.exit(1);
       }
 
-      const registryIndex = await getRegistryIndex()
+      const registryIndex = await getRegistryIndex();
 
       let selectedComponents = options.all
         ? registryIndex.map((entry) => entry.name)
-        : options.components
+        : options.components;
       if (!options.components?.length && !options.all) {
         const { components } = await prompts({
           type: "multiselect",
@@ -84,22 +84,22 @@ export const add = new Command()
               ? true
               : options.components?.includes(entry.name),
           })),
-        })
-        selectedComponents = components
+        });
+        selectedComponents = components;
       }
 
       if (!selectedComponents?.length) {
-        logger.warn("No components selected. Exiting.")
-        process.exit(0)
+        logger.warn("No components selected. Exiting.");
+        process.exit(0);
       }
 
-      const tree = await resolveTree(registryIndex, selectedComponents)
-      const payload = await fetchTree(config.style, tree)
-      const baseColor = await getRegistryBaseColor(config.tailwind.baseColor)
+      const tree = await resolveTree(registryIndex, selectedComponents);
+      const payload = await fetchTree(config.style, tree);
+      const baseColor = await getRegistryBaseColor(config.tailwind.baseColor);
 
       if (!payload.length) {
-        logger.warn("Selected components not found. Exiting.")
-        process.exit(0)
+        logger.warn("Selected components not found. Exiting.");
+        process.exit(0);
       }
 
       if (!options.yes) {
@@ -108,61 +108,61 @@ export const add = new Command()
           name: "proceed",
           message: `Ready to install components and dependencies. Proceed?`,
           initial: true,
-        })
+        });
 
         if (!proceed) {
-          process.exit(0)
+          process.exit(0);
         }
       }
 
-      const spinner = ora(`Installing components...`).start()
+      const spinner = ora(`Installing components...`).start();
       for (const item of payload) {
-        spinner.text = `Installing ${item.name}...`
+        spinner.text = `Installing ${item.name}...`;
         const targetDir = await getItemTargetPath(
           config,
           item,
-          options.path ? path.resolve(cwd, options.path) : undefined
-        )
+          options.path ? path.resolve(cwd, options.path) : undefined,
+        );
 
         if (!targetDir) {
-          continue
+          continue;
         }
 
         if (!existsSync(targetDir)) {
-          await fs.mkdir(targetDir, { recursive: true })
+          await fs.mkdir(targetDir, { recursive: true });
         }
 
         const existingComponent = item.files.filter((file) =>
-          existsSync(path.resolve(targetDir, file.name))
-        )
+          existsSync(path.resolve(targetDir, file.name)),
+        );
 
         if (existingComponent.length && !options.overwrite) {
           if (selectedComponents.includes(item.name)) {
-            spinner.stop()
+            spinner.stop();
             const { overwrite } = await prompts({
               type: "confirm",
               name: "overwrite",
               message: `Component ${item.name} already exists. Would you like to overwrite?`,
               initial: false,
-            })
+            });
 
             if (!overwrite) {
               logger.info(
                 `Skipped ${item.name}. To overwrite, run with the ${chalk.green(
-                  "--overwrite"
-                )} flag.`
-              )
-              continue
+                  "--overwrite",
+                )} flag.`,
+              );
+              continue;
             }
 
-            spinner.start(`Installing ${item.name}...`)
+            spinner.start(`Installing ${item.name}...`);
           } else {
-            continue
+            continue;
           }
         }
 
         for (const file of item.files) {
-          let filePath = path.resolve(targetDir, file.name)
+          let filePath = path.resolve(targetDir, file.name);
 
           // Run transformers.
           const content = await transform({
@@ -170,17 +170,17 @@ export const add = new Command()
             raw: file.content,
             config,
             baseColor,
-          })
+          });
 
           if (!config.tsx) {
-            filePath = filePath.replace(/\.tsx$/, ".jsx")
-            filePath = filePath.replace(/\.ts$/, ".js")
+            filePath = filePath.replace(/\.tsx$/, ".jsx");
+            filePath = filePath.replace(/\.ts$/, ".js");
           }
 
-          await fs.writeFile(filePath, content)
+          await fs.writeFile(filePath, content);
         }
 
-        const packageManager = await getPackageManager(cwd)
+        const packageManager = await getPackageManager(cwd);
 
         // Install dependencies.
         if (item.dependencies?.length) {
@@ -192,8 +192,8 @@ export const add = new Command()
             ],
             {
               cwd,
-            }
-          )
+            },
+          );
         }
 
         // Install devDependencies.
@@ -207,12 +207,12 @@ export const add = new Command()
             ],
             {
               cwd,
-            }
-          )
+            },
+          );
         }
       }
-      spinner.succeed(`Done.`)
+      spinner.succeed(`Done.`);
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
-  })
+  });
