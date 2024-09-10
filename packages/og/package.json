@@ -1,0 +1,18 @@
+{
+  "name": "@token-kit/og",
+  "version": "0.0.1",
+  "description": "token-kit opengraph image generator",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "scripts": {
+    "build": "tsup",
+    "prepare": "tsup"
+  },
+  "dependencies": {
+    "@tokenscript/engine-js": "1.5.2-alpha.1"
+  },
+  "devDependencies": {
+    "tsup": "^8.2.4"
+  }
+}
