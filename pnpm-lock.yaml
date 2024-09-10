@@ -116,7 +116,7 @@ importers:
         version: 4.4.1
       tsup:
         specifier: ^6.6.3
-        version: 6.7.0(typescript@4.9.5)
+        version: 6.7.0(postcss@8.4.45)(typescript@4.9.5)
       type-fest:
         specifier: ^3.8.0
         version: 3.13.1
@@ -195,7 +195,7 @@ importers:
         version: 2.7.0
       tsup:
         specifier: ^8.1.0
-        version: 8.2.4(jiti@1.21.6)(typescript@5.5.4)(yaml@2.5.1)
+        version: 8.2.4(jiti@1.21.6)(postcss@8.4.45)(typescript@5.5.4)(yaml@2.5.1)
       typescript:
         specifier: ^5
         version: 5.5.4
@@ -4736,6 +4736,11 @@ packages:
   mz@2.7.0:
     resolution: {integrity: sha512-z81GNO7nnYMEhrGh9LeymoE4+Yr0Wn5McHIZMK5cfQCl+NDX08sCZgUc9/6MHni9IWuFLm1Z3HTCXu2z9fN62Q==}
 
+  nanoid@3.3.7:
+    resolution: {integrity: sha512-eSRppjcPIatRIMC1U6UngP8XFcz8MQWGQdt1MTBQ7NaAmvXDfvNxbvWV3x2y6CdEUciCSsDHDQZbhYaB8QEo2g==}
+    engines: {node: ^10 || ^12 || ^13.7 || ^14 || >=15.0.1}
+    hasBin: true
+
   natural-compare@1.4.0:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
 
@@ -5094,6 +5099,10 @@ packages:
         optional: true
       yaml:
         optional: true
+
+  postcss@8.4.45:
+    resolution: {integrity: sha512-7KTLTdzdZZYscUc65XmjFiB73vBhBfbPztCYdUNvlaso9PrzjzcmjqBPR0lNGkcVlcO4BjiO5rK/qNz+XAen1Q==}
+    engines: {node: ^10 || ^12 || >=14}
 
   preact@10.23.2:
     resolution: {integrity: sha512-kKYfePf9rzKnxOAKDpsWhg/ysrHPqT+yQ7UW4JjdnqjFIeNUnNcEJvhuA8fDenxAGWzUqtd51DfVg7xp/8T9NA==}
@@ -5550,6 +5559,10 @@ packages:
 
   sonic-boom@2.8.0:
     resolution: {integrity: sha512-kuonw1YOYYNOve5iHdSahXPOK49GqwA+LZhI6Wz/l0rP57iKyXXIHaRagOBHAPmGwJC6od2Z9zgvZ5loSgMlVg==}
+
+  source-map-js@1.2.1:
+    resolution: {integrity: sha512-UXWMKhLOwVKb728IUtQPXxfYU+usdybtUrK/8uGE8CQMvrhOpwvzDBwj0QhSL7MQc7vIsISBG8VQ8+IDQxpfQA==}
+    engines: {node: '>=0.10.0'}
 
   source-map-support@0.5.21:
     resolution: {integrity: sha512-uBHU3L3czsIyYXKX88fdrGovxdSCoTGDRZ6SYXtSRxLZUzHg5P/66Ht6uoUlHu9EZod+inXhKo3qQgwXUT/y1w==}
@@ -12115,6 +12128,9 @@ snapshots:
       object-assign: 4.1.1
       thenify-all: 1.6.0
 
+  nanoid@3.3.7:
+    optional: true
+
   natural-compare@1.4.0: {}
 
   negotiator@0.6.3: {}
@@ -12434,17 +12450,27 @@ snapshots:
 
   possible-typed-array-names@1.0.0: {}
 
-  postcss-load-config@3.1.4:
+  postcss-load-config@3.1.4(postcss@8.4.45):
     dependencies:
       lilconfig: 2.1.0
       yaml: 1.10.2
+    optionalDependencies:
+      postcss: 8.4.45
 
-  postcss-load-config@6.0.1(jiti@1.21.6)(yaml@2.5.1):
+  postcss-load-config@6.0.1(jiti@1.21.6)(postcss@8.4.45)(yaml@2.5.1):
     dependencies:
       lilconfig: 3.1.2
     optionalDependencies:
       jiti: 1.21.6
+      postcss: 8.4.45
       yaml: 2.5.1
+
+  postcss@8.4.45:
+    dependencies:
+      nanoid: 3.3.7
+      picocolors: 1.1.0
+      source-map-js: 1.2.1
+    optional: true
 
   preact@10.23.2: {}
 
@@ -13011,6 +13037,9 @@ snapshots:
     dependencies:
       atomic-sleep: 1.0.0
 
+  source-map-js@1.2.1:
+    optional: true
+
   source-map-support@0.5.21:
     dependencies:
       buffer-from: 1.1.2
@@ -13257,7 +13286,7 @@ snapshots:
 
   tsort@0.0.1: {}
 
-  tsup@6.7.0(typescript@4.9.5):
+  tsup@6.7.0(postcss@8.4.45)(typescript@4.9.5):
     dependencies:
       bundle-require: 4.2.1(esbuild@0.17.19)
       cac: 6.7.14
@@ -13267,19 +13296,20 @@ snapshots:
       execa: 5.1.1
       globby: 11.1.0
       joycon: 3.1.1
-      postcss-load-config: 3.1.4
+      postcss-load-config: 3.1.4(postcss@8.4.45)
       resolve-from: 5.0.0
       rollup: 3.29.4
       source-map: 0.8.0-beta.0
       sucrase: 3.35.0
       tree-kill: 1.2.2
     optionalDependencies:
+      postcss: 8.4.45
       typescript: 4.9.5
     transitivePeerDependencies:
       - supports-color
       - ts-node
 
-  tsup@8.2.4(jiti@1.21.6)(typescript@5.5.4)(yaml@2.5.1):
+  tsup@8.2.4(jiti@1.21.6)(postcss@8.4.45)(typescript@5.5.4)(yaml@2.5.1):
     dependencies:
       bundle-require: 5.0.0(esbuild@0.23.1)
       cac: 6.7.14
@@ -13291,13 +13321,14 @@ snapshots:
       globby: 11.1.0
       joycon: 3.1.1
       picocolors: 1.1.0
-      postcss-load-config: 6.0.1(jiti@1.21.6)(yaml@2.5.1)
+      postcss-load-config: 6.0.1(jiti@1.21.6)(postcss@8.4.45)(yaml@2.5.1)
       resolve-from: 5.0.0
       rollup: 4.21.2
       source-map: 0.8.0-beta.0
       sucrase: 3.35.0
       tree-kill: 1.2.2
     optionalDependencies:
+      postcss: 8.4.45
       typescript: 5.5.4
     transitivePeerDependencies:
       - jiti
