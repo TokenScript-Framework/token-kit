@@ -1,4 +1,4 @@
-# token-kit ui cli
+# @token-kit/cli
 
 A CLI for adding token-kit ui components to your project.
 

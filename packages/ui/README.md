@@ -1,4 +1,4 @@
-# Token kit
+# @token-kit/ui
 
 ## build
 
