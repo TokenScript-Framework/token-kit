@@ -7,8 +7,6 @@ export default defineConfig({
   clean: true,
   dts: true,
   format: ["cjs", "esm"],
-  // this will caused esm module import json issue
-  // external: ["./tokens.json"],
   shims: true,
   minify: true,
   treeshake: true,
