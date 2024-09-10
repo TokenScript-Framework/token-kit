@@ -210,6 +210,17 @@ export const add = new Command()
             },
           );
         }
+
+        // Install devDependencies.
+        if (item.shadcnDependencies?.length) {
+          await execa(
+            "npx",
+            ["shadcn@latest", "add", "-o", ...item.shadcnDependencies],
+            {
+              cwd,
+            },
+          );
+        }
       }
       spinner.succeed(`Done.`);
     } catch (error) {

@@ -1,5 +1,6 @@
 {
   "name": "token-card",
+  "shadcnDependencies": ["card", "scroll-area", "skeleton"],
   "files": [
     {
       "name": "token-card.tsx",
