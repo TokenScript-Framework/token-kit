@@ -1,4 +1,4 @@
-export const ABI = [
+export const ERC165_ABI = [
   "function supportsInterface(bytes4 interfaceId) view returns (bool)",
   "function scriptURI() view returns (string[])",
 ];

@@ -1,5 +1,3 @@
-import { ethers } from "ethers";
-
 const RPC_URLS: Record<number, string> = {
   1: "https://eth.llamarpc.com",
   59140: "https://rpc.goerli.linea.build",
@@ -12,7 +10,8 @@ const RPC_URLS: Record<number, string> = {
 
 const DEFAULT_RPC_URL = "https://ethereum-sepolia-rpc.publicnode.com";
 
-export function getProvider(chainId: number): ethers.Provider {
-  const rpcUrl = RPC_URLS[chainId] || DEFAULT_RPC_URL;
-  return new ethers.JsonRpcProvider(rpcUrl, chainId, { staticNetwork: true });
+export function getRPCURL(chainId: number): string {
+  //   const rpcUrl = RPC_URLS[chainId] || DEFAULT_RPC_URL;
+  //   return new ethers.JsonRpcProvider(rpcUrl, chainId, { staticNetwork: true });
+  return RPC_URLS[chainId] || DEFAULT_RPC_URL;
 }
