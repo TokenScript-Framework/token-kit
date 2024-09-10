@@ -1,5 +1,6 @@
 {
   "name": "token-thumbnail",
+  "shadcnDependencies": ["card", "tooltip", "badge", "avatar"],
   "files": [
     {
       "name": "token-thumbnail.tsx",
