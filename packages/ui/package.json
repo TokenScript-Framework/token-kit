@@ -1,0 +1,56 @@
+{
+  "name": "token-kit",
+  "version": "1.0.0",
+  "description": "kit for smart token",
+  "type": "module",
+  "scripts": {
+    "dev": "tsup --watch",
+    "build": "tsup",
+    "prepare": "npm run build"
+  },
+  "files": [
+    "dist/"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "keywords": [],
+  "author": "SLN",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/react": "^18",
+    "react": "^18",
+    "tailwind-merge": "^2.4.0",
+    "tslib": "^2.6.3",
+    "tsup": "^8.1.0",
+    "typescript": "^5",
+    "webcrypto-liner": "^1.4.3"
+  },
+  "dependencies": {
+    "@ethereum-attestation-service/eas-sdk": "^2.5.0",
+    "@peculiar/x509": "^1.11.0",
+    "@radix-ui/react-avatar": "^1.1.0",
+    "@radix-ui/react-scroll-area": "^1.1.0",
+    "@radix-ui/react-tooltip": "^1.1.2",
+    "@tanstack/react-query": "^5.50.1",
+    "@tokenscript/xmldsigjs": "^2.5.2",
+    "axios": "^1.7.2",
+    "bignumber.js": "^9.1.2",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.1.1",
+    "ethers": "^6.13.1",
+    "ipfs-only-hash": "^4.0.0",
+    "jsdom": "^22.1.0",
+    "lucide-react": "^0.401.0",
+    "viem": "2.x",
+    "wagmi": "^2.10.9"
+  }
+}
