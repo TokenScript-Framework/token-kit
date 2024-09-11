@@ -25,13 +25,6 @@ export const TokenCard: React.FC<TokenCardProps> = ({
   wallet,
   onClick,
 }) => {
-  const { data: erc20Data } = useReadContracts({
-    contracts: contractsForErc20(chainId, contract, wallet),
-    query: {
-      enabled: type === "ERC20",
-    },
-  });
-
   const { data: erc721TokenURI } = useReadContract({
     chainId: chainId,
     address: contract,
@@ -88,7 +81,7 @@ export const TokenCard: React.FC<TokenCardProps> = ({
       value,
     }));
 
-  if (!metadata && !erc20Data) {
+  if (!metadata) {
     return (
       <Card>
         <CardHeader className="relative space-y-0 p-0">
@@ -109,43 +102,9 @@ export const TokenCard: React.FC<TokenCardProps> = ({
 
   if (type === "ERC20") {
     return (
-      <Card>
-        <CardContent className="p-4 cursor-pointer" onClick={onClick}>
-          <div className="flex flex-col gap-4">
-            <div className="relative w-full">
-              <h3 className="mb-2 text-lg font-semibold leading-none">Name</h3>
-              <p className="text-muted-foreground text-sm">
-                {erc20Data?.[0]?.result?.toString()}
-              </p>
-            </div>
-            <div className="relative w-full">
-              <h3 className="mb-2 text-lg font-semibold leading-none">
-                Symbol
-              </h3>
-              <p className="text-muted-foreground text-sm">
-                {erc20Data?.[1]?.result?.toString()}
-              </p>
-            </div>
-            {!!erc20Data?.[2]?.result && !!erc20Data?.[3]?.result && (
-              <div className="relative w-full">
-                <h3 className="mb-2 text-lg font-semibold leading-none">
-                  Balance
-                </h3>
-                <p className="text-muted-foreground text-sm">
-                  {new BigNumber(erc20Data?.[3]?.result.toString())
-                    .dividedBy(
-                      new BigNumber(10 ** Number(erc20Data?.[2]?.result)),
-                    )
-                    .toString()}
-                </p>
-              </div>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+      <ERC20TokenCard chainId={chainId} contract={contract} wallet={wallet!} />
     );
   }
-
   return (
     <Card>
       <CardHeader
@@ -212,36 +171,83 @@ export const TokenCard: React.FC<TokenCardProps> = ({
 
 function contractsForErc20(
   chainId: number,
-  constract: `0x${string}`,
+  contract: `0x${string}`,
   walletAddress?: string,
 ) {
   const contractInfo = [
     {
       chainId: chainId,
-      address: constract,
+      address: contract,
       abi: erc20Abi,
       functionName: "name",
     },
     {
       chainId: chainId,
-      address: constract,
+      address: contract,
       abi: erc20Abi,
       functionName: "symbol",
     },
     {
       chainId: chainId,
-      address: constract,
+      address: contract,
       abi: erc20Abi,
       functionName: "decimals",
     },
   ];
   const balanceInfo = {
     chainId: chainId,
-    address: constract,
+    address: contract,
     abi: erc20Abi,
     functionName: "balanceOf",
     args: [walletAddress],
   };
 
   return walletAddress ? [...contractInfo, balanceInfo] : contractInfo;
+}
+
+type ERC20TokenCardProps = {
+  chainId: number;
+  contract: `0x${string}`;
+  wallet: `0x${string}`;
+  onClick?: () => void;
+};
+function ERC20TokenCard(props: ERC20TokenCardProps) {
+  const { data: erc20Data } = useReadContracts({
+    contracts: contractsForErc20(props.chainId, props.contract, props.wallet),
+  });
+
+  return (
+    <Card>
+      <CardContent className="p-4 cursor-pointer" onClick={props.onClick}>
+        <div className="flex flex-col gap-4">
+          <div className="relative w-full">
+            <h3 className="mb-2 text-lg font-semibold leading-none">Name</h3>
+            <p className="text-muted-foreground text-sm">
+              {erc20Data?.[0]?.result?.toString()}
+            </p>
+          </div>
+          <div className="relative w-full">
+            <h3 className="mb-2 text-lg font-semibold leading-none">Symbol</h3>
+            <p className="text-muted-foreground text-sm">
+              {erc20Data?.[1]?.result?.toString()}
+            </p>
+          </div>
+          {!!erc20Data?.[2]?.result && !!erc20Data?.[3]?.result && (
+            <div className="relative w-full">
+              <h3 className="mb-2 text-lg font-semibold leading-none">
+                Balance
+              </h3>
+              <p className="text-muted-foreground text-sm">
+                {new BigNumber(erc20Data?.[3]?.result.toString())
+                  .dividedBy(
+                    new BigNumber(10 ** Number(erc20Data?.[2]?.result)),
+                  )
+                  .toString()}
+              </p>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
