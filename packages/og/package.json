@@ -38,6 +38,6 @@
     "jsdom": "^22.1.0",
     "satori": "^0.10.14",
     "sharp": "^0.33.5",
-    "token-kit": "file:token-kit-1.0.0.tgz"
+    "token-kit": "github:TokenScript-Framework/ts-front-monorepo#path:packages/token-kit"
   }
 }
