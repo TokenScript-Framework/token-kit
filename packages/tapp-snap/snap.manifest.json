@@ -1,0 +1,33 @@
+{
+  "version": "0.0.1",
+  "description": "This is a snap for token",
+  "proposedName": "Tapp Snap",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TokenScript-Framework/token-kit/tree/main/packages/snap"
+  },
+  "source": {
+    "shasum": "KAfNEHMB8nCG4Znzvwhw4V49kjfPtnCU4HboTB1oxbI=",
+    "location": {
+      "npm": {
+        "filePath": "dist/bundle.js",
+        "packageName": "@token-kit/tapp-snap",
+        "registry": "https://registry.npmjs.org/",
+        "iconPath": "images/logo.svg"
+      }
+    }
+  },
+  "initialPermissions": {
+    "snap_dialog": {},
+    "endowment:rpc": {
+      "dapps": true,
+      "snaps": true
+    },
+    "snap_manageState": {},
+    "snap_manageAccounts": {},
+    "endowment:network-access": {},
+    "endowment:page-home": {},
+    "snap_getEntropy": {}
+  },
+  "manifestVersion": "0.1"
+}
