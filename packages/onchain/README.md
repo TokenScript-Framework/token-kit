@@ -4,7 +4,7 @@ This module provides some onchain tools.
 
 ## tokenType
 
-This function is to detect the type of a given token contract address on the Ethereum blockchain.
+This function is to detect the type and subTypes of a given token contract address on the Ethereum blockchain.
 
 ### Usage
 
@@ -16,24 +16,33 @@ const client = YOUR_VIEM_CLIENT;
 const result = await tokenType("TOKEN_ADDRESS", client);
 ```
 
-### Return Value
-
 The `tokenType` function returns an object with the following structure:
 
 ```typescript
 {
    type: string;
-   subType?: string[];
+   subTypes?: string[];
+   scriptURI?: string[];
 }
 ```
 
-### Supported Token Types
+For `type`, this function supports the following types:
 
 - ERC20
 - ERC721
 - ERC1155
-- ERC5169
 - Unknown Type: If the contract doesn't match any of the above standards
+
+For `scriptURI`, it supports the following types:
+
+- ERC5169
+- IERC721TokenReceiver
+- IERC721Metadata
+- IERC721Enumerable
+- IERC1155TokenReceiver
+- IERC1155Metadata_URI
+
+For ERC5169 tokens, the function will return the `scriptURI` if available.
 
 ### Error Handling
 

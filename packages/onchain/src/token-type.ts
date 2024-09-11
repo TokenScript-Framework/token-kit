@@ -1,25 +1,31 @@
 import {
-  INTERFACEIDS,
+  INTERFACE_IDS,
   SUB_TYPES,
   SUBTYPE_INTERFACEIDS,
-  TOKEN_TYPE,
   TOKEN_TYPES,
+  TokenType,
+  UNKNOWN_TYPE,
 } from "./constant";
-import { ERC165_ABI, ERC20_ABI } from "./abi";
+import { ERC165_ABI, ERC20_ABI, ERC5169_ABI } from "./abi";
 import { parseAbi, PublicClient, zeroAddress } from "viem";
 
-export async function tokenType(address: string, client: PublicClient) {
+export async function tokenType(
+  address: string,
+  client: PublicClient,
+): Promise<TokenType> {
   try {
-    const tokenType = await detectTokenType(address, client);
-
-    const subType = await detectSubTokenType(tokenType, address, client);
+    const mainType = await detectTokenType(address, client);
+    if (mainType.type === UNKNOWN_TYPE) {
+      return mainType;
+    }
+    const subTypes = await detectSubTokenType(mainType, address, client);
 
     return {
-      ...tokenType,
-      ...(subType.length > 0 ? { subType } : {}),
+      ...mainType,
+      ...subTypes,
     };
   } catch {
-    return { type: "Unknow Type" };
+    return { type: UNKNOWN_TYPE };
   }
 }
 
@@ -27,89 +33,110 @@ async function detectTokenType(
   address: string,
   client: PublicClient,
 ): Promise<{ type: string }> {
-  const checks = [
-    isERC20(address, client),
-    isERC165(address, INTERFACEIDS["ERC721"], client),
-    isERC165(address, INTERFACEIDS["ERC1155"], client),
+  const tokenTypeChecks = [
+    { check: isERC20(address, client), type: TOKEN_TYPES.ERC20 },
+    {
+      check: isSupportedToken(address, INTERFACE_IDS["ERC721"], client),
+      type: TOKEN_TYPES.ERC721,
+    },
+    {
+      check: isSupportedToken(address, INTERFACE_IDS["ERC1155"], client),
+      type: TOKEN_TYPES.ERC1155,
+    },
   ];
 
-  const results = await Promise.all(checks);
-  const detectedIndex = results.findIndex((result) => result === true);
+  const results = await Promise.all(tokenTypeChecks.map(({ check }) => check));
+  const type =
+    tokenTypeChecks.find((_, index) => results[index])?.type || UNKNOWN_TYPE;
 
-  if (detectedIndex !== -1) {
-    return { type: TOKEN_TYPES[detectedIndex] };
-  }
-
-  return { type: "Unknown Type" };
+  return { type };
 }
 
 async function detectSubTokenType(
-  tokenType: TOKEN_TYPE,
+  tokenType: TokenType,
   address: string,
   client: PublicClient,
-): Promise<string[]> {
+): Promise<{ subTypes?: string[]; scriptURI?: string[] }> {
   if (!SUB_TYPES[tokenType.type] || SUB_TYPES[tokenType.type].length === 0) {
-    return [];
+    return { subTypes: [] };
   }
-  const interfaceIds = {};
-  const subTypes = await Promise.all(
+
+  let scriptURI;
+  const checkSubTypes = await Promise.all(
     SUB_TYPES[tokenType.type].map(async (subType) => {
       if (subType === "ERC5169") {
         const result = await isERC5169(address, client);
-        return result ? "ERC5169" : "";
+        scriptURI = result.isERC5169 ? result.scriptURI : [];
+        return result.isERC5169 ? "ERC5169" : null;
       } else {
-        interfaceIds[`${subType}`] =
-          SUBTYPE_INTERFACEIDS[tokenType.type][`${subType}`];
-        return null;
+        const result = await isSupportedInterface(
+          address,
+          SUBTYPE_INTERFACEIDS[tokenType.type][`${subType}`],
+          client,
+        );
+
+        return result ? subType : null;
       }
     }),
   );
+  const subTypes = checkSubTypes.flatMap((f) => (f ? [f] : []));
 
-  const supportInterfaces = await checkInterfaces(
-    address,
-    interfaceIds,
-    client,
-  );
-
-  return [...removeNull(subTypes), ...supportInterfaces];
-}
-
-async function checkInterfaces(address, interfaceIds, client) {
-  const contract = {
-    address: address as `0x${string}`,
-    abi: parseAbi(ERC165_ABI),
+  return {
+    ...(subTypes.length > 0 ? { subTypes } : {}),
+    ...(scriptURI.length > 0 ? { scriptURI } : {}),
   };
-  const list = await Promise.all(
-    Object.entries(interfaceIds).map(async ([key, value]) => {
-      try {
-        const isSupported = await client.readContract({
-          ...contract,
-          functionName: "supportsInterface",
-          args: [value],
-        });
-        return isSupported ? key : null;
-      } catch {
-        return null;
-      }
-    }),
-  );
-
-  return removeNull(list);
 }
 
-async function isERC5169(address: string, client: PublicClient) {
+async function isSupportedToken(
+  address: string,
+  interfaceId: string,
+  client: PublicClient,
+) {
   const contract = {
     address: address as `0x${string}`,
     abi: parseAbi(ERC165_ABI),
   };
   try {
-    await client.readContract({
+    return await client.readContract({
+      ...contract,
+      functionName: "supportsInterface",
+      args: [interfaceId],
+    });
+  } catch {
+    return false;
+  }
+}
+
+async function isSupportedInterface(address, interfaceId, client) {
+  const contract = {
+    address: address as `0x${string}`,
+    abi: parseAbi(ERC165_ABI),
+  };
+  try {
+    const result = await client.readContract({
+      ...contract,
+      functionName: "supportsInterface",
+      args: [interfaceId],
+    });
+    return result;
+  } catch {
+    return false;
+  }
+}
+
+async function isERC5169(address: string, client: PublicClient) {
+  const contract = {
+    address: address as `0x${string}`,
+    abi: parseAbi(ERC5169_ABI),
+  };
+  try {
+    const scriptURI = await client.readContract({
       ...contract,
       functionName: "scriptURI",
     });
-    return true;
+    return { isERC5169: true, scriptURI };
   } catch {
-    return false;
+    return { isERC5169: false };
   }
 }
 
@@ -134,28 +161,4 @@ async function isERC20(address: string, client: PublicClient) {
   } catch {
     return false;
   }
-}
-
-async function isERC165(
-  address: string,
-  interfaceId: string,
-  client: PublicClient,
-) {
-  const contract = {
-    address: address as `0x${string}`,
-    abi: parseAbi(ERC165_ABI),
-  };
-  try {
-    return await client.readContract({
-      ...contract,
-      functionName: "supportsInterface",
-      args: [interfaceId],
-    });
-  } catch {
-    return false;
-  }
-}
-
-function removeNull(list: string[]) {
-  return list.flatMap((f) => (f ? [f] : []));
 }
