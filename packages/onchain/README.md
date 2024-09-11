@@ -1,29 +1,33 @@
-# Token Type
+# @token-kit/onchain
 
-This module provides a `tokenType` function to detect the type of a given token contract address on the Ethereum blockchain.
+This module provides some onchain tools.
 
-## Usage
+## tokenType
+
+This function is to detect the type of a given token contract address on the Ethereum blockchain.
+
+### Usage
 
 ```typescript
 import { tokenType } from "@token-kit/onchain";
 
-const provider = YOUR_PROVIDER;
+const client = YOUR_VIEM_CLIENT;
 
-const result = await tokenType("TOKEN_ADDRESS", provider);
+const result = await tokenType("TOKEN_ADDRESS", client);
 ```
 
-## Return Value
+### Return Value
 
 The `tokenType` function returns an object with the following structure:
 
 ```typescript
 {
    type: string;
-   supportedInterfaces?: string[];
+   subType?: string[];
 }
 ```
 
-## Supported Token Types
+### Supported Token Types
 
 - ERC20
 - ERC721
@@ -31,10 +35,10 @@ The `tokenType` function returns an object with the following structure:
 - ERC5169
 - Unknown Type: If the contract doesn't match any of the above standards
 
-## Error Handling
+### Error Handling
 
 If an error occurs during the detection process, the function will return `{ type: "Unknown Type" }`.
 
-## Dependencies
+### Dependencies
 
-This module requires `ethers` library to interact with the Ethereum blockchain.
+This module requires `viem` library to interact with the Ethereum blockchain.

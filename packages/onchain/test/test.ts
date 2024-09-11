@@ -18,10 +18,25 @@ test("test ERC721 on Sepolia", async (t) => {
 
   t.is(result.type, "ERC721", "Should return ERC721.");
   t.deepEqual(
-    result.supportedInterfaces,
-    ["IERC721Metadata"],
+    result.subType,
+    ["ERC5169", "IERC721Metadata"],
     "Should support these interfaces.",
   );
+});
+
+test("test unknown type on Sepolia", async (t) => {
+  const client = createPublicClient({
+    chain: sepolia,
+    transport: http(getRPCURL(11155111)),
+  });
+
+  const result = await tokenType(
+    "0xd52CE4582d4F1De01643C82A516C1192f3Bd9B25",
+    client as PublicClient,
+  );
+
+  t.is(result.type, "Unknown Type", "Should return Unknown Type.");
+  t.is(result.subType, undefined, "subType should be undefined for ERC20");
 });
 
 test("test ERC1155 on Mainnet", async (t) => {
@@ -34,8 +49,8 @@ test("test ERC1155 on Mainnet", async (t) => {
     "0x73da73ef3a6982109c4d5bdb0db9dd3e3783f313",
     client as PublicClient,
   );
-
-  t.is(result.type, "Unknow Type", "Should return Unknow Type.");
+  t.is(result.type, "ERC1155", "Should return ERC1155.");
+  t.is(result.subType, undefined, "subType should be undefined for ERC20");
 });
 
 test("test ERC20 on Mainnet", async (t) => {
@@ -49,5 +64,6 @@ test("test ERC20 on Mainnet", async (t) => {
     client as PublicClient,
   );
 
-  t.is(result.type, "Unknow Type", "Should return Unknow Type.");
+  t.is(result.type, "ERC20", "Should return ERC20.");
+  t.is(result.subType, undefined, "subType should be undefined for ERC20");
 });

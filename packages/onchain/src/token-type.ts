@@ -1,32 +1,24 @@
 import {
-  earlyReturnTypes,
-  IERC1155InterfaceId,
-  IERC721InterfaceId,
-  interfaceIdMap,
-  tokenTypes,
+  INTERFACEIDS,
+  SUB_TYPES,
+  SUBTYPE_INTERFACEIDS,
+  TOKEN_TYPE,
+  TOKEN_TYPES,
 } from "./constant";
 import { ERC165_ABI, ERC20_ABI } from "./abi";
 import { parseAbi, PublicClient, zeroAddress } from "viem";
 
 export async function tokenType(address: string, client: PublicClient) {
   try {
-    let result = await detectTokenType(address, client);
-    if (earlyReturnTypes.includes(result.type)) {
-      return result;
-    }
+    const tokenType = await detectTokenType(address, client);
 
-    if (result.type in interfaceIdMap) {
-      const supportedInterfaces = await checkInterfaces(
-        address,
-        interfaceIdMap[result.type as keyof typeof interfaceIdMap],
-        client,
-      );
-      result = { ...result, supportedInterfaces };
-    }
+    const subType = await detectSubTokenType(tokenType, address, client);
 
-    return result;
-  } catch (err) {
-    console.error(err);
+    return {
+      ...tokenType,
+      ...(subType.length > 0 ? { subType } : {}),
+    };
+  } catch {
     return { type: "Unknow Type" };
   }
 }
@@ -34,25 +26,52 @@ export async function tokenType(address: string, client: PublicClient) {
 async function detectTokenType(
   address: string,
   client: PublicClient,
-): Promise<{ type: string; supportedInterfaces?: string[] }> {
-  if (await isERC5169(address, client)) {
-    const checks = [
-      isERC20(address, client),
-      isERC165(address, IERC721InterfaceId, client),
-      isERC165(address, IERC1155InterfaceId, client),
-    ];
+): Promise<{ type: string }> {
+  const checks = [
+    isERC20(address, client),
+    isERC165(address, INTERFACEIDS["ERC721"], client),
+    isERC165(address, INTERFACEIDS["ERC1155"], client),
+  ];
 
-    const results = await Promise.all(checks);
-    const detectedIndex = results.findIndex(Boolean);
+  const results = await Promise.all(checks);
+  const detectedIndex = results.findIndex((result) => result === true);
 
-    if (detectedIndex !== -1) {
-      return { type: tokenTypes[detectedIndex] };
-    }
-
-    return { type: "ERC5169" };
+  if (detectedIndex !== -1) {
+    return { type: TOKEN_TYPES[detectedIndex] };
   }
 
-  return { type: "Unknow Type" };
+  return { type: "Unknown Type" };
+}
+
+async function detectSubTokenType(
+  tokenType: TOKEN_TYPE,
+  address: string,
+  client: PublicClient,
+): Promise<string[]> {
+  if (!SUB_TYPES[tokenType.type] || SUB_TYPES[tokenType.type].length === 0) {
+    return [];
+  }
+  const interfaceIds = {};
+  const subTypes = await Promise.all(
+    SUB_TYPES[tokenType.type].map(async (subType) => {
+      if (subType === "ERC5169") {
+        const result = await isERC5169(address, client);
+        return result ? "ERC5169" : "";
+      } else {
+        interfaceIds[`${subType}`] =
+          SUBTYPE_INTERFACEIDS[tokenType.type][`${subType}`];
+        return null;
+      }
+    }),
+  );
+
+  const supportInterfaces = await checkInterfaces(
+    address,
+    interfaceIds,
+    client,
+  );
+
+  return [...removeNull(subTypes), ...supportInterfaces];
 }
 
 async function checkInterfaces(address, interfaceIds, client) {
@@ -60,18 +79,22 @@ async function checkInterfaces(address, interfaceIds, client) {
     address: address as `0x${string}`,
     abi: parseAbi(ERC165_ABI),
   };
-  const entries = Object.entries(interfaceIds);
-  const supportedInterfaces = await Promise.all(
-    entries.map(async ([key, value]) => {
-      const isSupported = await client.readContract({
-        ...contract,
-        functionName: "supportsInterface",
-        args: [value],
-      });
-      return isSupported ? key : null;
+  const list = await Promise.all(
+    Object.entries(interfaceIds).map(async ([key, value]) => {
+      try {
+        const isSupported = await client.readContract({
+          ...contract,
+          functionName: "supportsInterface",
+          args: [value],
+        });
+        return isSupported ? key : null;
+      } catch {
+        return null;
+      }
     }),
   );
-  return supportedInterfaces.filter(Boolean);
+
+  return removeNull(list);
 }
 
 async function isERC5169(address: string, client: PublicClient) {
@@ -85,8 +108,7 @@ async function isERC5169(address: string, client: PublicClient) {
       functionName: "scriptURI",
     });
     return true;
-  } catch (err) {
-    console.error(err);
+  } catch {
     return false;
   }
 }
@@ -109,8 +131,7 @@ async function isERC20(address: string, client: PublicClient) {
       }),
     ]);
     return true;
-  } catch (err) {
-    console.error(err);
+  } catch {
     return false;
   }
 }
@@ -130,8 +151,11 @@ async function isERC165(
       functionName: "supportsInterface",
       args: [interfaceId],
     });
-  } catch (err) {
-    console.error(err);
+  } catch {
     return false;
   }
+}
+
+function removeNull(list: string[]) {
+  return list.flatMap((f) => (f ? [f] : []));
 }
