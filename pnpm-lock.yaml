@@ -33,6 +33,25 @@ importers:
         specifier: ^8.4.0
         version: 8.4.0(eslint@9.10.0(jiti@1.21.6))(typescript@5.5.4)
 
+  lambdas/og:
+    dependencies:
+      '@token-kit/og':
+        specifier: workspace:*
+        version: link:../../packages/og
+      ethers:
+        specifier: ^6.13.1
+        version: 6.13.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
+    devDependencies:
+      '@types/node':
+        specifier: ^22.5.4
+        version: 22.5.4
+      source-map-support:
+        specifier: ^0.5.21
+        version: 0.5.21
+      tsup:
+        specifier: ^8.2.4
+        version: 8.2.4(jiti@1.21.6)(postcss@8.4.45)(typescript@5.6.2)(yaml@2.5.1)
+
   packages/cli:
     dependencies:
       '@antfu/ni':
@@ -1652,7 +1671,6 @@ packages:
 
   '@motionone/vue@10.16.4':
     resolution: {integrity: sha512-z10PF9JV6SbjFq+/rYabM+8CVlMokgl8RFGvieSGNTmrkQanfHn+15XBrhG3BgUfvmTeSeyShfOHpG0i9zEdcg==}
-    deprecated: Motion One for Vue is deprecated. Use Oku Motion instead https://oku-ui.com/motion
 
   '@multiformats/base-x@4.0.1':
     resolution: {integrity: sha512-eMk0b9ReBbV23xXU693TAIrLyeO5iTgBZGSJfpqriG8UkYvr/hC9u9pyMlAakDNHWmbhMZCDs6KQO0jzKD8OTw==}
@@ -2625,9 +2643,6 @@ packages:
 
   '@types/node@18.15.13':
     resolution: {integrity: sha512-N+0kuo9KgrUQ1Sn/ifDXsvg0TTleP7rIy4zOBGECxAljqvqfqpTfzx0Q1NUedOixRMBfe2Whhb056a42cWs26Q==}
-
-  '@types/node@20.16.5':
-    resolution: {integrity: sha512-VwYCweNo3ERajwy0IUlqqcyZ8/A7Zwa9ZP3MnENWcB11AejO+tLy3pu850goUW2FC/IJMdZUfKpX/yxL1gymCA==}
 
   '@types/node@22.5.4':
     resolution: {integrity: sha512-FDuKUJQm/ju9fT/SeX/6+gBzoPzlVCzfzmGkwKvRHQVxi4BntVbyIwf6a4Xn62mrvndLiml6z/UBXIdEVjQLXg==}
@@ -5295,10 +5310,6 @@ packages:
 
   pkg-types@1.2.0:
     resolution: {integrity: sha512-+ifYuSSqOQ8CqP4MbZA5hDpb97n3E8SVWdJe+Wms9kj745lmd3b7EZJiqvmLwAlmRfjrI7Hi5z3kdBJ93lFNPA==}
-
-  pkijs@3.0.11:
-    resolution: {integrity: sha512-vwNdOt4MFi3r3Loghx55FawZ/xo2QeVh0Qh9Ona94Yuca6PcdgPnTsw9tnEBG2hYdWu/+5Kj/m/CKTfU4AwxVQ==}
-    engines: {node: '>=12.0.0'}
 
   pkijs@3.1.0:
     resolution: {integrity: sha512-N+OCWUp6xrg7OkG+4DIiZUOsp3qMztjq8RGCc1hSY92dsUG8cTlAo7pEkfRGjcdyBv2c1Y9bjAzqdTJAlctuNg==}
@@ -9507,7 +9518,7 @@ snapshots:
     dependencies:
       '@tokenscript/xml-core': 1.1.6
       asn1js: 3.0.5
-      pkijs: 3.0.11
+      pkijs: 3.1.0
       pvtsutils: 1.3.5
       pvutils: 1.1.3
       tslib: 2.7.0
@@ -9545,11 +9556,11 @@ snapshots:
 
   '@types/bn.js@4.11.6':
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 22.5.4
 
   '@types/bn.js@5.1.5':
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 22.5.4
 
   '@types/debug@4.1.12':
     dependencies:
@@ -9595,7 +9606,7 @@ snapshots:
 
   '@types/jsonfile@6.1.4':
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 22.5.4
 
   '@types/lodash.template@4.5.3':
     dependencies:
@@ -9617,10 +9628,6 @@ snapshots:
 
   '@types/node@18.15.13': {}
 
-  '@types/node@20.16.5':
-    dependencies:
-      undici-types: 6.19.8
-
   '@types/node@22.5.4':
     dependencies:
       undici-types: 6.19.8
@@ -9629,7 +9636,7 @@ snapshots:
 
   '@types/pbkdf2@3.1.2':
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 22.5.4
 
   '@types/prompts@2.4.9':
     dependencies:
@@ -9650,7 +9657,7 @@ snapshots:
 
   '@types/secp256k1@4.0.6':
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 22.5.4
 
   '@types/stack-utils@2.0.3': {}
 
@@ -13062,14 +13069,6 @@ snapshots:
       mlly: 1.7.1
       pathe: 1.1.2
 
-  pkijs@3.0.11:
-    dependencies:
-      asn1js: 3.0.5
-      bytestreamjs: 2.0.1
-      pvtsutils: 1.3.5
-      pvutils: 1.1.3
-      tslib: 2.7.0
-
   pkijs@3.1.0:
     dependencies:
       asn1js: 3.0.5
@@ -13157,7 +13156,7 @@ snapshots:
       '@protobufjs/pool': 1.1.0
       '@protobufjs/utf8': 1.1.0
       '@types/long': 4.0.2
-      '@types/node': 20.16.5
+      '@types/node': 22.5.4
       long: 4.0.0
 
   proxy-compare@2.5.1: {}
@@ -13453,7 +13452,7 @@ snapshots:
 
   rimraf@2.7.1:
     dependencies:
-      glob: 7.2.0
+      glob: 7.2.3
 
   rimraf@3.0.2:
     dependencies:
@@ -14411,8 +14410,8 @@ snapshots:
 
   webauthn-p256@0.0.5:
     dependencies:
-      '@noble/curves': 1.4.0
-      '@noble/hashes': 1.4.0
+      '@noble/curves': 1.4.2
+      '@noble/hashes': 1.5.0
 
   webcrypto-core@1.8.0:
     dependencies:
