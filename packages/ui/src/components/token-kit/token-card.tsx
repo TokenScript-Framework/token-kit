@@ -226,20 +226,18 @@ function ERC20TokenCard(props: ERC20TokenCardProps) {
             <h3 className="mb-2 text-lg font-semibold leading-none">Name</h3>
             <p className="text-muted-foreground text-sm">{name}</p>
           </div>
+
           <div className="relative w-full">
             <h3 className="mb-2 text-lg font-semibold leading-none">Symbol</h3>
             <p className="text-muted-foreground text-sm">{symbol}</p>
           </div>
-          {
-            <div className="relative w-full">
-              <h3 className="mb-2 text-lg font-semibold leading-none">
-                Balance
-              </h3>
-              <p className="text-muted-foreground text-sm">
-                {formatUnits(balance, decimals)}
-              </p>
-            </div>
-          }
+
+          <div className="relative w-full">
+            <h3 className="mb-2 text-lg font-semibold leading-none">Balance</h3>
+            <p className="text-muted-foreground text-sm">
+              {formatUnits(balance, decimals)}
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>
