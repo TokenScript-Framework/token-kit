@@ -16,6 +16,7 @@ export type TransformOpts = {
   filename: string;
   raw: string;
   config: Config;
+  shadcnConfig: Config;
   baseColor?: z.infer<typeof registryBaseColorSchema>;
 };
 

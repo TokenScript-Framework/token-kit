@@ -1,12 +1,35 @@
 import { Transformer } from "@/src/utils/transformers";
 
-export const transformImport: Transformer = async ({ sourceFile, config }) => {
+export const transformImport: Transformer = async ({
+  sourceFile,
+  config,
+  shadcnConfig,
+}) => {
   const importDeclarations = sourceFile.getImportDeclarations();
 
   for (const importDeclaration of importDeclarations) {
     const moduleSpecifier = importDeclaration.getModuleSpecifierValue();
 
-    // Replace @/registry/[style] with the components alias.
+    // Replace @/shadcn-registry/[style] with the shadcn components alias.
+    if (moduleSpecifier.startsWith("@/shadcn-registry/")) {
+      if (shadcnConfig.aliases.ui) {
+        importDeclaration.setModuleSpecifier(
+          moduleSpecifier.replace(
+            /^@\/shadcn-registry\/[^/]+\/ui/,
+            shadcnConfig.aliases.ui,
+          ),
+        );
+      } else {
+        importDeclaration.setModuleSpecifier(
+          moduleSpecifier.replace(
+            /^@\/shadcn-registry\/[^/]+/,
+            shadcnConfig.aliases.components,
+          ),
+        );
+      }
+    }
+
+    // Replace @/registry/[style] with the token-kit ui components alias.
     if (moduleSpecifier.startsWith("@/registry/")) {
       if (config.aliases.ui) {
         importDeclaration.setModuleSpecifier(

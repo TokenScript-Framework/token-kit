@@ -57,6 +57,14 @@ export const diff = new Command()
         process.exit(1);
       }
 
+      const shadcnConfig = await getConfig(cwd, "shadcn");
+      if (!shadcnConfig) {
+        logger.warn(
+          `Shadcn configuration is missing. Please setup shadcn ui first.`,
+        );
+        process.exit(1);
+      }
+
       const registryIndex = await getRegistryIndex();
 
       if (!options.component) {
@@ -117,7 +125,7 @@ export const diff = new Command()
         process.exit(1);
       }
 
-      const changes = await diffComponent(component, config);
+      const changes = await diffComponent(component, config, shadcnConfig);
 
       if (!changes.length) {
         logger.info(`No updates found for ${options.component}.`);
@@ -137,6 +145,7 @@ export const diff = new Command()
 async function diffComponent(
   component: z.infer<typeof registryIndexSchema>[number],
   config: Config,
+  shadcnConfig: Config,
 ) {
   const payload = await fetchTree(config.style, [component]);
   const baseColor = await getRegistryBaseColor(config.tailwind.baseColor);
@@ -163,6 +172,7 @@ async function diffComponent(
         filename: file.name,
         raw: file.content,
         config,
+        shadcnConfig,
         baseColor,
       });
 
