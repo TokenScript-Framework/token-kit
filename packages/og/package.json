@@ -7,12 +7,21 @@
   "module": "dist/index.js",
   "scripts": {
     "build": "tsup",
-    "prepare": "tsup"
-  },
-  "dependencies": {
-    "@tokenscript/engine-js": "1.5.2-alpha.1"
+    "prepare": "npm run build"
   },
   "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/node": "^22.5.4",
     "tsup": "^8.2.4"
+  },
+  "peerDependencies": {
+    "ethers": "^6.13.1",
+    "hono": "^4.5.11"
+  },
+  "dependencies": {
+    "jsdom": "^22.1.0",
+    "satori": "^0.10.14",
+    "sharp": "^0.33.5",
+    "token-kit": "file:token-kit-1.0.0.tgz"
   }
 }
