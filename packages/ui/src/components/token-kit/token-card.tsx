@@ -3,9 +3,8 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { erc1155ABI, rewriteUrlIfIFPSUrl, urlPipe, valuePipe } from "@/libs";
 import { useQuery } from "@tanstack/react-query";
-import BigNumber from "bignumber.js";
 import React from "react";
-import { erc20Abi, erc721Abi } from "viem";
+import { erc20Abi, erc721Abi, formatUnits } from "viem";
 import { useReadContract, useReadContracts } from "wagmi";
 
 export interface TokenCardProps {
@@ -154,42 +153,6 @@ export const TokenCard: React.FC<TokenCardProps> = ({
   );
 };
 
-function contractsForErc20(
-  chainId: number,
-  contract: `0x${string}`,
-  walletAddress?: string,
-) {
-  const contractInfo = [
-    {
-      chainId: chainId,
-      address: contract,
-      abi: erc20Abi,
-      functionName: "name",
-    },
-    {
-      chainId: chainId,
-      address: contract,
-      abi: erc20Abi,
-      functionName: "symbol",
-    },
-    {
-      chainId: chainId,
-      address: contract,
-      abi: erc20Abi,
-      functionName: "decimals",
-    },
-  ];
-  const balanceInfo = {
-    chainId: chainId,
-    address: contract,
-    abi: erc20Abi,
-    functionName: "balanceOf",
-    args: [walletAddress],
-  };
-
-  return walletAddress ? [...contractInfo, balanceInfo] : contractInfo;
-}
-
 function TokenCardSkeleton() {
   return (
     <Card>
@@ -216,9 +179,44 @@ type ERC20TokenCardProps = {
   onClick?: () => void;
 };
 function ERC20TokenCard(props: ERC20TokenCardProps) {
-  const { data: erc20Data } = useReadContracts({
-    contracts: contractsForErc20(props.chainId, props.contract, props.wallet),
+  const { chainId, contract, wallet } = props;
+  const { data } = useReadContracts({
+    allowFailure: false,
+    contracts: [
+      {
+        chainId: chainId,
+        address: contract,
+        abi: erc20Abi,
+        functionName: "name",
+      },
+      {
+        chainId: chainId,
+        address: contract,
+        abi: erc20Abi,
+        functionName: "symbol",
+      },
+
+      {
+        chainId: chainId,
+        address: contract,
+        abi: erc20Abi,
+        functionName: "decimals",
+      },
+      {
+        chainId: chainId,
+        address: contract,
+        abi: erc20Abi,
+        functionName: "balanceOf",
+        args: [wallet],
+      },
+    ],
   });
+
+  if (!data) {
+    return <TokenCardSkeleton />;
+  }
+
+  const [name, symbol, decimals, balance] = data;
 
   return (
     <Card>
@@ -226,30 +224,22 @@ function ERC20TokenCard(props: ERC20TokenCardProps) {
         <div className="flex flex-col gap-4">
           <div className="relative w-full">
             <h3 className="mb-2 text-lg font-semibold leading-none">Name</h3>
-            <p className="text-muted-foreground text-sm">
-              {erc20Data?.[0]?.result?.toString()}
-            </p>
+            <p className="text-muted-foreground text-sm">{name}</p>
           </div>
           <div className="relative w-full">
             <h3 className="mb-2 text-lg font-semibold leading-none">Symbol</h3>
-            <p className="text-muted-foreground text-sm">
-              {erc20Data?.[1]?.result?.toString()}
-            </p>
+            <p className="text-muted-foreground text-sm">{symbol}</p>
           </div>
-          {!!erc20Data?.[2]?.result && !!erc20Data?.[3]?.result && (
+          {
             <div className="relative w-full">
               <h3 className="mb-2 text-lg font-semibold leading-none">
                 Balance
               </h3>
               <p className="text-muted-foreground text-sm">
-                {new BigNumber(erc20Data?.[3]?.result.toString())
-                  .dividedBy(
-                    new BigNumber(10 ** Number(erc20Data?.[2]?.result)),
-                  )
-                  .toString()}
+                {formatUnits(balance, decimals)}
               </p>
             </div>
-          )}
+          }
         </div>
       </CardContent>
     </Card>

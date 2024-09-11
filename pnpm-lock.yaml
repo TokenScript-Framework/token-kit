@@ -316,9 +316,6 @@ importers:
       '@tokenscript/xmldsigjs':
         specifier: ^2.5.2
         version: 2.5.2
-      bignumber.js:
-        specifier: ^9.1.2
-        version: 9.1.2
       class-variance-authority:
         specifier: ^0.7.0
         version: 0.7.0
