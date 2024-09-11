@@ -82,22 +82,7 @@ export const TokenCard: React.FC<TokenCardProps> = ({
     }));
 
   if (!metadata) {
-    return (
-      <Card>
-        <CardHeader className="relative space-y-0 p-0">
-          <Skeleton className="w-full rounded-lg pb-[100%]" />
-        </CardHeader>
-        <CardContent className="p-4">
-          <div className="relative flex w-full items-center space-x-4">
-            <Skeleton className="h-12 w-12 rounded-full" />
-            <div className="space-y-2">
-              <Skeleton className="h-4 w-48" />
-              <Skeleton className="h-4 w-36" />
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-    );
+    return <TokenCardSkeleton />;
   }
 
   if (type === "ERC20") {
@@ -203,6 +188,25 @@ function contractsForErc20(
   };
 
   return walletAddress ? [...contractInfo, balanceInfo] : contractInfo;
+}
+
+function TokenCardSkeleton() {
+  return (
+    <Card>
+      <CardHeader className="relative space-y-0 p-0">
+        <Skeleton className="w-full rounded-lg pb-[100%]" />
+      </CardHeader>
+      <CardContent className="p-4">
+        <div className="relative flex w-full items-center space-x-4">
+          <Skeleton className="h-12 w-12 rounded-full" />
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-48" />
+            <Skeleton className="h-4 w-36" />
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
 }
 
 type ERC20TokenCardProps = {
