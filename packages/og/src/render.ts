@@ -162,8 +162,11 @@ export default class TsRender {
   }
   async toDocument() {
     const cards = this.params.metadata.cards;
-    const featuredCard = cards?.find((card) => card.buttonClass === "featured");
-    const nonFeaturedCards = cards?.filter(
+    const allCards = cards?.getAllCards();
+    const featuredCard = allCards?.find(
+      (card) => card.buttonClass === "featured",
+    );
+    const nonFeaturedCards = allCards?.filter(
       (card) => card.buttonClass !== "featured",
     );
 

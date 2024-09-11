@@ -1,7 +1,7 @@
-import { Eip1193Provider } from "ethers";
+import { Eip1193Provider, JsonRpcApiProvider } from "ethers";
 import { getTokenscriptMetadata } from "token-kit";
-import TsRender from "./render";
 import { svg2PngBuffer, svg2WebpBuffer } from "./imageProcess";
+import TsRender from "./render";
 
 export type ImageResponseOptions = {
   headers?: Record<string, string>;
@@ -12,7 +12,7 @@ export type ImageResponseOptions = {
 };
 
 export type MetadataOptions = {
-  provider: Eip1193Provider;
+  provider: Eip1193Provider | JsonRpcApiProvider;
   chainId: number;
   contract: `0x${string}`;
   imgBuffer: Buffer;
