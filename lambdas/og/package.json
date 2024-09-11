@@ -9,7 +9,9 @@
     "*.map"
   ],
   "scripts": {
+    "prebuild": "rm -fr dist",
     "build": "tsup",
+    "postbuild": "pnpm --prod --config.node-linker=hoisted --config.platform=linux --config.architecture=x64 --filter . deploy dist",
     "package": "cd dist && zip -9vddr - . > ../token-kit-og-lambda.zip"
   },
   "dependencies": {
