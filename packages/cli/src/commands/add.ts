@@ -65,6 +65,14 @@ export const add = new Command()
         process.exit(1);
       }
 
+      const shadcnConfig = await getConfig(cwd, "shadcn");
+      if (!shadcnConfig) {
+        logger.warn(
+          `Shadcn configuration is missing. Please setup shadcn ui first.`,
+        );
+        process.exit(1);
+      }
+
       const registryIndex = await getRegistryIndex();
 
       let selectedComponents = options.all
@@ -169,6 +177,7 @@ export const add = new Command()
             filename: file.name,
             raw: file.content,
             config,
+            shadcnConfig,
             baseColor,
           });
 
