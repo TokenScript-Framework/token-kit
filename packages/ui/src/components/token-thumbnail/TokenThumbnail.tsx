@@ -1,18 +1,18 @@
-import { Card, CardContent } from "@/components/shadcn/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import React from "react";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/shadcn/ui/tooltip";
-import { Badge } from "@/components/shadcn/ui/badge";
+} from "@/components/ui/tooltip";
+import { Badge } from "@/components/ui/badge";
 import { ShieldCheck, ShieldX } from "lucide-react";
 import {
   Avatar,
   AvatarFallback,
   AvatarImage,
-} from "@/components/shadcn/ui/avatar";
+} from "@/components/ui/avatar";
 import { addressPipe } from "@/libs";
 
 type TokenCollection = {

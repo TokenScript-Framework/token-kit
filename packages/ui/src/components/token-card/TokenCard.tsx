@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader } from "@/components/shadcn/ui/card";
-import { ScrollArea, ScrollBar } from "@/components/shadcn/ui/scroll-area";
-import { Skeleton } from "@/components/shadcn/ui/skeleton";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { Skeleton } from "@/components/ui/skeleton";
 import { erc1155ABI, rewriteUrlIfIFPSUrl, urlPipe, valuePipe } from "@/libs";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";

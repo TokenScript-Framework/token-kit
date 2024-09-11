@@ -16,3 +16,5 @@ cache
 .vscode
 *.tgz
 coverage
+
+.idea/
