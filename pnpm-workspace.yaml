@@ -2,4 +2,3 @@ packages:
   - "apps/*"
   - "apis/*"
   - "packages/*"
-  - "templates/*"
