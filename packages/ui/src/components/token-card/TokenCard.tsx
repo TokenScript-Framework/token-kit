@@ -4,10 +4,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { erc1155ABI, rewriteUrlIfIFPSUrl, urlPipe, valuePipe } from "@/libs";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import React from "react";
-import { erc721Abi, erc20Abi } from "viem";
-import { useReadContract, useReadContracts } from "wagmi";
 import BigNumber from "bignumber.js";
+import React from "react";
+import { erc20Abi, erc721Abi } from "viem";
+import { useReadContract, useReadContracts } from "wagmi";
 
 export interface TokenCardProps {
   type: "ERC20" | "ERC721" | "ERC1155";
