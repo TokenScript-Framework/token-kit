@@ -3,7 +3,6 @@ import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { erc1155ABI, rewriteUrlIfIFPSUrl, urlPipe, valuePipe } from "@/libs";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import BigNumber from "bignumber.js";
 import React from "react";
 import { erc20Abi, erc721Abi } from "viem";
@@ -47,8 +46,11 @@ export const TokenCard: React.FC<TokenCardProps> = ({
   const { data: erc721Metadata } = useQuery({
     queryKey: ["metadata", chainId, contract, tokenId],
     queryFn: async () => {
-      const res = await axios.get(rewriteUrlIfIFPSUrl(erc721TokenURI!));
-      return res.data;
+      const response = await fetch(rewriteUrlIfIFPSUrl(erc721TokenURI!));
+      if (!response.ok) {
+        throw new Error("Network error");
+      }
+      return response.json();
     },
     enabled: !!erc721TokenURI,
   });
@@ -67,10 +69,13 @@ export const TokenCard: React.FC<TokenCardProps> = ({
   const { data: erc1155Metadata } = useQuery({
     queryKey: ["metadata", chainId, contract, tokenId],
     queryFn: async () => {
-      const res = await axios.get(
+      const response = await fetch(
         rewriteUrlIfIFPSUrl(erc1155TokenURI as string),
       );
-      return res.data;
+      if (!response.ok) {
+        throw new Error("Network error");
+      }
+      return response.json();
     },
     enabled: !!erc1155TokenURI,
   });
