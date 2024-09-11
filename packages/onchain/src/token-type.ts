@@ -1,8 +1,8 @@
 import {
-  INTERFACE_IDS,
+  InterfaceIds,
   SUB_TYPES,
   SUBTYPE_INTERFACEIDS,
-  TOKEN_TYPES,
+  TokenTypes,
   TokenType,
   UNKNOWN_TYPE,
 } from "./constant";
@@ -34,14 +34,14 @@ async function detectTokenType(
   client: PublicClient,
 ): Promise<{ type: string }> {
   const tokenTypeChecks = [
-    { check: isERC20(address, client), type: TOKEN_TYPES.ERC20 },
+    { check: isERC20(address, client), type: TokenTypes.ERC20 },
     {
-      check: isSupportedToken(address, INTERFACE_IDS["ERC721"], client),
-      type: TOKEN_TYPES.ERC721,
+      check: isSupportedToken(address, InterfaceIds["ERC721"], client),
+      type: TokenTypes.ERC721,
     },
     {
-      check: isSupportedToken(address, INTERFACE_IDS["ERC1155"], client),
-      type: TOKEN_TYPES.ERC1155,
+      check: isSupportedToken(address, InterfaceIds["ERC1155"], client),
+      type: TokenTypes.ERC1155,
     },
   ];
 
