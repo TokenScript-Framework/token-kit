@@ -57,15 +57,28 @@ export async function tokenData(
       return result;
     }
     case TokenTypes.ERC1155: {
-      const onChainData = (await fetchERC1155TokenData(
-        client,
-        address,
-        normalizeTokenId(tokenId),
-      )) as ERC1155TokenData;
-      return {
+      const result = {
         type,
-        ...onChainData,
-      };
+        ...(await fetchERC1155TokenData(
+          client,
+          address,
+          normalizeTokenId(tokenId),
+        )),
+      } as ERC1155TokenData;
+
+      if (opts.includeTokenMetadata) {
+        result.tokenMetadata = await opts.fetchHandler(result.uri);
+      }
+
+      // So far, no ERC1155 token has contractURI is found, but keep the logic here
+      if (opts.includeContractMetadata) {
+        const contractURI = await fetchOpenseaContractURI(client, address);
+        if (contractURI) {
+          result.contractMetadata = await opts.fetchHandler(contractURI);
+        }
+      }
+
+      return result;
     }
     default:
       throw new Error("Unsupported token type");
