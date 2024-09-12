@@ -21,7 +21,6 @@
       "require": "./dist/index.cjs"
     }
   },
-  "author": "SLN",
   "license": "GPL-3.0-only",
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
@@ -29,7 +28,6 @@
     "react": "^18",
     "tailwind-merge": "^2.4.0",
     "tslib": "^2.6.3",
-    "typescript": "^5",
     "webcrypto-liner": "^1.4.3"
   },
   "dependencies": {

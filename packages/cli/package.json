@@ -6,9 +6,6 @@
     "access": "public"
   },
   "license": "GPL-3.0-only",
-  "author": {
-    "name": "Smart Token Labs"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TokenScript-Framework/token-kit.git",
@@ -71,7 +68,6 @@
     "@types/lodash.template": "^4.5.1",
     "@types/prompts": "^2.4.2",
     "rimraf": "^4.1.3",
-    "type-fest": "^3.8.0",
-    "typescript": "^4.9.3"
+    "type-fest": "^3.8.0"
   }
 }
