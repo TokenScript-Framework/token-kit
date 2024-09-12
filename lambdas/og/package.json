@@ -1,5 +1,6 @@
 {
   "name": "@token-kit/og-lambda",
+  "license": "GPL-3.0-only",
   "version": "0.0.1",
   "description": "aws cloudfront lambda@edge for generate token open graph image",
   "main": "dist/index.js",

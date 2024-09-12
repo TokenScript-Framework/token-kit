@@ -1,5 +1,6 @@
 {
   "name": "@token-kit/og",
+  "license": "GPL-3.0-only",
   "version": "0.0.1",
   "description": "token-kit opengraph image generator",
   "type": "module",

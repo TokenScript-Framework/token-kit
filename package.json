@@ -1,4 +1,5 @@
 {
+  "license": "GPL-3.0-only",
   "scripts": {
     "build": "pnpm -r build",
     "lint": "pnpm -r lint"

@@ -5,7 +5,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "author": {
     "name": "Smart Token Labs"
   },

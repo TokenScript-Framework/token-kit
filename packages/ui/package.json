@@ -23,7 +23,7 @@
   },
   "keywords": [],
   "author": "SLN",
-  "license": "MIT",
+  "license": "GPL-3.0-only",
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
     "@types/react": "^18",

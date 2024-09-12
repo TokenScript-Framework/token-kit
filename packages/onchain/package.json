@@ -1,5 +1,6 @@
 {
   "name": "@token-kit/onchain",
+  "license": "GPL-3.0-only",
   "description": "token-kit onchain tools",
   "type": "module",
   "main": "dist/index.cjs",
