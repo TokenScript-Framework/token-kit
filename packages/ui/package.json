@@ -1,27 +1,26 @@
 {
   "name": "@token-kit/ui",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "kit for smart token",
   "type": "module",
   "scripts": {
     "dev": "tsup --watch",
     "build": "tsup",
-    "prepare": "npm run build"
+    "prepare": "tsup"
   },
   "files": [
     "dist/"
   ],
-  "main": "./dist/index.js",
+  "main": "./dist/index.cjs",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "require": "./dist/index.cjs"
     }
   },
-  "keywords": [],
   "author": "SLN",
   "license": "GPL-3.0-only",
   "devDependencies": {

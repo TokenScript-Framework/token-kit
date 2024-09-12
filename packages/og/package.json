@@ -19,12 +19,17 @@
       }
     }
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TokenScript-Framework/token-kit.git",
+    "directory": "packages/og"
+  },
   "files": [
     "dist/"
   ],
   "scripts": {
     "build": "tsup",
-    "prepare": "npm run build"
+    "prepare": "tsup"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",

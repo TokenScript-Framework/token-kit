@@ -17,6 +17,7 @@
   },
   "scripts": {
     "build": "tsup",
+    "prepare": "tsup",
     "lint": "eslint",
     "test": "c8 ava"
   },

@@ -3,7 +3,7 @@
 ## build
 
 ```sh
-npm run rollup
+npm run build
 ```
 
 ## Components
