@@ -30,7 +30,6 @@
     "react": "^18",
     "tailwind-merge": "^2.4.0",
     "tslib": "^2.6.3",
-    "tsup": "^8.1.0",
     "typescript": "^5",
     "webcrypto-liner": "^1.4.3"
   },
