@@ -1,8 +1,9 @@
 import fs from "fs";
 import jsdom from "jsdom";
 import path from "path";
-import { TsMetadata } from "token-kit";
+import { getTokenscriptMetadata, TsMetadata } from "token-kit";
 
+import { Eip1193Provider, JsonRpcApiProvider } from "ethers";
 import satori, { SatoriOptions } from "satori";
 
 const SpaceGroteskFont = fs.readFileSync(
@@ -13,6 +14,18 @@ const SpaceGroteskFontBold = fs.readFileSync(
 );
 
 const Node = new jsdom.JSDOM().window.Node;
+
+export type MetadataOptions = {
+  provider: Eip1193Provider | JsonRpcApiProvider;
+  chainId: number;
+  contract: `0x${string}`;
+  imgBuffer: Buffer;
+  context?: {
+    tokenId: string;
+    originIndex?: number;
+  };
+  index?: number;
+};
 
 export default class TsRender {
   private readonly defaultCss = `
@@ -160,10 +173,31 @@ export default class TsRender {
       }
     }
   }
+
+  static async from(params: MetadataOptions): Promise<TsRender> {
+    const metadata = await getTokenscriptMetadata(
+      params.provider,
+      params.chainId,
+      params.contract,
+      params.context,
+      { css: true, cards: true },
+      params.index,
+    );
+    return new TsRender({
+      metadata,
+      image: params.imgBuffer,
+      name: metadata.name,
+      description: metadata.name,
+    });
+  }
+
   async toDocument() {
     const cards = this.params.metadata.cards;
-    const featuredCard = cards?.find((card) => card.buttonClass === "featured");
-    const nonFeaturedCards = cards?.filter(
+    const allCards = cards?.getAllCards();
+    const featuredCard = allCards?.find(
+      (card) => card.buttonClass === "featured",
+    );
+    const nonFeaturedCards = allCards?.filter(
       (card) => card.buttonClass !== "featured",
     );
 

@@ -1,7 +1,5 @@
-import { Eip1193Provider } from "ethers";
-import { getTokenscriptMetadata } from "token-kit";
-import TsRender from "./render";
 import { svg2PngBuffer, svg2WebpBuffer } from "./imageProcess";
+import TsRender, { MetadataOptions } from "./render";
 
 export type ImageResponseOptions = {
   headers?: Record<string, string>;
@@ -9,18 +7,6 @@ export type ImageResponseOptions = {
   debug?: boolean;
   status?: number;
   statusText?: string;
-};
-
-export type MetadataOptions = {
-  provider: Eip1193Provider;
-  chainId: number;
-  contract: `0x${string}`;
-  imgBuffer: Buffer;
-  context?: {
-    tokenId: string;
-    originIndex?: number;
-  };
-  index?: number;
 };
 
 export class ImageResponseBase extends Response {
@@ -41,20 +27,7 @@ export class ImageResponseBase extends Response {
 
     const body = new ReadableStream({
       async start(controller) {
-        const metadata = await getTokenscriptMetadata(
-          params.provider,
-          params.chainId,
-          params.contract,
-          params.context,
-          { css: true, cards: true },
-          params.index,
-        );
-        const converter = new TsRender({
-          metadata,
-          image: params.imgBuffer,
-          name: metadata.name,
-          description: metadata.name,
-        });
+        const converter = await TsRender.from(params);
         const svg = await converter.toSvg();
         let data: string | Buffer;
         switch (format) {

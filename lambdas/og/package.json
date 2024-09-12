@@ -1,0 +1,26 @@
+{
+  "name": "@token-kit/og-lambda",
+  "version": "0.0.1",
+  "description": "aws cloudfront lambda@edge for generate token open graph image",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "*.js",
+    "*.map"
+  ],
+  "scripts": {
+    "prebuild": "rm -fr dist",
+    "build": "tsup",
+    "postbuild": "pnpm --prod --config.node-linker=hoisted --config.platform=linux --config.architecture=x64 --filter . deploy dist",
+    "package": "cd dist && zip -9vddr - . > ../token-kit-og-lambda.zip"
+  },
+  "dependencies": {
+    "@token-kit/og": "workspace:*",
+    "ethers": "^6.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.5.4",
+    "source-map-support": "^0.5.21",
+    "tsup": "^8.2.4"
+  }
+}
