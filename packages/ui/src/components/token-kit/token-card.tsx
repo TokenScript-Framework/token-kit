@@ -2,7 +2,6 @@
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
-import { erc1155ABI, rewriteUrlIfIpfsUrl, urlPipe, valuePipe } from "@/libs";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { erc20Abi, erc721Abi, formatUnits } from "viem";
@@ -68,7 +67,6 @@ function ERC20TokenCard(props: ERC20TokenCardProps) {
         abi: erc20Abi,
         functionName: "symbol",
       },
-
       {
         chainId: chainId,
         address: contract,
@@ -228,30 +226,30 @@ export const ERC1155TokenCard: React.FC<ERC1155TokenCardProps> = ({
   tokenId = "0",
   onClick,
 }) => {
-  const { data: erc721TokenURI } = useReadContract({
-    chainId: chainId,
-    address: contract,
-    abi: erc721Abi,
-    functionName: "tokenURI",
-    args: [BigInt(tokenId)],
-  });
-
-  const { data: erc721Metadata } = useQuery({
-    queryKey: ["metadata", chainId, contract, tokenId],
-    queryFn: async () => {
-      const response = await fetch(rewriteUrlIfIpfsUrl(erc721TokenURI!));
-      if (!response.ok) {
-        throw new Error("Network error");
-      }
-      return response.json();
-    },
-    enabled: !!erc721TokenURI,
-  });
-
   const { data: erc1155TokenURI } = useReadContract({
     chainId: chainId,
     address: contract,
-    abi: erc1155ABI,
+    abi: [
+      {
+        inputs: [
+          {
+            internalType: "uint256",
+            name: "id",
+            type: "uint256",
+          },
+        ],
+        name: "uri",
+        outputs: [
+          {
+            internalType: "string",
+            name: "",
+            type: "string",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+    ],
     functionName: "uri",
     args: [BigInt(tokenId)],
   });
@@ -270,7 +268,7 @@ export const ERC1155TokenCard: React.FC<ERC1155TokenCardProps> = ({
     enabled: !!erc1155TokenURI,
   });
 
-  const metadata = erc721Metadata || erc1155Metadata;
+  const metadata = erc1155Metadata;
   const attributes =
     metadata?.attributes ||
     Object.entries(erc1155Metadata?.properties || {}).map(([key, value]) => ({
@@ -345,3 +343,31 @@ export const ERC1155TokenCard: React.FC<ERC1155TokenCardProps> = ({
     </Card>
   );
 };
+
+function addressPipe(address: string, start: number = 38) {
+  return `${address.slice(0, 6)}...${address.slice(start)}`;
+}
+
+function valuePipe(value: string) {
+  return value.indexOf("0x") === 0 ? addressPipe(value) : value;
+}
+
+function urlPipe(url: string) {
+  return `${url.slice(0, 10)}...${url.slice(-4)}`;
+}
+
+function rewriteUrlIfIpfsUrl(url: string) {
+  if (!url) {
+    return "";
+  } else if (url.toLowerCase().startsWith("https://ipfs.io/ipfs")) {
+    return url.replace(
+      "https://ipfs.io/ipfs",
+      "https://gateway.pinata.cloud/ipfs",
+    );
+  } else if (url.toLowerCase().startsWith("ipfs://ipfs")) {
+    return url.replace("ipfs://ipfs", "https://gateway.pinata.cloud/ipfs");
+  } else if (url.toLowerCase().startsWith("ipfs://")) {
+    return url.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/");
+  }
+  return url;
+}
