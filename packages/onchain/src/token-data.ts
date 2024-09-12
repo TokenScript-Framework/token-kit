@@ -7,13 +7,15 @@ import {
   TokenTypes,
 } from "./constant";
 import { tokenType } from "./token-type";
-import { ERC1155_ABI } from "./abi";
+import { ERC1155_ABI, OPENSEA_CONTRACT_URI_ABI } from "./abi";
 import { rewriteUrlIfIFPSUrl } from "./libs/url-rewrite";
 import axios from "axios";
 
 const defaultOptions: TokenDataOptions = {
   includeTokenMetadata: false,
   includeContractMetadata: false,
+  fetchHandler: async (uri: string) =>
+    (await axios.get(rewriteUrlIfIFPSUrl(uri))).data,
 };
 
 export async function tokenData(
@@ -42,19 +44,24 @@ export async function tokenData(
       } as ERC721TokenData;
 
       if (opts.includeTokenMetadata) {
-        const metadata = (await axios.get(rewriteUrlIfIFPSUrl(result.tokenURI)))
-          .data;
-        result.tokenMetadata = metadata;
+        result.tokenMetadata = await opts.fetchHandler(result.tokenURI);
+      }
+
+      if (opts.includeContractMetadata) {
+        const contractURI = await fetchOpenseaContractURI(client, address);
+        if (contractURI) {
+          result.contractMetadata = await opts.fetchHandler(contractURI);
+        }
       }
 
       return result;
     }
     case TokenTypes.ERC1155: {
-      const onChainData = await fetchERC1155TokenData(
+      const onChainData = (await fetchERC1155TokenData(
         client,
         address,
         normalizeTokenId(tokenId),
-      );
+      )) as ERC1155TokenData;
       return {
         type,
         ...onChainData,
@@ -138,7 +145,7 @@ async function fetchERC721TokenData(
 
   return {
     owner: results[0] as `0x${string}`,
-    tokenURI: results[1] as string,
+    tokenURI: results[1],
   };
 }
 
@@ -164,6 +171,21 @@ async function fetchERC1155TokenData(
   const results = await Promise.all(contracts.map(client.readContract));
 
   return {
-    uri: results[0] as `0x${string}`,
+    uri: results[0],
   };
+}
+
+async function fetchOpenseaContractURI(
+  client: PublicClient,
+  address: `0x${string}`,
+) {
+  try {
+    return (await client.readContract({
+      address,
+      abi: OPENSEA_CONTRACT_URI_ABI,
+      functionName: "contractURI",
+    })) as string;
+  } catch {
+    return null;
+  }
 }
