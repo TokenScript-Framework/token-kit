@@ -4,7 +4,7 @@
   "description": "The snap for tapp.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/TokenScript-Framework/token-kit/tree/main/packages/snap"
+    "url": "https://github.com/TokenScript-Framework/token-kit/tree/main/packages/tapp-snap"
   },
   "license": "MIT",
   "main": "./dist/bundle.js",
