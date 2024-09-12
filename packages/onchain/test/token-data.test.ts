@@ -103,6 +103,22 @@ test("ERC1155 - should return token data with type", async (t) => {
   });
 });
 
+test("ERC1155 - should fetch token metadata when includeTokenMetadata is true", async (t) => {
+  const client = createPublicClient({
+    chain: mainnet,
+    transport: http(getRPCURL(1)),
+  });
+
+  const result = (await tokenData(
+    client as PublicClient,
+    "0x495f947276749Ce646f68AC8c248420045cb7b5e",
+    1,
+    { includeTokenMetadata: true },
+  )) as ERC1155TokenData;
+
+  t.truthy(result.tokenMetadata);
+});
+
 test("UNKNOWN - should throw error", async (t) => {
   const client = createPublicClient({
     chain: mainnet,
