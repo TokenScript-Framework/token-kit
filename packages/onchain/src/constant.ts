@@ -36,7 +36,7 @@ export enum InterfaceIds {
   ERC1155 = "0xd9b67a26",
 }
 
-export const UNKNOWN_TYPE = "Unknown Type";
+export const UNKNOWN = "Unknown";
 
 export type TokenType = {
   type: string;

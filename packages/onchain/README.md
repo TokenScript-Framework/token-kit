@@ -31,9 +31,9 @@ For `type`, this function supports the following types:
 - ERC20
 - ERC721
 - ERC1155
-- Unknown Type: If the contract doesn't match any of the above standards
+- Unknown: If the contract doesn't match any of the above standards
 
-For `scriptURI`, it supports the following types:
+For `subTypes`, it supports the following types:
 
 - ERC5169
 - IERC721TokenReceiver
@@ -46,7 +46,7 @@ For ERC5169 tokens, the function will return the `scriptURI` if available.
 
 ### Error Handling
 
-If an error occurs during the detection process, the function will return `{ type: "Unknown Type" }`.
+If an error occurs during the detection process, the function will return `{ type: "Unknown" }`.
 
 ### Dependencies
 

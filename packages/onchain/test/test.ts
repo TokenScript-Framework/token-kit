@@ -25,7 +25,7 @@ test("test ERC721 on Sepolia", async (t) => {
   t.truthy(result.scriptURI, "scriptURI should not be empty");
 });
 
-test("test unknown type on Sepolia", async (t) => {
+test("test Unknown type on Sepolia", async (t) => {
   const client = createPublicClient({
     chain: sepolia,
     transport: http(getRPCURL(11155111)),
@@ -36,7 +36,7 @@ test("test unknown type on Sepolia", async (t) => {
     client as PublicClient,
   );
 
-  t.is(result.type, "Unknown Type", "Should return Unknown Type.");
+  t.is(result.type, "Unknown", "Should return Unknown.");
   t.is(result.subTypes, undefined, "subTypes should be undefined for ERC20");
 });
 

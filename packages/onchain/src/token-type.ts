@@ -4,7 +4,7 @@ import {
   SUBTYPE_INTERFACEIDS,
   TokenTypes,
   TokenType,
-  UNKNOWN_TYPE,
+  UNKNOWN,
 } from "./constant";
 import { ERC165_ABI, ERC20_ABI, ERC5169_ABI } from "./abi";
 import { parseAbi, PublicClient, zeroAddress } from "viem";
@@ -15,7 +15,7 @@ export async function tokenType(
 ): Promise<TokenType> {
   try {
     const mainType = await detectTokenType(address, client);
-    if (mainType.type === UNKNOWN_TYPE) {
+    if (mainType.type === UNKNOWN) {
       return mainType;
     }
     const subTypes = await detectSubTokenType(mainType, address, client);
@@ -25,7 +25,7 @@ export async function tokenType(
       ...subTypes,
     };
   } catch {
-    return { type: UNKNOWN_TYPE };
+    return { type: UNKNOWN };
   }
 }
 
@@ -36,18 +36,18 @@ async function detectTokenType(
   const tokenTypeChecks = [
     { check: isERC20(address, client), type: TokenTypes.ERC20 },
     {
-      check: isSupportedToken(address, InterfaceIds["ERC721"], client),
+      check: isSupported(address, InterfaceIds["ERC721"], client),
       type: TokenTypes.ERC721,
     },
     {
-      check: isSupportedToken(address, InterfaceIds["ERC1155"], client),
+      check: isSupported(address, InterfaceIds["ERC1155"], client),
       type: TokenTypes.ERC1155,
     },
   ];
 
   const results = await Promise.all(tokenTypeChecks.map(({ check }) => check));
   const type =
-    tokenTypeChecks.find((_, index) => results[index])?.type || UNKNOWN_TYPE;
+    tokenTypeChecks.find((_, index) => results[index])?.type || UNKNOWN;
 
   return { type };
 }
@@ -69,7 +69,7 @@ async function detectSubTokenType(
         scriptURI = result.isERC5169 ? result.scriptURI : [];
         return result.isERC5169 ? "ERC5169" : null;
       } else {
-        const result = await isSupportedInterface(
+        const result = await isSupported(
           address,
           SUBTYPE_INTERFACEIDS[tokenType.type][`${subType}`],
           client,
@@ -87,7 +87,7 @@ async function detectSubTokenType(
   };
 }
 
-async function isSupportedToken(
+async function isSupported(
   address: string,
   interfaceId: string,
   client: PublicClient,
@@ -102,23 +102,6 @@ async function isSupportedToken(
       functionName: "supportsInterface",
       args: [interfaceId],
     });
-  } catch {
-    return false;
-  }
-}
-
-async function isSupportedInterface(address, interfaceId, client) {
-  const contract = {
-    address: address as `0x${string}`,
-    abi: parseAbi(ERC165_ABI),
-  };
-  try {
-    const result = await client.readContract({
-      ...contract,
-      functionName: "supportsInterface",
-      args: [interfaceId],
-    });
-    return result;
   } catch {
     return false;
   }
