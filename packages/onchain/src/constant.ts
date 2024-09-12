@@ -43,3 +43,36 @@ export type TokenType = {
   subTypes?: string[];
   scriptURI?: string[];
 };
+
+export interface ERC20TokenData {
+  type: TokenType;
+  name: string;
+  symbol: string;
+  decimals: number;
+  totalSupply: number;
+}
+
+export interface ERC721TokenData {
+  type: TokenType;
+  owner: `0x${string}`;
+  tokenURI: string;
+  tokenMetadata?: object;
+  contractMetadata?: object;
+}
+
+export interface ERC1155TokenData {
+  type: TokenType;
+  owner: `0x${string}`;
+  balance: number;
+  uri: string;
+  tokenMetadata?: object;
+  contractMetadata?: object;
+}
+
+export type FetchHandler = (uri: string) => Promise<unknown>;
+
+export type TokenDataOptions = {
+  includeTokenMetadata?: boolean;
+  includeContractMetadata?: boolean;
+  fetchHandler?: FetchHandler;
+};
