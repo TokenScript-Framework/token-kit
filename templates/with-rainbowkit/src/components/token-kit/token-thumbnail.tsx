@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { ShieldCheck, ShieldX } from "lucide-react";
-import React from "react";
 
 type TokenCollection = {
   verified: boolean;
