@@ -62,8 +62,6 @@ export interface ERC721TokenData {
 
 export interface ERC1155TokenData {
   type: TokenType;
-  owner: `0x${string}`;
-  balance: number;
   uri: string;
   tokenMetadata?: object;
   contractMetadata?: object;
