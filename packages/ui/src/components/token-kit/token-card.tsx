@@ -52,36 +52,7 @@ type ERC20TokenCardProps = {
 };
 function ERC20TokenCard(props: ERC20TokenCardProps) {
   const { chainId, contract, wallet } = props;
-  const { data } = useReadContracts({
-    allowFailure: false,
-    contracts: [
-      {
-        chainId: chainId,
-        address: contract,
-        abi: erc20Abi,
-        functionName: "name",
-      },
-      {
-        chainId: chainId,
-        address: contract,
-        abi: erc20Abi,
-        functionName: "symbol",
-      },
-      {
-        chainId: chainId,
-        address: contract,
-        abi: erc20Abi,
-        functionName: "decimals",
-      },
-      {
-        chainId: chainId,
-        address: contract,
-        abi: erc20Abi,
-        functionName: "balanceOf",
-        args: [wallet],
-      },
-    ],
-  });
+  const { data } = useERC20Balance({ chainId, contract, wallet });
 
   if (!data) {
     return <TokenCardSkeleton />;
@@ -331,4 +302,45 @@ function rewriteUrlIfIpfsUrl(url: string) {
     return url.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/");
   }
   return url;
+}
+
+function useERC20Balance({
+  chainId,
+  contract,
+  wallet,
+}: {
+  chainId: number;
+  contract: `0x${string}`;
+  wallet: `0x${string}`;
+}) {
+  return useReadContracts({
+    allowFailure: false,
+    contracts: [
+      {
+        chainId: chainId,
+        address: contract,
+        abi: erc20Abi,
+        functionName: "name",
+      },
+      {
+        chainId: chainId,
+        address: contract,
+        abi: erc20Abi,
+        functionName: "symbol",
+      },
+      {
+        chainId: chainId,
+        address: contract,
+        abi: erc20Abi,
+        functionName: "decimals",
+      },
+      {
+        chainId: chainId,
+        address: contract,
+        abi: erc20Abi,
+        functionName: "balanceOf",
+        args: [wallet],
+      },
+    ],
+  });
 }
