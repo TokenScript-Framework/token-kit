@@ -121,8 +121,12 @@ interface ERC721TokenCardProps {
   tokenId: string;
   onClick?: () => void;
 }
-function ERC721TokenCard(props: ERC721TokenCardProps) {
-  const { chainId, contract, tokenId, onClick } = props;
+function ERC721TokenCard({
+  chainId,
+  contract,
+  tokenId,
+  ...props
+}: ERC721TokenCardProps) {
   const { data: erc721TokenURI } = useReadContract({
     chainId,
     address: contract,
@@ -151,66 +155,11 @@ function ERC721TokenCard(props: ERC721TokenCardProps) {
   }
 
   return (
-    <Card>
-      <CardHeader
-        className="relative cursor-pointer space-y-0 p-0"
-        onClick={onClick}
-      >
-        <img
-          className="rounded-lg"
-          src={rewriteUrlIfIpfsUrl(metadata?.image)}
-        />
-      </CardHeader>
-      <CardContent className="p-4">
-        <div className="flex flex-col gap-4">
-          <div className="relative w-full">
-            <h3 className="mb-2 text-lg font-semibold leading-none">
-              Description
-            </h3>
-            <p className="text-muted-foreground text-sm">
-              {metadata?.description}
-            </p>
-          </div>
-          <div className="w-full">
-            <h3 className="mb-2 text-lg font-semibold leading-none">Traits</h3>
-            <ScrollArea className="w-full whitespace-nowrap rounded-md border p-2">
-              <div className="flex w-full gap-2">
-                {attributes?.map(
-                  ({
-                    trait_type,
-                    value,
-                  }: {
-                    trait_type: string;
-                    value: string;
-                  }) => {
-                    return (
-                      <div
-                        key={trait_type}
-                        className="bg-primary-100/10 flex w-full flex-col items-center rounded-md border"
-                      >
-                        <div className="font-semibold">{trait_type}</div>
-                        {value.toString().indexOf("https://") === 0 ? (
-                          <a
-                            href={value}
-                            target="_blank"
-                            className="text-primary-500 cursor-pointer underline"
-                          >
-                            {shortenUrl(value)}
-                          </a>
-                        ) : (
-                          <div>{formatValueOrAddress(value.toString())}</div>
-                        )}
-                      </div>
-                    );
-                  },
-                )}
-              </div>
-              <ScrollBar orientation="horizontal" />
-            </ScrollArea>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
+    <TokenMetadataDisplay
+      metadata={metadata}
+      attributes={attributes}
+      {...props}
+    />
   );
 }
 
@@ -223,8 +172,8 @@ interface ERC1155TokenCardProps {
 export const ERC1155TokenCard: React.FC<ERC1155TokenCardProps> = ({
   chainId,
   contract,
-  tokenId = "0",
-  onClick,
+  tokenId,
+  ...props
 }) => {
   const { data: erc1155TokenURI } = useReadContract({
     chainId: chainId,
@@ -254,7 +203,7 @@ export const ERC1155TokenCard: React.FC<ERC1155TokenCardProps> = ({
     args: [BigInt(tokenId)],
   });
 
-  const { data: erc1155Metadata } = useQuery({
+  const { data: metadata } = useQuery({
     queryKey: ["metadata", chainId, contract, tokenId],
     queryFn: async () => {
       const response = await fetch(
@@ -263,29 +212,46 @@ export const ERC1155TokenCard: React.FC<ERC1155TokenCardProps> = ({
       if (!response.ok) {
         throw new Error("Network error");
       }
-      return response.json();
+      return (await response.json()) as {
+        name: string;
+        decimals: string;
+        description: string;
+        image: string;
+        properties: { [key: string]: string };
+      };
     },
     enabled: !!erc1155TokenURI,
   });
 
-  const metadata = erc1155Metadata;
-  const attributes =
-    metadata?.attributes ||
-    Object.entries(erc1155Metadata?.properties || {}).map(([key, value]) => ({
-      trait_type: key,
-      value,
-    }));
+  const attributes = Object.entries(metadata?.properties || {}).map(
+    ([key, value]) => ({ trait_type: key, value }),
+  );
 
   if (!metadata) {
     return <TokenCardSkeleton />;
   }
 
   return (
+    <TokenMetadataDisplay
+      metadata={metadata}
+      attributes={attributes}
+      {...props}
+    />
+  );
+};
+
+interface TokenMetadataDisplayProps {
+  metadata: { image: string; description?: string };
+  attributes?: Array<{ trait_type: string; value: string }>;
+}
+
+export const TokenMetadataDisplay: React.FC<TokenMetadataDisplayProps> = ({
+  metadata,
+  attributes,
+}) => {
+  return (
     <Card>
-      <CardHeader
-        className="relative cursor-pointer space-y-0 p-0"
-        onClick={onClick}
-      >
+      <CardHeader className="relative cursor-pointer space-y-0 p-0">
         <img
           className="rounded-lg"
           src={rewriteUrlIfIpfsUrl(metadata?.image)}
@@ -301,39 +267,32 @@ export const ERC1155TokenCard: React.FC<ERC1155TokenCardProps> = ({
               {metadata?.description}
             </p>
           </div>
+
           <div className="w-full">
             <h3 className="mb-2 text-lg font-semibold leading-none">Traits</h3>
             <ScrollArea className="w-full whitespace-nowrap rounded-md border p-2">
               <div className="flex w-full gap-2">
-                {attributes?.map(
-                  ({
-                    trait_type,
-                    value,
-                  }: {
-                    trait_type: string;
-                    value: string;
-                  }) => {
-                    return (
-                      <div
-                        key={trait_type}
-                        className="bg-primary-100/10 flex w-full flex-col items-center rounded-md border"
-                      >
-                        <div className="font-semibold">{trait_type}</div>
-                        {value.toString().indexOf("https://") === 0 ? (
-                          <a
-                            href={value}
-                            target="_blank"
-                            className="text-primary-500 cursor-pointer underline"
-                          >
-                            {shortenUrl(value)}
-                          </a>
-                        ) : (
-                          <div>{formatValueOrAddress(value.toString())}</div>
-                        )}
-                      </div>
-                    );
-                  },
-                )}
+                {attributes?.map(({ trait_type, value }) => {
+                  return (
+                    <div
+                      key={trait_type}
+                      className="bg-primary-100/10 flex w-full flex-col items-center rounded-md border"
+                    >
+                      <div className="font-semibold">{trait_type}</div>
+                      {value.toString().indexOf("https://") === 0 ? (
+                        <a
+                          href={value}
+                          target="_blank"
+                          className="text-primary-500 cursor-pointer underline"
+                        >
+                          {shortenUrl(value)}
+                        </a>
+                      ) : (
+                        <div>{formatValueOrAddress(value.toString())}</div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
               <ScrollBar orientation="horizontal" />
             </ScrollArea>
