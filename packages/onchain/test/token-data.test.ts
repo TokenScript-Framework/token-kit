@@ -2,7 +2,7 @@ import test from "ava";
 import { getRPCURL } from "./_utils";
 import { createPublicClient, http, PublicClient } from "viem";
 
-import { mainnet } from "viem/chains";
+import { mainnet, polygon } from "viem/chains";
 import { tokenData } from "../src/token-data";
 import {
   ERC1155TokenData,
@@ -66,6 +66,22 @@ test("ERC721 - should fetch token metadata when includeTokenMetadata is true", a
   )) as ERC721TokenData;
 
   t.truthy(result.tokenMetadata);
+});
+
+test("ERC721 - should fetch contract metadata when includeContractMetadata is true", async (t) => {
+  const client = createPublicClient({
+    chain: polygon,
+    transport: http(getRPCURL(137)),
+  });
+
+  const result = (await tokenData(
+    client as PublicClient,
+    "0xD5cA946AC1c1F24Eb26dae9e1A53ba6a02bd97Fe", // Smart Cat
+    1997912245,
+    { includeContractMetadata: true },
+  )) as ERC721TokenData;
+
+  t.truthy(result.contractMetadata);
 });
 
 test("ERC1155 - should return token data with type", async (t) => {

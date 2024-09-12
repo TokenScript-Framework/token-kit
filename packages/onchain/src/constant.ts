@@ -56,15 +56,15 @@ export interface ERC721TokenData {
   type: TokenType;
   owner: `0x${string}`;
   tokenURI: string;
-  tokenMetadata?: object;
-  contractMetadata?: object;
+  tokenMetadata?: unknown;
+  contractMetadata?: unknown;
 }
 
 export interface ERC1155TokenData {
   type: TokenType;
   uri: string;
-  tokenMetadata?: object;
-  contractMetadata?: object;
+  tokenMetadata?: unknown;
+  contractMetadata?: unknown;
 }
 
 export type FetchHandler = (uri: string) => Promise<unknown>;

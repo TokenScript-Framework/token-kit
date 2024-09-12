@@ -322,3 +322,19 @@ export const ERC1155_ABI = [
     type: "function",
   },
 ];
+
+export const OPENSEA_CONTRACT_URI_ABI = [
+  {
+    inputs: [],
+    name: "contractURI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+];
