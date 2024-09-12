@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
-    "target": "ES2022"
+    "target": "ES2022",
   },
   "include": ["src", "test"]
 }
