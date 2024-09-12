@@ -195,10 +195,10 @@ function ERC721TokenCard(props: ERC721TokenCardProps) {
                             target="_blank"
                             className="text-primary-500 cursor-pointer underline"
                           >
-                            {urlPipe(value)}
+                            {shortenUrl(value)}
                           </a>
                         ) : (
-                          <div>{valuePipe(value.toString())}</div>
+                          <div>{formatValueOrAddress(value.toString())}</div>
                         )}
                       </div>
                     );
@@ -325,10 +325,10 @@ export const ERC1155TokenCard: React.FC<ERC1155TokenCardProps> = ({
                             target="_blank"
                             className="text-primary-500 cursor-pointer underline"
                           >
-                            {urlPipe(value)}
+                            {shortenUrl(value)}
                           </a>
                         ) : (
-                          <div>{valuePipe(value.toString())}</div>
+                          <div>{formatValueOrAddress(value.toString())}</div>
                         )}
                       </div>
                     );
@@ -344,22 +344,24 @@ export const ERC1155TokenCard: React.FC<ERC1155TokenCardProps> = ({
   );
 };
 
-function addressPipe(address: string, start: number = 38) {
-  return `${address.slice(0, 6)}...${address.slice(start)}`;
-}
+const formatAddress = (
+  address: `0x${string}`,
+  prefixLength = 6,
+  suffixLength = 4,
+): string => {
+  return `${address.slice(0, prefixLength)}...${address.slice(-suffixLength)}`;
+};
 
-function valuePipe(value: string) {
-  return value.indexOf("0x") === 0 ? addressPipe(value) : value;
-}
+const formatValueOrAddress = (value: string): string => {
+  return value.startsWith("0x") ? formatAddress(value as `0x${string}`) : value;
+};
 
-function urlPipe(url: string) {
+function shortenUrl(url: string) {
   return `${url.slice(0, 10)}...${url.slice(-4)}`;
 }
 
 function rewriteUrlIfIpfsUrl(url: string) {
-  if (!url) {
-    return "";
-  } else if (url.toLowerCase().startsWith("https://ipfs.io/ipfs")) {
+  if (url.toLowerCase().startsWith("https://ipfs.io/ipfs")) {
     return url.replace(
       "https://ipfs.io/ipfs",
       "https://gateway.pinata.cloud/ipfs",
