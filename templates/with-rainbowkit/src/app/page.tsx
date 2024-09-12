@@ -1,3 +1,5 @@
+import { TokenCard } from "@/components/token-kit/token-card";
+import { TokenThumbnail } from "@/components/token-kit/token-thumbnail";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function Home() {
@@ -15,6 +17,48 @@ export default function Home() {
           </li>
           <li>Save and see your changes instantly.</li>
         </ol>
+
+        <div className="grid grid-cols-3 gap-10">
+          <div>
+            <TokenCard
+              type="ERC20"
+              chainId={1}
+              contract="0xdac17f958d2ee523a2206206994597c13d831ec7"
+              wallet="0x04B07Ab1970898FF7e4e6a487530515129deF530"
+            />
+          </div>
+
+          <div className="max-w-xs">
+            <TokenCard
+              type="ERC721"
+              chainId={137}
+              tokenId="1649017156"
+              contract="0xD5cA946AC1c1F24Eb26dae9e1A53ba6a02bd97Fe"
+            />
+          </div>
+
+          <div className="max-w-xs">
+            <TokenCard
+              type="ERC1155"
+              chainId={1}
+              tokenId="1"
+              contract="0x73da73ef3a6982109c4d5bdb0db9dd3e3783f313"
+            />
+          </div>
+        </div>
+
+        <div>
+          <TokenThumbnail
+            token={{
+              address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+              name: "Tether USD",
+              chainId: 1,
+              logoURI:
+                "https://assets.coingecko.com/coins/images/325/standard/Tether.png?1696501661",
+              verified: true,
+            }}
+          />
+        </div>
 
         <div className="flex flex-col gap-4 items-center  sm:flex-row">
           <ConnectButton />

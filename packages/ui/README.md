@@ -11,25 +11,44 @@ npm run rollup
 ### Token Card
 
 ```jsx
-import { TokenCard } from "token-kit";
-
 // ERC 20
 <TokenCard
   type="ERC20"
   chainId={1}
-  contract="0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-  wallet="0x0000000000000000000000000000000000000000"
-  onClick={() => void}
+  contract="0xdac17f958d2ee523a2206206994597c13d831ec7"
+  wallet="0x04B07Ab1970898FF7e4e6a487530515129deF530"
 />;
 
-// ERC 721/1155
+// ERC721
 <TokenCard
   type="ERC721"
   chainId={137}
-  contract="0xd5ca946ac1c1f24eb26dae9e1a53ba6a02bd97fe"
-  tokenId="1202370524"
-  onClick={() => void}
+  tokenId="1649017156"
+  contract="0xD5cA946AC1c1F24Eb26dae9e1A53ba6a02bd97Fe"
 />;
+
+// ERC1155
+<TokenCard
+  type="ERC1155"
+  chainId={1}
+  tokenId="1"
+  contract="0x73da73ef3a6982109c4d5bdb0db9dd3e3783f313"
+/>;
+```
+
+### Token Thumbnail
+
+```jsx
+<TokenThumbnail
+  token={{
+    address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    name: "Tether USD",
+    chainId: 1,
+    logoURI:
+      "https://assets.coingecko.com/coins/images/325/standard/Tether.png?1696501661",
+    verified: true,
+  }}
+/>
 ```
 
 ## React Hooks
