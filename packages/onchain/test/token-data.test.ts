@@ -70,3 +70,21 @@ test("ERC1155 - should return token data with type", async (t) => {
     subTypes: ["IERC1155Metadata_URI"],
   });
 });
+
+test("UNKNOWN - should throw error", async (t) => {
+  const client = createPublicClient({
+    chain: mainnet,
+    transport: http(getRPCURL(1)),
+  });
+
+  const error = await t.throwsAsync(
+    async () =>
+      await tokenData(
+        client as PublicClient,
+        "0xae749AE248d9c7014b6a2E951542cdAa619e14C1",
+        1,
+      ),
+  );
+
+  t.is(error.message, "Unsupported token type");
+});

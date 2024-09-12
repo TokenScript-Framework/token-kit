@@ -53,6 +53,8 @@ export async function tokenData(
         ...onChainData,
       };
     }
+    default:
+      throw new Error("Unsupported token type");
   }
 }
 
