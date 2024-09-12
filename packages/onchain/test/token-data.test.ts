@@ -52,6 +52,22 @@ test("ERC721 - should return token data with type", async (t) => {
   });
 });
 
+test("ERC721 - should fetch token metadata when includeTokenMetadata is true", async (t) => {
+  const client = createPublicClient({
+    chain: mainnet,
+    transport: http(getRPCURL(1)),
+  });
+
+  const result = (await tokenData(
+    client as PublicClient,
+    "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d", // BAYC
+    1,
+    { includeTokenMetadata: true },
+  )) as ERC721TokenData;
+
+  t.truthy(result.tokenMetadata);
+});
+
 test("ERC1155 - should return token data with type", async (t) => {
   const client = createPublicClient({
     chain: mainnet,

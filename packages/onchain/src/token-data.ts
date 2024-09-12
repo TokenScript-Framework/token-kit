@@ -8,6 +8,8 @@ import {
 } from "./constant";
 import { tokenType } from "./token-type";
 import { ERC1155_ABI } from "./abi";
+import { rewriteUrlIfIFPSUrl } from "./libs/url-rewrite";
+import axios from "axios";
 
 const defaultOptions: TokenDataOptions = {
   includeTokenMetadata: false,
@@ -24,23 +26,28 @@ export async function tokenData(
   const type = await tokenType(address, client);
 
   switch (type.type) {
-    case TokenTypes.ERC20: {
-      const onChainData = await fetchERC20TokenData(client, address);
+    case TokenTypes.ERC20:
       return {
         type,
-        ...onChainData,
+        ...(await fetchERC20TokenData(client, address)),
       };
-    }
     case TokenTypes.ERC721: {
-      const onChainData = await fetchERC721TokenData(
-        client,
-        address,
-        normalizeTokenId(tokenId),
-      );
-      return {
+      const result = {
         type,
-        ...onChainData,
-      };
+        ...(await fetchERC721TokenData(
+          client,
+          address,
+          normalizeTokenId(tokenId),
+        )),
+      } as ERC721TokenData;
+
+      if (opts.includeTokenMetadata) {
+        const metadata = (await axios.get(rewriteUrlIfIFPSUrl(result.tokenURI)))
+          .data;
+        result.tokenMetadata = metadata;
+      }
+
+      return result;
     }
     case TokenTypes.ERC1155: {
       const onChainData = await fetchERC1155TokenData(
