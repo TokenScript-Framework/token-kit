@@ -12313,8 +12313,6 @@ snapshots:
       '@typescript-eslint/types': 8.5.0
       eslint-visitor-keys: 3.4.3
 
-  '@ungap/structured-clone@1.2.0': {}
-
   '@vercel/nft@0.26.5':
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
@@ -18335,7 +18333,7 @@ snapshots:
 
   token-kit@https://codeload.github.com/TokenScript-Framework/ts-front-monorepo/tar.gz/4a3908db04e122c601cebb711b182a45a075ec94#path:packages/token-kit(@types/react@18.3.5)(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10):
     dependencies:
-      '@ethereum-attestation-service/eas-sdk': 2.6.0(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
+      '@ethereum-attestation-service/eas-sdk': 2.6.0(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
       '@peculiar/x509': 1.12.1
       '@radix-ui/react-avatar': 1.1.0(@types/react@18.3.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-scroll-area': 1.1.0(@types/react@18.3.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
