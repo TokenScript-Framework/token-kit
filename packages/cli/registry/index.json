@@ -1,7 +1,7 @@
 [
   {
     "name": "token-card",
-    "shadcnDependencies": ["card", "scroll-area", "skeleton"],
+    "shadcnDependencies": ["card", "skeleton"],
     "files": ["ui/token-card.tsx"],
     "type": "components:ui"
   },
