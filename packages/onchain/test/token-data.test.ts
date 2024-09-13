@@ -68,6 +68,22 @@ test("ERC721 - should fetch token metadata when includeTokenMetadata is true", a
   t.truthy(result.tokenMetadata);
 });
 
+test("ERC721 - should fetch token metadata with custom ipfs gateway", async (t) => {
+  const client = createPublicClient({
+    chain: mainnet,
+    transport: http(getRPCURL(1)),
+  });
+
+  const result = (await tokenData(
+    client as PublicClient,
+    "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d", // BAYC
+    1,
+    { includeTokenMetadata: true, ipfsGatewayDomain: "https://dweb.link" },
+  )) as ERC721TokenData;
+
+  t.truthy(result.tokenMetadata);
+});
+
 test("ERC721 - should fetch token metadata with custom fetch handler", async (t) => {
   const client = createPublicClient({
     chain: polygon,
