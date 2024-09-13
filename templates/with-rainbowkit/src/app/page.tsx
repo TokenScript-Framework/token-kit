@@ -1,3 +1,6 @@
+"use client";
+
+import { TokenTxSonner } from "@/components/token-kit/token-tx-sonner";
 import { TokenCard } from "@/components/token-kit/token-card";
 import { TokenThumbnail } from "@/components/token-kit/token-thumbnail";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
@@ -9,7 +12,7 @@ export default function Home() {
         <h1 className="text-4xl font-bold">Token-Kit template</h1>
         <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
           <li className="mb-2">
-            Get sarted by editing{" "}
+            Get started by editing{" "}
             <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
               src/app/page.tsx
             </code>
@@ -60,7 +63,7 @@ export default function Home() {
           />
         </div>
 
-        <div className="flex flex-col gap-4 items-center  sm:flex-row">
+        <div className="flex flex-col gap-4 items-center sm:flex-row">
           <ConnectButton />
 
           <a
@@ -71,6 +74,10 @@ export default function Home() {
           >
             Read our docs
           </a>
+        </div>
+
+        <div>
+          <TokenTxSonner txHash="0x84d94889f045f659ef1e8e51948f2ee83a8d159fc31d5dd81d128bac7f533a2b" txUri="https://etherscan.io/tx/" />
         </div>
       </main>
     </div>
