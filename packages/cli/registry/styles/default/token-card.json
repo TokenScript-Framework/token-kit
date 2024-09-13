@@ -1,5 +1,6 @@
 {
   "name": "token-card",
+  "dependencies": ["@tanstack/react-query", "wagmi", "viem"],
   "shadcnDependencies": ["card", "skeleton"],
   "files": [
     {

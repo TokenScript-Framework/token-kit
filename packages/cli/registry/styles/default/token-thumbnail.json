@@ -1,5 +1,6 @@
 {
   "name": "token-thumbnail",
+  "dependencies": ["lucide-react"],
   "shadcnDependencies": ["card", "tooltip", "badge", "avatar"],
   "files": [
     {
