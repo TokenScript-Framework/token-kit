@@ -1,18 +1,21 @@
 import { assert, Json, ManageStateOperation } from "@metamask/snaps-sdk";
 import { bytesToBase64 } from "@metamask/utils";
 import { ADDRESSTYPE, Token, TokenListState } from "./types";
-
-export const VIEWER_ROOT = "https://viewer.tokenscript.org";
+import { BrowserProvider, ethers } from "ethers";
+import { ABI } from "./contants";
 
 export async function getSVG(url: string) {
-  const imagePromise = getImageComponent(url, { width: 400 });
-
+  if (!url) {
+    return { svg: "" };
+  }
+  const imagePromise = getImageComponent(rewriteUrlIfIFPSUrl(url), {
+    width: 400,
+  });
   const [image] = await Promise.all([imagePromise]);
-
   return { svg: image };
 }
 
-export async function updateTokenList(
+export async function importTokenToState(
   newToken: Token,
   key: string,
   owner: ADDRESSTYPE,
@@ -25,16 +28,16 @@ export async function updateTokenList(
   } else {
     tokenList[key] = { ...tokenList[key], ...newToken };
   }
-  await updateState({ [owner]: tokenList });
+
+  await updateState({ ...state, ...{ [owner]: tokenList } });
 }
 
-export async function updateState(content: Record<string, Json>) {
-  const state = await getState();
+export async function updateState(newState: Record<string, Json>) {
   await snap.request({
     method: "snap_manageState",
     params: {
       operation: ManageStateOperation.UpdateState,
-      newState: { ...state, ...content },
+      newState: newState,
     },
   });
 }
@@ -55,23 +58,6 @@ export async function clearState() {
       operation: ManageStateOperation.ClearState,
     },
   });
-}
-
-export async function getSnapStateSize() {
-  const state = await snap.request({
-    method: "snap_manageState",
-    params: { operation: ManageStateOperation.GetState },
-  });
-
-  const stateString = JSON.stringify(state);
-  const sizeInBytes = new TextEncoder().encode(stateString).length;
-  const sizeInKB = sizeInBytes / 1024;
-
-  return {
-    sizeInBytes,
-    sizeInKB: sizeInKB.toFixed(2),
-    percentageUsed: ((sizeInBytes / (10 * 1024 * 1024)) * 100).toFixed(2),
-  };
 }
 
 async function getImageComponent(
@@ -144,6 +130,59 @@ export function chainPipe(chain: number) {
   }
 }
 
-export function addressPipe(address: string, start: number = 38) {
+export function truncateAddress(address: string, start: number = 38) {
   return `${address.slice(0, 6)}...${address.slice(start)}`;
+}
+
+export async function detectChain(chain: string) {
+  const permissions = await ethereum.request({
+    method: "eth_chainId",
+  });
+  const currentChain = typeof permissions === "string" ? permissions : "0x0";
+  return BigInt(currentChain).toString(10) === chain.toString();
+}
+
+export async function detectOwner(contract: ADDRESSTYPE, tokenId: string) {
+  const accounts = await ethereum.request<string[]>({
+    method: "eth_requestAccounts",
+  });
+
+  if (!tokenId) {
+    return { isOwner: true, owner: accounts?.[0] as ADDRESSTYPE };
+  }
+
+  const owner = await getOwnerOf(contract, tokenId);
+  const isOwner =
+    accounts?.length && owner && accounts.includes(owner.toLowerCase());
+  return { isOwner, ...(isOwner ? { owner: owner as ADDRESSTYPE } : {}) };
+}
+
+async function getOwnerOf(contract: string, tokenId: string): Promise<string> {
+  try {
+    const provider = new BrowserProvider(ethereum);
+    const ethersContract = new ethers.Contract(contract, ABI, provider);
+    if (!ethersContract || typeof ethersContract.ownerOf !== "function") {
+      return "0x";
+    }
+    return await ethersContract.ownerOf(tokenId);
+  } catch (error) {
+    console.error("Error getting owner:", error);
+    throw error;
+  }
+}
+
+export function rewriteUrlIfIFPSUrl(url: string) {
+  if (!url) {
+    return "";
+  } else if (url.toLowerCase().startsWith("https://ipfs.io/ipfs")) {
+    return url.replace(
+      "https://ipfs.io/ipfs",
+      "https://gateway.pinata.cloud/ipfs",
+    );
+  } else if (url.toLowerCase().startsWith("ipfs://ipfs")) {
+    return url.replace("ipfs://ipfs", "https://gateway.pinata.cloud/ipfs");
+  } else if (url.toLowerCase().startsWith("ipfs://")) {
+    return url.replace("ipfs://", "https://gateway.pinata.cloud/ipfs/");
+  }
+  return url;
 }

@@ -5,38 +5,44 @@ import type {
 } from "@metamask/snaps-sdk";
 import { MethodNotFoundError, UserInputEventType } from "@metamask/snaps-sdk";
 
-import { InteractiveForm } from "./components/InteractiveForm";
 import { operateForActions } from "./components/Actions";
-import { getState, getSVG, updateTokenList } from "./libs/utils";
-import { HomeForm } from "./components/HomeForm";
-import { ADDRESSTYPE, State, TokenMetadata } from "./libs/types";
+import {
+  chainPipe,
+  detectChain,
+  detectOwner,
+  getState,
+  getSVG,
+  importTokenToState,
+} from "./libs/utils";
+import { ADDRESSTYPE, CheckResult, State, TokenMetadata } from "./libs/types";
+import { Dialog } from "./components/Dialog";
+import { HomePage } from "./components/HomePage";
+import { TokenPage } from "./components/TokenPage";
 
 export const onHomePage: OnHomePageHandler = async () => {
   const state: State = (await getState()) as State;
-
-  return { content: <HomeForm state={state} /> };
+  return { content: <HomePage state={state} /> };
 };
 
 type RequestParams = {
   chain: string;
   contract: ADDRESSTYPE;
   tokenId: string;
-  owner: ADDRESSTYPE;
   actions: string[];
   name: string;
   description: string;
   aboutUrl: string;
   tokenMetadata: TokenMetadata;
+  type: string;
 };
 
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
   switch (request.method) {
-    case "init": {
+    case "import": {
       const {
         chain,
         contract,
         tokenId,
-        owner,
         actions,
         name,
         description,
@@ -44,21 +50,16 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
         tokenMetadata,
       } = request.params as RequestParams;
 
+      const detectResult = await checkChainAndOwner(chain, contract, tokenId);
+      if (!detectResult.result) {
+        return detectResult.dialog;
+      }
+
+      const owner = detectResult.owner;
+
       const tokenSVG = await getSVG(tokenMetadata.image);
 
-      const metadata = {
-        chain,
-        contract,
-        tokenId,
-        owner,
-        actions,
-        name,
-        description,
-        aboutUrl,
-        tokenMetadata: { ...tokenMetadata, ...tokenSVG },
-      };
-
-      await updateTokenList(
+      await importTokenToState(
         {
           chain,
           contract,
@@ -74,12 +75,24 @@ export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
         owner,
       );
 
+      const metadata = {
+        chain,
+        contract,
+        tokenId,
+        owner,
+        actions,
+        name,
+        description,
+        aboutUrl,
+        tokenMetadata: { ...tokenMetadata, ...tokenSVG },
+      };
+
       return await snap.request({
         method: "snap_dialog",
         params: {
           type: "alert",
           content: (
-            <InteractiveForm
+            <TokenPage
               metadata={metadata}
               chain={chain}
               contract={contract}
@@ -101,4 +114,44 @@ export const onUserInput: OnUserInputHandler = async ({ id, event }) => {
   if (event.type === UserInputEventType.ButtonClickEvent && event.name) {
     await operateForActions(id, event.name);
   }
+};
+
+const checkChainAndOwner = async (
+  chain: string,
+  contract: ADDRESSTYPE,
+  tokenId: string,
+): Promise<CheckResult> => {
+  if (!(await detectChain(chain))) {
+    return {
+      result: false,
+      dialog: await showWarningDialog(
+        `Network mismatch, please switch to ${chainPipe(Number(chain))}, and try again.`,
+      ),
+    };
+  }
+
+  const { isOwner, owner } = await detectOwner(contract, tokenId);
+  if (!isOwner) {
+    return {
+      result: false,
+      dialog: await showWarningDialog(
+        "The owner wallet mismatch, please confirm you've import this wallet and set the request permission.",
+      ),
+    };
+  }
+
+  return {
+    result: true,
+    owner: owner as ADDRESSTYPE,
+  };
+};
+
+const showWarningDialog = async (message: string) => {
+  return await snap.request({
+    method: "snap_dialog",
+    params: {
+      type: "alert",
+      content: <Dialog type="alert" title="Warning" message={message} />,
+    },
+  });
 };
