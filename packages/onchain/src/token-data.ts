@@ -42,17 +42,7 @@ export async function tokenData(
           normalizeTokenId(tokenId),
         )),
       } as ERC721TokenData;
-
-      if (opts.includeTokenMetadata) {
-        result.tokenMetadata = await opts.fetchHandler(result.tokenURI);
-      }
-
-      if (opts.includeContractMetadata) {
-        const contractURI = await fetchOpenseaContractURI(client, address);
-        if (contractURI) {
-          result.contractMetadata = await opts.fetchHandler(contractURI);
-        }
-      }
+      await enrichMetadata(client, address, result, opts, result.tokenURI);
 
       return result;
     }
@@ -65,18 +55,7 @@ export async function tokenData(
           normalizeTokenId(tokenId),
         )),
       } as ERC1155TokenData;
-
-      if (opts.includeTokenMetadata) {
-        result.tokenMetadata = await opts.fetchHandler(result.uri);
-      }
-
-      // So far, no ERC1155 token has contractURI is found, but keep the logic here
-      if (opts.includeContractMetadata) {
-        const contractURI = await fetchOpenseaContractURI(client, address);
-        if (contractURI) {
-          result.contractMetadata = await opts.fetchHandler(contractURI);
-        }
-      }
+      await enrichMetadata(client, address, result, opts, result.uri);
 
       return result;
     }
@@ -89,6 +68,25 @@ function normalizeTokenId(tokenId: number | bigint) {
   if (!["bigint", "number"].includes(typeof tokenId))
     throw new Error("tokenId number is required for ERC721");
   return BigInt(tokenId);
+}
+
+async function enrichMetadata(
+  client: PublicClient,
+  address: `0x${string}`,
+  result: ERC721TokenData | ERC1155TokenData,
+  opts: TokenDataOptions,
+  tokenURI: string,
+) {
+  if (opts.includeTokenMetadata) {
+    result.tokenMetadata = await opts.fetchHandler(tokenURI);
+  }
+
+  if (opts.includeContractMetadata) {
+    const contractURI = await fetchOpenseaContractURI(client, address);
+    if (contractURI) {
+      result.contractMetadata = await opts.fetchHandler(contractURI);
+    }
+  }
 }
 
 async function fetchERC20TokenData(

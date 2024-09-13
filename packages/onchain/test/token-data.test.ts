@@ -68,6 +68,27 @@ test("ERC721 - should fetch token metadata when includeTokenMetadata is true", a
   t.truthy(result.tokenMetadata);
 });
 
+test("ERC721 - should fetch token metadata with custom fetch handler", async (t) => {
+  const client = createPublicClient({
+    chain: polygon,
+    transport: http(getRPCURL(137)),
+  });
+
+  const fetchHandler = async (url: string) => {
+    const response = await fetch(url);
+    return { ...(await response.json()), custom: true };
+  };
+
+  const result = (await tokenData(
+    client as PublicClient,
+    "0xD5cA946AC1c1F24Eb26dae9e1A53ba6a02bd97Fe", // Smart Cat
+    1997912245,
+    { includeTokenMetadata: true, fetchHandler },
+  )) as ERC721TokenData;
+
+  t.like(result.tokenMetadata, { custom: true });
+});
+
 test("ERC721 - should fetch contract metadata when includeContractMetadata is true", async (t) => {
   const client = createPublicClient({
     chain: polygon,
@@ -111,7 +132,7 @@ test("ERC1155 - should fetch token metadata when includeTokenMetadata is true", 
 
   const result = (await tokenData(
     client as PublicClient,
-    "0x495f947276749Ce646f68AC8c248420045cb7b5e",
+    "0x33fd426905f149f8376e227d0c9d3340aad17af1",
     1,
     { includeTokenMetadata: true },
   )) as ERC1155TokenData;
