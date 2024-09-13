@@ -1,22 +1,18 @@
-import { Card, CardContent } from "@/components/shadcn/ui/card";
-import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/shadcn/ui/tooltip";
-import { Badge } from "@/components/shadcn/ui/badge";
+} from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { ShieldCheck, ShieldX } from "lucide-react";
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/shadcn/ui/avatar";
-import { addressPipe } from "@/libs";
+import React from "react";
 
 type TokenCollection = {
-  signed: boolean;
+  verified: boolean;
   chainId: number;
   address: `0x${string}`;
   name: string;
@@ -25,48 +21,50 @@ type TokenCollection = {
 };
 
 export interface TokenThumbnailProps {
-  type: "ERC20" | "ERC721" | "ERC1155";
   token: TokenCollection;
-  selected: boolean;
   onClick?: () => void;
+  className?: string;
 }
 
-export const TokenThumbnail: React.FC<TokenThumbnailProps> = ({
-  type,
+export const TokenThumbnail = ({
   token,
-  selected,
   onClick,
-}) => {
+  className,
+}: TokenThumbnailProps) => {
   return (
     <Card
-      className={`${selected ? "bg-accent" : ""} cursor-pointer text-left dark:bg-gray-900  hover:bg-accent w-full`}
+      className={cn(
+        "cursor-pointer text-left dark:bg-gray-900  hover:bg-accent w-full",
+        className,
+      )}
       onClick={onClick}
     >
-      <CardContent>
-        <div className="flex justify-between items-center m-0">
-          <div className="flex justify-start items-center">
+      <CardContent className="p-4">
+        <div className="flex justify-between items-center gap-10">
+          <div className="flex justify-start items-center gap-3">
             <Avatar className="w-10 h-10">
               <AvatarImage src={token.logoURI} alt="token" />
-              <AvatarFallback className="bg-primary-100/20">T</AvatarFallback>
+              <AvatarFallback className="">T</AvatarFallback>
             </Avatar>
 
-            <div className="ml-4">
+            <div className="">
               <div className="font-bold">
                 <span>{token.name}</span>
               </div>
-              <div className="mt-2">
-                <a className="hover:text-primary-500 text-[12px] text-gray-500 underline ">
-                  {addressPipe(token.address)}
-                </a>
+              <div className="">
+                <span className="hover:text-primary-500 text-[12px] text-gray-500 underline ">
+                  {formatAddress(token.address)}
+                </span>
               </div>
             </div>
           </div>
+
           <div>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div className="flex justify-end">
-                    {token.signed ? (
+                    {token.verified ? (
                       <ShieldCheck color="#16a34a" />
                     ) : (
                       <ShieldX color="#aa3131" />
@@ -74,7 +72,7 @@ export const TokenThumbnail: React.FC<TokenThumbnailProps> = ({
                   </div>
                 </TooltipTrigger>
                 <TooltipContent>
-                  {token.signed ? "Secure Tokenscript" : "Insecure Tokenscript"}
+                  {token.verified ? "Verified" : "Unverified"}
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -91,4 +89,12 @@ export const TokenThumbnail: React.FC<TokenThumbnailProps> = ({
       </CardContent>
     </Card>
   );
+};
+
+const formatAddress = (
+  address: `0x${string}`,
+  prefixLength = 6,
+  suffixLength = 4,
+): string => {
+  return `${address.slice(0, prefixLength)}...${address.slice(-suffixLength)}`;
 };

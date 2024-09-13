@@ -39,7 +39,7 @@ const imgBuffer: Buffer = await axios
 
 app.get("/", () => {
   return new ImageResponse({
-    provider: provider as unknown as ethers.Eip1193Provider,
+    provider: provider,
     chainId,
     contract,
     imgBuffer,

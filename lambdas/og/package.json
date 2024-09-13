@@ -1,5 +1,6 @@
 {
   "name": "@token-kit/og-lambda",
+  "license": "GPL-3.0-only",
   "version": "0.0.1",
   "description": "aws cloudfront lambda@edge for generate token open graph image",
   "main": "dist/index.js",
@@ -20,7 +21,6 @@
   },
   "devDependencies": {
     "@types/node": "^22.5.4",
-    "source-map-support": "^0.5.21",
-    "tsup": "^8.2.4"
+    "source-map-support": "^0.5.21"
   }
 }

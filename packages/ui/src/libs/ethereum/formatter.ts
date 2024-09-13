@@ -10,7 +10,7 @@ export function urlPipe(url: string) {
   return `${url.slice(0, 10)}...${url.slice(-4)}`;
 }
 
-export function rewriteUrlIfIFPSUrl(url: string) {
+export function rewriteUrlIfIpfsUrl(url: string) {
   if (!url) {
     return "";
   } else if (url.toLowerCase().startsWith("https://ipfs.io/ipfs")) {

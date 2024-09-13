@@ -1,4 +1,3 @@
-import axios from "axios";
 import {
   Chain,
   createPublicClient,
@@ -84,7 +83,8 @@ export async function getERC721Metadata(
       args: [BigInt(tokenId)],
     });
 
-    return (await axios.get(tokenURI)).data;
+    const response = await fetch(tokenURI);
+    return await response.json();
   } catch (e) {
     console.log(e);
     return null;

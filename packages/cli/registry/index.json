@@ -1,12 +1,14 @@
 [
   {
     "name": "token-card",
-    "shadcnDependencies": ["card", "scroll-area", "skeleton"],
+    "dependencies": ["@tanstack/react-query", "wagmi", "viem"],
+    "shadcnDependencies": ["card", "skeleton"],
     "files": ["ui/token-card.tsx"],
     "type": "components:ui"
   },
   {
     "name": "token-thumbnail",
+    "dependencies": ["lucide-react"],
     "shadcnDependencies": ["card", "tooltip", "badge", "avatar"],
     "files": ["ui/token-thumbnial.tsx"],
     "type": "components:ui"
