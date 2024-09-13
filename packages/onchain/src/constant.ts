@@ -72,5 +72,8 @@ export type FetchHandler = (uri: string) => Promise<unknown>;
 export type TokenDataOptions = {
   includeTokenMetadata?: boolean;
   includeContractMetadata?: boolean;
+  ipfsGatewayDomain?: string;
   fetchHandler?: FetchHandler;
 };
+
+export const DEFAULT_IPFS_GATEWAY_DOMAIN = "https://gateway.pinata.cloud";

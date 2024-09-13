@@ -6,8 +6,8 @@ import {
   TokenType,
   UNKNOWN,
 } from "./constant";
-import { ERC165_ABI, ERC20_ABI, ERC5169_ABI } from "./abi";
-import { parseAbi, PublicClient, zeroAddress } from "viem";
+import { ERC165_ABI, ERC5169_ABI } from "./abi";
+import { erc20Abi, PublicClient, zeroAddress } from "viem";
 
 export async function tokenType(
   address: string,
@@ -94,7 +94,7 @@ async function isSupported(
 ) {
   const contract = {
     address: address as `0x${string}`,
-    abi: parseAbi(ERC165_ABI),
+    abi: ERC165_ABI,
   };
   try {
     return await client.readContract({
@@ -110,7 +110,7 @@ async function isSupported(
 async function isERC5169(address: string, client: PublicClient) {
   const contract = {
     address: address as `0x${string}`,
-    abi: parseAbi(ERC5169_ABI),
+    abi: ERC5169_ABI,
   };
   try {
     const scriptURI = await client.readContract({
@@ -126,7 +126,7 @@ async function isERC5169(address: string, client: PublicClient) {
 async function isERC20(address: string, client: PublicClient) {
   const contract = {
     address: address as `0x${string}`,
-    abi: parseAbi(ERC20_ABI),
+    abi: erc20Abi,
   };
   try {
     await Promise.all([

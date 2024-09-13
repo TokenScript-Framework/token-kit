@@ -1,11 +1,39 @@
 export const ERC165_ABI = [
-  "function supportsInterface(bytes4 interfaceId) view returns (bool)",
+  {
+    inputs: [
+      {
+        internalType: "bytes4",
+        name: "interfaceId",
+        type: "bytes4",
+      },
+    ],
+    name: "supportsInterface",
+    outputs: [
+      {
+        internalType: "bool",
+        name: "",
+        type: "bool",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
 ];
-export const ERC5169_ABI = ["function scriptURI() view returns (string[])"];
 
-export const ERC20_ABI = [
-  "function balanceOf(address account) external view returns (uint256)",
-  "function totalSupply() public view returns (uint256)",
+export const ERC5169_ABI = [
+  {
+    inputs: [],
+    name: "scriptURI",
+    outputs: [
+      {
+        internalType: "string[]",
+        name: "",
+        type: "string[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
 ];
 
 export const ERC1155_ABI = [

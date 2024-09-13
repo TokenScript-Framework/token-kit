@@ -9,13 +9,10 @@ import {
 import { tokenType } from "./token-type";
 import { ERC1155_ABI, OPENSEA_CONTRACT_URI_ABI } from "./abi";
 import { rewriteUrlIfIFPSUrl } from "./libs/url-rewrite";
-import axios from "axios";
 
 const defaultOptions: TokenDataOptions = {
   includeTokenMetadata: false,
   includeContractMetadata: false,
-  fetchHandler: async (uri: string) =>
-    (await axios.get(rewriteUrlIfIFPSUrl(uri))).data,
 };
 
 export async function tokenData(
@@ -25,6 +22,12 @@ export async function tokenData(
   options?: TokenDataOptions,
 ): Promise<ERC20TokenData | ERC721TokenData | ERC1155TokenData> {
   const opts = { ...defaultOptions, ...options };
+  if (!opts.fetchHandler) {
+    opts.fetchHandler = async (uri: string) =>
+      await (
+        await fetch(rewriteUrlIfIFPSUrl(uri, opts.ipfsGatewayDomain))
+      ).json();
+  }
   const type = await tokenType(address, client);
 
   switch (type.type) {
