@@ -159,8 +159,7 @@ importers:
         version: 0.33.5
       token-kit:
         specifier: github:TokenScript-Framework/ts-front-monorepo#path:packages/token-kit
-        version: https://codeload.github.com/TokenScript-Framework/ts-front-monorepo/tar.gz/4a3908db04e122c601cebb711b182a45a075ec94#path:packages/token-kit(@types/react@18.3.5)(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)
-
+        version: https://codeload.github.com/TokenScript-Framework/ts-front-monorepo/tar.gz/4a3908db04e122c601cebb711b182a45a075ec94#path:packages/token-kit(@types/react@18.3.5)(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10)
     devDependencies:
       '@types/jsdom':
         specifier: ^21.1.7
@@ -211,6 +210,30 @@ importers:
       tsx:
         specifier: ^4.15.7
         version: 4.19.1
+      eslint:
+        specifier: ^9.10.0
+        version: 9.10.0(jiti@1.21.6)
+      eslint-config-prettier:
+        specifier: ^9.1.0
+        version: 9.1.0(eslint@9.10.0(jiti@1.21.6))
+      eslint-plugin-prettier:
+        specifier: ^5.2.1
+        version: 5.2.1(@types/eslint@9.6.1)(eslint-config-prettier@9.1.0(eslint@9.10.0(jiti@1.21.6)))(eslint@9.10.0(jiti@1.21.6))(prettier@3.3.3)
+      prettier:
+        specifier: ^3.3.3
+        version: 3.3.3
+      tsup:
+        specifier: ^8.1.0
+        version: 8.2.4(@swc/core@1.3.78)(jiti@1.21.6)(postcss@8.4.45)(tsx@4.19.1)(typescript@5.5.4)(yaml@2.5.1)
+      tsx:
+        specifier: ^4.15.7
+        version: 4.19.1
+      typescript:
+        specifier: ^5.5.4
+        version: 5.5.4
+      typescript-eslint:
+        specifier: ^8.4.0
+        version: 8.4.0(eslint@9.10.0(jiti@1.21.6))(typescript@5.5.4)
 
   packages/tapp-snap:
     dependencies:
@@ -4575,6 +4598,12 @@ packages:
     peerDependencies:
       eslint: '>=7.0.0'
 
+
+  eslint-config-prettier@8.10.0:
+    resolution: {integrity: sha512-SM8AMJdeQqRYT9O9zguiruQZaN7+z+E4eAP9oiLNGKMtomwaB1E9dcgUD6ZAn/eQAb52USbvezbiljfZUhbJcg==}
+    hasBin: true
+    peerDependencies:
+      eslint: '>=7.0.0'
 
   eslint-config-prettier@9.1.0:
     resolution: {integrity: sha512-NSWl5BFQWEPi1j4TjVNItzYV7dZXZ+wP6I6ZhrBGpChQhZRUaElihE9uRRkcbRnNb76UMKDF3r+WTmNcGPKsqw==}
@@ -9668,7 +9697,6 @@ snapshots:
   '@eslint/eslintrc@2.1.4':
     dependencies:
       ajv: 6.12.6
-
       debug: 4.3.7(supports-color@8.1.1)
       minimatch: 3.1.2
     transitivePeerDependencies:
@@ -9696,7 +9724,7 @@ snapshots:
     dependencies:
       levn: 0.4.1
 
-  '@ethereum-attestation-service/eas-contracts@1.7.1(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)':
+  '@ethereum-attestation-service/eas-contracts@1.7.1(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)':
     dependencies:
       hardhat: 2.22.4(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)
 
@@ -9711,7 +9739,7 @@ snapshots:
   '@ethereum-attestation-service/eas-sdk@2.6.0(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)':
 
     dependencies:
-      '@ethereum-attestation-service/eas-contracts': 1.7.1(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)
+      '@ethereum-attestation-service/eas-contracts': 1.7.1(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)
       '@openzeppelin/merkle-tree': 1.0.7
       ethers: 6.13.2(bufferutil@4.0.8)(utf-8-validate@5.0.10)
       js-base64: 3.7.7
@@ -9719,7 +9747,7 @@ snapshots:
       multiformats: 9.9.0
       pako: 2.1.0
       semver: 7.6.3
-      viem: 2.21.6(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+      viem: 2.21.4(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
     transitivePeerDependencies:
       - bufferutil
       - c-kzg
@@ -11400,7 +11428,7 @@ snapshots:
 
   '@react-native-community/cli-config@14.1.0(typescript@5.6.2)':
     dependencies:
-      '@react-native-community/cli-tools': 14.1.0
+      '@react-native-community/cli-tools': 14.0.0
       chalk: 4.1.2
       cosmiconfig: 9.0.0(typescript@5.6.2)
 
@@ -11448,7 +11476,7 @@ snapshots:
   '@react-native-community/cli-platform-android@14.1.0':
 
     dependencies:
-      '@react-native-community/cli-tools': 14.1.0
+      '@react-native-community/cli-tools': 14.0.0
       chalk: 4.1.2
       execa: 5.1.1
       fast-glob: 3.3.2
@@ -11757,7 +11785,7 @@ snapshots:
   '@rollup/rollup-win32-x64-msvc@4.21.3':
     optional: true
 
-  '@safe-global/safe-apps-provider@0.18.3(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)':
+  '@safe-global/safe-apps-provider@0.18.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)':
     dependencies:
       '@safe-global/safe-apps-sdk': 9.1.0(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
 
@@ -11768,7 +11796,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@safe-global/safe-apps-sdk@9.1.0(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)':
+  '@safe-global/safe-apps-sdk@9.1.0(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)':
     dependencies:
       '@safe-global/safe-gateway-typescript-sdk': 3.22.2
       viem: 2.21.6(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
@@ -12031,7 +12059,7 @@ snapshots:
       '@tanstack/query-core': 5.55.4
       react: 18.3.1
 
-  '@tokenscript/engine-js@1.5.2-alpha.3(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)':
+  '@tokenscript/engine-js@1.5.2-alpha.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)':
     dependencies:
       '@ethereum-attestation-service/eas-sdk': 2.6.0(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
 
@@ -12407,6 +12435,8 @@ snapshots:
       '@typescript-eslint/types': 8.5.0
       eslint-visitor-keys: 3.4.3
 
+  '@ungap/structured-clone@1.2.0': {}
+
   '@vercel/nft@0.26.5':
     dependencies:
       '@mapbox/node-pre-gyp': 1.0.11
@@ -12429,16 +12459,16 @@ snapshots:
   '@wagmi/connectors@5.1.10(@types/react@18.3.5)(@wagmi/core@2.13.5(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.21.6(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)))(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react-native@0.75.3(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.21.3)(typescript@5.6.2)(utf-8-validate@5.0.10)(viem@2.21.6(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8))(zod@3.23.8)':
     dependencies:
       '@coinbase/wallet-sdk': 4.0.4
-      '@metamask/sdk': 0.28.2(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react-native@0.75.3(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.21.3)(utf-8-validate@5.0.10)
-      '@safe-global/safe-apps-provider': 0.18.3(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
-      '@safe-global/safe-apps-sdk': 9.1.0(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
-      '@wagmi/core': 2.13.5(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.21.6(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8))
-      '@walletconnect/ethereum-provider': 2.16.1(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10)
+      '@metamask/sdk': 0.28.2(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react-native@0.75.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10))(react@18.3.1)(rollup@4.21.2)(utf-8-validate@5.0.10)
+      '@safe-global/safe-apps-provider': 0.18.3(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
+      '@safe-global/safe-apps-sdk': 9.1.0(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
+      '@wagmi/core': 2.13.4(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1)(typescript@5.5.4)(viem@2.21.4(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))
+      '@walletconnect/ethereum-provider': 2.15.3(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(utf-8-validate@5.0.10)
       '@walletconnect/modal': 2.6.2(@types/react@18.3.5)(react@18.3.1)
       cbw-sdk: '@coinbase/wallet-sdk@3.9.3'
-      viem: 2.21.6(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+      viem: 2.21.4(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
     optionalDependencies:
-      typescript: 5.6.2
+      typescript: 5.5.4
     transitivePeerDependencies:
       - '@azure/app-configuration'
       - '@azure/cosmos'
@@ -12465,7 +12495,7 @@ snapshots:
       - utf-8-validate
       - zod
 
-  '@wagmi/core@2.13.5(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.21.6(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8))':
+  '@wagmi/core@2.13.4(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1)(typescript@5.5.4)(viem@2.21.4(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8))':
     dependencies:
       eventemitter3: 5.0.1
       mipd: 0.0.7(typescript@5.6.2)
@@ -14880,7 +14910,6 @@ snapshots:
     dependencies:
       flat-cache: 3.2.0
 
-
   file-entry-cache@8.0.0:
     dependencies:
       flat-cache: 4.0.1
@@ -15083,7 +15112,7 @@ snapshots:
       es-errors: 1.3.0
       get-intrinsic: 1.2.4
 
-  get-tsconfig@4.8.1:
+  get-tsconfig@4.8.0:
     dependencies:
       resolve-pkg-maps: 1.0.0
 
@@ -16740,9 +16769,9 @@ snapshots:
       minipass: 3.3.6
       yallist: 4.0.0
 
-  mipd@0.0.7(typescript@5.6.2):
+  mipd@0.0.7(typescript@5.5.4):
     optionalDependencies:
-      typescript: 5.6.2
+      typescript: 5.5.4
 
 
   mkdirp-classic@0.5.3: {}
@@ -17253,6 +17282,14 @@ snapshots:
       mlly: 1.7.1
       pathe: 1.1.2
 
+  pkijs@3.0.11:
+    dependencies:
+      asn1js: 3.0.5
+      bytestreamjs: 2.0.1
+      pvtsutils: 1.3.5
+      pvutils: 1.1.3
+      tslib: 2.7.0
+
   pkijs@3.1.0:
     dependencies:
       asn1js: 3.0.5
@@ -17297,13 +17334,11 @@ snapshots:
     optionalDependencies:
       postcss: 8.4.45
 
-
     dependencies:
       lilconfig: 3.1.2
     optionalDependencies:
       jiti: 1.21.6
       postcss: 8.4.45
-
       tsx: 4.19.1
       yaml: 2.5.1
 
@@ -17517,7 +17552,7 @@ snapshots:
 
       react-native: 0.75.3(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10)
 
-  react-native@0.75.3(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10):
+  react-native@0.75.2(@babel/core@7.25.2)(@babel/preset-env@7.25.4(@babel/core@7.25.2))(@types/react@18.3.5)(bufferutil@4.0.8)(react@18.3.1)(typescript@5.5.4)(utf-8-validate@5.0.10):
     dependencies:
       '@jest/create-cache-key-function': 29.7.0
       '@react-native-community/cli': 14.1.0(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)
@@ -18449,7 +18484,7 @@ snapshots:
   token-kit@https://codeload.github.com/TokenScript-Framework/ts-front-monorepo/tar.gz/4a3908db04e122c601cebb711b182a45a075ec94#path:packages/token-kit(@types/react@18.3.5)(bufferutil@4.0.8)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(typescript@5.6.2)(utf-8-validate@5.0.10):
 
     dependencies:
-      '@ethereum-attestation-service/eas-sdk': 2.6.0(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+      '@ethereum-attestation-service/eas-sdk': 2.6.0(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
       '@peculiar/x509': 1.12.1
       '@radix-ui/react-avatar': 1.1.0(@types/react@18.3.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@radix-ui/react-scroll-area': 1.1.0(@types/react@18.3.5)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -18626,7 +18661,8 @@ snapshots:
       tree-kill: 1.2.2
     optionalDependencies:
       '@swc/core': 1.3.78
-      typescript: 5.6.2
+      postcss: 8.4.45
+      typescript: 5.5.4
     transitivePeerDependencies:
       - jiti
       - supports-color
@@ -18960,7 +18996,7 @@ snapshots:
       '@wagmi/core': 2.13.5(@tanstack/query-core@5.55.4)(@types/react@18.3.5)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.21.6(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8))
       react: 18.3.1
       use-sync-external-store: 1.2.0(react@18.3.1)
-      viem: 2.21.6(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8)
+      viem: 2.21.4(bufferutil@4.0.8)(typescript@5.5.4)(utf-8-validate@5.0.10)(zod@3.23.8)
     optionalDependencies:
       typescript: 5.6.2
 
