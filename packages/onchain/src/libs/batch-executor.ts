@@ -1,7 +1,7 @@
 const DEFAULT_CHUNK_SIZE = 20;
-export async function batchExecutor<T, O>(
-  all: T[],
-  executor: (T) => Promise<O>,
+export async function batchExecutor<I, O>(
+  all: I[],
+  executor: (input: I) => Promise<O>,
   chuckSize: number = DEFAULT_CHUNK_SIZE,
 ): Promise<O[]> {
   let results: O[] = [];

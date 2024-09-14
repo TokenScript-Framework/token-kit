@@ -1,10 +1,4 @@
-import {
-  ContractFunctionParameters,
-  erc20Abi,
-  erc721Abi,
-  MulticallParameters,
-  PublicClient,
-} from "viem";
+import { erc20Abi, erc721Abi, PublicClient } from "viem";
 import {
   ERC1155TokenData,
   ERC20TokenData,
@@ -13,7 +7,6 @@ import {
   TokenTypes,
 } from "./constant";
 import { ERC1155_ABI, OPENSEA_CONTRACT_URI_ABI } from "./libs/abi";
-import { rewriteUrlIfIFPSUrl } from "./libs/url-rewrite";
 import { tokenType } from "./token-type";
 import { normalizeTokenId } from "./libs/normalizer";
 import { initFetchHandler } from "./libs/fetch-handler";

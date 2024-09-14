@@ -4,7 +4,13 @@ import {
   ReadContractParameters,
   ReadContractReturnType,
 } from "viem";
-import { MyNfts, MyNftsOptions, MyNftToken, TokenTypes } from "./constant";
+import {
+  MyNfts,
+  MyNftsOptions,
+  MyNftToken,
+  MyNftTokenWithoutMetadata,
+  TokenTypes,
+} from "./constant";
 import { tokenType } from "./token-type";
 import { normalizeTokenId } from "./libs/normalizer";
 import { ERC721Enumerable_ABI } from "./libs/abi";
@@ -33,15 +39,7 @@ export async function myNfts(
   let tokens = await fetchTokenURIs(client, address, tokenIds);
 
   if (opts.includeTokenMetadata) {
-    initFetchHandler(opts);
-
-    tokens = await batchExecutor<Omit<MyNftToken, "tokenMetadata">, MyNftToken>(
-      tokens,
-      async (token) => {
-        const tokenMetadata = await opts.fetchHandler(token.tokenURI);
-        return { ...token, tokenMetadata };
-      },
-    );
+    tokens = await fetchTokenMetadatas(tokens, opts);
   }
 
   return {
@@ -110,11 +108,26 @@ async function fetchTokenURIs(
     args: [tokenId],
   })) as ReadContractParameters[];
 
-  return await batchExecutor<
-    ReadContractParameters,
-    { tokenId: bigint; tokenURI: string }
-  >(contractParams, async (contract) => {
-    const tokenURI = (await client.readContract(contract)) as string;
-    return { tokenId: contract.args[0], tokenURI };
-  });
+  return await batchExecutor<ReadContractParameters, MyNftTokenWithoutMetadata>(
+    contractParams,
+    async (contract) => {
+      const tokenURI = (await client.readContract(contract)) as string;
+      return { tokenId: contract.args[0] as bigint, tokenURI };
+    },
+  );
+}
+
+async function fetchTokenMetadatas(
+  tokens: MyNftTokenWithoutMetadata[],
+  opts: MyNftsOptions,
+) {
+  initFetchHandler(opts);
+
+  return await batchExecutor<MyNftTokenWithoutMetadata, MyNftToken>(
+    tokens,
+    async (token) => {
+      const tokenMetadata = await opts.fetchHandler(token.tokenURI);
+      return { ...token, tokenMetadata };
+    },
+  );
 }

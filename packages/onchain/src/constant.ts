@@ -82,6 +82,7 @@ export type MyNftToken = {
   tokenURI: string;
   tokenMetadata?: unknown;
 };
+export type MyNftTokenWithoutMetadata = Omit<MyNftToken, "tokenMetadata">;
 export type MyNfts = {
   owner: `0x${string}`;
   tokens: MyNftToken[];
