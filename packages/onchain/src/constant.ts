@@ -76,4 +76,15 @@ export type TokenDataOptions = {
   fetchHandler?: FetchHandler;
 };
 
+export type MyNftsOptions = Omit<TokenDataOptions, "includeContractMetadata">;
+export type MyNftToken = {
+  tokenId: bigint;
+  tokenURI: string;
+  tokenMetadata?: unknown;
+};
+export type MyNfts = {
+  owner: `0x${string}`;
+  tokens: MyNftToken[];
+};
+
 export const DEFAULT_IPFS_GATEWAY_DOMAIN = "https://gateway.pinata.cloud";

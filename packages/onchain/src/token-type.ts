@@ -1,13 +1,13 @@
+import { erc20Abi, PublicClient, zeroAddress } from "viem";
 import {
   InterfaceIds,
   SUB_TYPES,
   SUBTYPE_INTERFACEIDS,
-  TokenTypes,
   TokenType,
+  TokenTypes,
   UNKNOWN,
 } from "./constant";
-import { ERC165_ABI, ERC5169_ABI } from "./abi";
-import { erc20Abi, PublicClient, zeroAddress } from "viem";
+import { ERC165_ABI, ERC5169_ABI } from "./libs/abi";
 
 export async function tokenType(
   address: string,
