@@ -43,3 +43,37 @@ export type TokenType = {
   subTypes?: string[];
   scriptURI?: string[];
 };
+
+export interface ERC20TokenData {
+  type: TokenType;
+  name: string;
+  symbol: string;
+  decimals: number;
+  totalSupply: number;
+}
+
+export interface ERC721TokenData {
+  type: TokenType;
+  owner: `0x${string}`;
+  tokenURI: string;
+  tokenMetadata?: unknown;
+  contractMetadata?: unknown;
+}
+
+export interface ERC1155TokenData {
+  type: TokenType;
+  uri: string;
+  tokenMetadata?: unknown;
+  contractMetadata?: unknown;
+}
+
+export type FetchHandler = (uri: string) => Promise<unknown>;
+
+export type TokenDataOptions = {
+  includeTokenMetadata?: boolean;
+  includeContractMetadata?: boolean;
+  ipfsGatewayDomain?: string;
+  fetchHandler?: FetchHandler;
+};
+
+export const DEFAULT_IPFS_GATEWAY_DOMAIN = "https://gateway.pinata.cloud";
