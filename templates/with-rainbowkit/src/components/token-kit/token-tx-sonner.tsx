@@ -7,14 +7,14 @@ import { useTransaction } from 'wagmi';
 
 interface TokenTxSonnerProps {
   txHash: string;
-  txUri?: string;
+  txUrl?: string;
 }
 
 const isValidTxHash = (hash: string): hash is `0x${string}` => {
   return /^0x[a-fA-F0-9]{64}$/.test(hash);
 };
 
-const TokenTxSonner: React.FC<TokenTxSonnerProps> = ({ txHash, txUri }) => {
+const TokenTxSonner: React.FC<TokenTxSonnerProps> = ({ txHash, txUrl }) => {
   const { isLoading, isSuccess, isError } = useTransaction({
     hash: isValidTxHash(txHash) ? txHash : undefined,
   });
@@ -32,10 +32,10 @@ const TokenTxSonner: React.FC<TokenTxSonnerProps> = ({ txHash, txUri }) => {
         description: (
           <span>
             Your transaction has been confirmed.
-            {txUri && (
+            {txUrl && (
               <>
                 Please see the full details{' '}
-                <a className="underline" href={`${txUri}${txHash}`} target="_blank" rel="noopener noreferrer">
+                <a className="underline" href={`${txUrl}${txHash}`} target="_blank" rel="noopener noreferrer">
                   here
                 </a>.
               </>
@@ -50,7 +50,7 @@ const TokenTxSonner: React.FC<TokenTxSonnerProps> = ({ txHash, txUri }) => {
         duration: 5000,
       });
     }
-  }, [isLoading, isSuccess, isError, txHash, txUri]);
+  }, [isLoading, isSuccess, isError, txHash, txUrl]);
 
   return (
     <div className="flex flex-col gap-4 items-center">
