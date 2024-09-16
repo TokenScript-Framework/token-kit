@@ -15,9 +15,13 @@ const isValidTxHash = (hash: string): hash is `0x${string}` => {
 };
 
 const TokenTxSonner: React.FC<TokenTxSonnerProps> = ({ txHash, txUri }) => {
-  if (!isValidTxHash(txHash)) return null;
-  const { isLoading, isSuccess, isError } = useTransaction({ hash: txHash});
+  const { isLoading, isSuccess, isError } = useTransaction({
+    hash: isValidTxHash(txHash) ? txHash : undefined,
+  });
+
   useEffect(() => {
+    if (!isValidTxHash(txHash)) return;
+
     if (isLoading) {
       toast("Transaction is pending...", {
         description: "Waiting for confirmation",
@@ -27,10 +31,15 @@ const TokenTxSonner: React.FC<TokenTxSonnerProps> = ({ txHash, txUri }) => {
       toast.success("Transaction successful!", {
         description: (
           <span>
-            Your transaction has been confirmed. Please see the full details{' '}
-            <a className="underline" href={txUri+txHash} target="_blank" rel="noopener noreferrer">
-              here
-            </a>.
+            Your transaction has been confirmed.
+            {txUri && (
+              <>
+                Please see the full details{' '}
+                <a className="underline" href={`${txUri}${txHash}`} target="_blank" rel="noopener noreferrer">
+                  here
+                </a>.
+              </>
+            )}
           </span>
         ),
         duration: 5000,
@@ -41,7 +50,7 @@ const TokenTxSonner: React.FC<TokenTxSonnerProps> = ({ txHash, txUri }) => {
         duration: 5000,
       });
     }
-  }, [isLoading, isSuccess, isError, txUri]);
+  }, [isLoading, isSuccess, isError, txHash, txUri]);
 
   return (
     <div className="flex flex-col gap-4 items-center">

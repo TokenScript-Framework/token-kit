@@ -77,7 +77,7 @@ export default function Home() {
         </div>
 
         <div>
-          <TokenTxSonner txHash="0x84d94889f045f659ef1e8e51948f2ee83a8d159fc31d5dd81d128bac7f533a2b" txUri="https://etherscan.io/tx/" />
+          <TokenTxSonner txHash="0x98241040429b818d969523ebf8ec915296767224d3ce8ecb0aadbffa8ba0065d" txUri="https://etherscan.io/tx/" />
         </div>
       </main>
     </div>
