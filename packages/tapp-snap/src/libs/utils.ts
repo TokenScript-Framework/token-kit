@@ -103,7 +103,9 @@ async function getRawImageData(url: string) {
 
     const blob = await response.blob();
     assert(
-      blob.type === "image/jpeg" || blob.type === "image/png",
+      blob.type === "image/jpeg" ||
+        blob.type === "image/png" ||
+        blob.type === "image/svg+xml",
       "Expected image data to be a JPEG or PNG image.",
     );
 
