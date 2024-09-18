@@ -117,3 +117,54 @@ If the token type of the provided address cannot be identified, it throws return
 ### Dependencies
 
 This module requires `viem` library to interact with the Ethereum blockchain.
+
+## myNfts
+
+This function is to get all the ERC721 enumerable NFTs by providing a known token
+
+### Usage
+
+```typescript
+import { myNfts } from "@token-kit/onchain";
+
+const client = YOUR_VIEM_CLIENT;
+const options: MyNftsOptions = {
+   ...
+}
+
+const result = await myNfts(
+  client,
+  "TOKEN_ADDRESS",
+  "TOKEN_ID",
+  options, // optional
+);
+```
+
+The `myNfts` function returns:
+
+```typescript
+MyNfts {
+  owner: `0x${string}`;
+  tokens: {
+    tokenId: bigint;
+    tokenURI: string;
+    tokenMetadata?: unknown;
+  }[];
+}
+```
+
+For `options`
+
+| option                                            | description                                                                                                                                                                                                                                                                                                                                      |
+| ------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `includeTokenMetadata: boolean`                   | optional, control whether token metadata will be fetched                                                                                                                                                                                                                                                                                         |
+| `ipfsGatewayDomain: string`                       | optional, customize ipfs gateway for metadata fetching, default is `gateway.pinata.cloud`                                                                                                                                                                                                                                                        |
+| `fetchHandler: (uri: string) => Promise<unknown>` | optional, if you need to load metadata with custom network protocol, or process the raw metadata, this option will allow you to override the default fetch handler, provided function needs to take the metadata uri, and return the result as a JSON object. Note: default metadata fetch handler only handles https / ipfs based metadata uri. |
+
+### Error Handling
+
+If the token is not ERC721 Enumerable, it will throw an error
+
+### Dependencies
+
+This module requires `viem` library to interact with the Ethereum blockchain.
