@@ -9,18 +9,19 @@ import {
   Link,
   Address,
 } from "@metamask/snaps-sdk/jsx";
-import { addressPipe, chainPipe } from "../libs/utils";
+import { truncateAddress, chainPipe } from "../libs/utils";
 import { ADDRESSTYPE, State } from "../libs/types";
+import { UNDEFINED } from "../libs/contants";
 
 type FormProps = {
   state?: State | null;
 };
 
-export const HomeForm: SnapComponent<FormProps> = ({ state }) => {
+export const HomePage: SnapComponent<FormProps> = ({ state }) => {
   const tokenLinks = state
     ? Object.entries(state).map(([address, tokens]) => (
         <Box key={address}>
-          <Heading>Owned by {addressPipe(address)}</Heading>
+          <Heading>Owned by {truncateAddress(address)}</Heading>
           <Divider />
           {Object.entries(tokens).map(([key, token]) => {
             const [chainId, contractAddress, tokenId] = key.split("-");
@@ -33,10 +34,15 @@ export const HomeForm: SnapComponent<FormProps> = ({ state }) => {
                 <Row label="Contract">
                   <Address address={contractAddress as ADDRESSTYPE} />
                 </Row>
-                <Row label="TokenId">
-                  <Text>{tokenId}</Text>
-                </Row>
-                <Button name={`viewToken_${address}_${key}`}>View</Button>
+                {tokenId && tokenId !== UNDEFINED && (
+                  <Row label="TokenId">
+                    <Text>{tokenId}</Text>
+                  </Row>
+                )}
+                <Box direction="horizontal" alignment="space-between">
+                  <Button name={`viewToken_${address}_${key}`}>View</Button>
+                  <Button name={`removeToken_${address}_${key}`}>Remove</Button>
+                </Box>
                 <Divider />
               </Box>
             );
@@ -48,11 +54,7 @@ export const HomeForm: SnapComponent<FormProps> = ({ state }) => {
   if (tokenLinks.length === 0) {
     tokenLinks.push(<Text key="no-token">No token</Text>);
   } else {
-    tokenLinks.push(
-      <Button key="clear" name="clear">
-        Clear
-      </Button>,
-    );
+    tokenLinks.push(<Button name="removeAll">Remove all</Button>);
   }
 
   return <Box>{tokenLinks}</Box>;

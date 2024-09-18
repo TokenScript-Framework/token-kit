@@ -1,40 +1,57 @@
 import { ADDRESSTYPE, State } from "../libs/types";
-import { clearState, getState, getSVG } from "../libs/utils";
-import { HomeForm } from "./HomeForm";
-import { InteractiveForm } from "./InteractiveForm";
+import { clearState, getState, getSVG, updateState } from "../libs/utils";
+import { Dialog } from "./Dialog";
+import { HomePage } from "./HomePage";
+import { TokenPage } from "./TokenPage";
 
-const ACTIONNAME_VIEWTOKEN = "viewToken";
 export async function operateForActions(id: string, eventName: string) {
-  const isViewTokenAction = eventName.startsWith(ACTIONNAME_VIEWTOKEN);
-  const buttonName = isViewTokenAction ? ACTIONNAME_VIEWTOKEN : eventName;
-  const params = isViewTokenAction
-    ? parseViewTokenEvent(eventName)
-    : {
-        owner: "",
-        tokenKey: "",
-        chain: "",
-        contract: "" as ADDRESSTYPE,
-        tokenId: "",
-      };
+  const params = parseViewTokenEvent(eventName);
 
-  switch (buttonName) {
-    case "clear": {
+  const state: State = (await getState()) as State;
+  switch (params.actionName) {
+    case "cancel": {
+      await snap.request({
+        method: "snap_updateInterface",
+        params: {
+          id,
+          ui: <HomePage state={state} />,
+        },
+      });
+      break;
+    }
+    case "confirmRemoveAll": {
       await clearState();
       await snap.request({
         method: "snap_updateInterface",
         params: {
           id,
-          ui: <HomeForm state={null} />,
+          ui: <HomePage state={null} />,
+        },
+      });
+
+      break;
+    }
+    case "removeAll": {
+      await snap.request({
+        method: "snap_updateInterface",
+        params: {
+          id,
+          ui: (
+            <Dialog
+              type="confirm"
+              title="Confirm"
+              actionName="confirmRemoveAll"
+              message="Are you sure to remove all tokens."
+            />
+          ),
         },
       });
       break;
     }
     case "viewToken": {
-      const state: State = (await getState()) as State;
       if (state === null) {
         throw new Error("State is null");
       }
-
       if (
         params.owner &&
         params.tokenKey &&
@@ -50,7 +67,7 @@ export async function operateForActions(id: string, eventName: string) {
         const metadata = ownerTokens[params.tokenKey];
 
         if (!metadata) {
-          throw new Error("Metdata no found");
+          throw new Error("Not found metadata");
         }
         const tokenSVG = await getSVG(metadata.tokenMetadata.image);
 
@@ -66,7 +83,7 @@ export async function operateForActions(id: string, eventName: string) {
           params: {
             type: "alert",
             content: (
-              <InteractiveForm
+              <TokenPage
                 metadata={updatedMetadata}
                 chain={params.chain}
                 contract={params.contract}
@@ -78,6 +95,42 @@ export async function operateForActions(id: string, eventName: string) {
       }
       break;
     }
+    case "removeToken": {
+      await snap.request({
+        method: "snap_updateInterface",
+        params: {
+          id,
+          ui: (
+            <Dialog
+              type="confirm"
+              title="Confirm"
+              actionName={`confirmRemoveToken_${params.owner}_${params.tokenKey}`}
+              message="Are you sure to remove this tokens."
+            />
+          ),
+        },
+      });
+      break;
+    }
+    case "confirmRemoveToken": {
+      const state: State = (await getState()) as State;
+      if (params.owner && params.tokenKey) {
+        const ownerTokens = state[params.owner];
+        if (ownerTokens && ownerTokens[params.tokenKey]) {
+          delete ownerTokens[params.tokenKey];
+          if (Object.keys(ownerTokens).length === 0) {
+            delete state[params.owner];
+          }
+          await updateState(state);
+
+          await snap.request({
+            method: "snap_updateInterface",
+            params: { id, ui: <HomePage state={state} /> },
+          });
+        }
+      }
+      break;
+    }
     default:
       console.log("Unknow opertion:", eventName);
       break;
@@ -86,15 +139,14 @@ export async function operateForActions(id: string, eventName: string) {
 
 function parseViewTokenEvent(event: string) {
   const parts = event.split("_");
-  if (parts.length < 3) {
-    throw new Error("Invalid event format");
+  const [actionName, owner, token] = parts;
+  if (parts.length === 1 || !token) {
+    return { actionName };
   }
-  const [, owner, token] = parts;
-  if (!token) {
-    throw new Error("Token is undefined");
-  }
+
   const [chain, contract, tokenId] = token.split("-");
   return {
+    actionName,
     owner,
     tokenKey: token,
     chain,

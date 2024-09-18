@@ -9,8 +9,8 @@ import {
   Link,
 } from "@metamask/snaps-sdk/jsx";
 
-import { VIEWER_ROOT } from "../libs/utils";
 import { Metadata } from "../libs/types";
+import { UNDEFINED, VIEWER_ROOT } from "../libs/contants";
 
 type FormProps = {
   metadata?: Metadata;
@@ -19,7 +19,7 @@ type FormProps = {
   tokenId: string;
 };
 
-export const InteractiveForm: SnapComponent<FormProps> = ({
+export const TokenPage: SnapComponent<FormProps> = ({
   metadata,
   chain,
   contract,
@@ -29,6 +29,8 @@ export const InteractiveForm: SnapComponent<FormProps> = ({
     return <Text>Metadata is wrong</Text>;
   }
 
+  const title =
+    tokenId && tokenId !== UNDEFINED ? `#${tokenId}` : metadata.name;
   const actionLinks = [];
   for (let i = 0; i < metadata.actions.length; i += 2) {
     actionLinks.push(
@@ -55,11 +57,12 @@ export const InteractiveForm: SnapComponent<FormProps> = ({
 
   return (
     <Box>
-      <Heading>#{tokenId}</Heading>
-      <Divider />
-      <Image src={metadata.tokenMetadata.svg} />
-      <Divider />
-      {metadata.tokenMetadata.attributes.map(({ trait_type, value }) => (
+      <Heading>{title}</Heading>
+      {!!metadata.tokenMetadata.svg && metadata.tokenMetadata.svg !== "" && (
+        <Image src={metadata.tokenMetadata.svg} />
+      )}
+
+      {metadata.tokenMetadata.attributes?.map(({ trait_type, value }) => (
         <Row label={trait_type}>
           <Text>{value.toString()}</Text>
         </Row>

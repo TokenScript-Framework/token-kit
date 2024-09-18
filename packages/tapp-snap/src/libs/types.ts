@@ -1,3 +1,5 @@
+import { Json } from "@metamask/utils";
+
 export type ADDRESSTYPE = `0x${string}`;
 
 export type Attribute = {
@@ -5,7 +7,7 @@ export type Attribute = {
   value: string | number;
 };
 
-export type Metadata = {
+type BaseTokenInfo = {
   chain: string;
   contract: ADDRESSTYPE;
   tokenId: string;
@@ -14,7 +16,14 @@ export type Metadata = {
   name: string;
   description: string;
   aboutUrl: string;
+};
+
+export type Metadata = BaseTokenInfo & {
   tokenMetadata: TokenMetadata & { svg?: string };
+};
+
+export type Token = Omit<Metadata, "tokenMetadata"> & {
+  tokenMetadata: TokenMetadata;
 };
 
 export type TokenMetadata = {
@@ -23,18 +32,6 @@ export type TokenMetadata = {
   description: string;
   name: string;
   animation_url?: string;
-};
-
-export type Token = {
-  chain: string;
-  contract: ADDRESSTYPE;
-  tokenId: string;
-  owner: ADDRESSTYPE;
-  actions: string[];
-  name: string;
-  description: string;
-  aboutUrl: string;
-  tokenMetadata: TokenMetadata;
 };
 
 export type State = {
@@ -46,3 +43,7 @@ export type State = {
 export type TokenListState = {
   [key: string]: Token;
 };
+
+export type CheckResult =
+  | { result: false; dialog: Json }
+  | { result: true; owner: ADDRESSTYPE };
