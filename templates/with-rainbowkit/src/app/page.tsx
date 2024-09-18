@@ -1,11 +1,13 @@
 "use client";
 
-import { TokenTxSonner } from "@/components/token-kit/token-tx-sonner";
 import { TokenCard } from "@/components/token-kit/token-card";
 import { TokenThumbnail } from "@/components/token-kit/token-thumbnail";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-
+import { useSonnerTransactionStatus } from "@/hooks/token-kit/use-sonner-transaction-status";
 export default function Home() {
+
+  useSonnerTransactionStatus({ txHash: "0x98241040429b818d969523ebf8ec915296767224d3ce8ecb0aadbffa8ba0065d", txBaseUrl: "https://etherscan.io/tx/"});
+  
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
@@ -65,7 +67,6 @@ export default function Home() {
 
         <div className="flex flex-col gap-4 items-center sm:flex-row">
           <ConnectButton />
-
           <a
             className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
             href="https://github.com/tokenScript-Framework/token-kit/"
@@ -76,9 +77,6 @@ export default function Home() {
           </a>
         </div>
 
-        <div>
-          <TokenTxSonner txHash="0x98241040429b818d969523ebf8ec915296767224d3ce8ecb0aadbffa8ba0065d" txUrl="https://etherscan.io/tx/" />
-        </div>
       </main>
     </div>
   );
