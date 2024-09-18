@@ -1,0 +1,70 @@
+{
+  "name": "@token-kit/hooks",
+  "private": false,
+  "version": "0.0.1",
+  "description": "React web3 hook library, ready to use, written in Typescript.",
+  "keywords": [
+    "web3",
+    "typescript",
+    "react",
+    "hooks"
+  ],
+  "license": "GPL-3.0-only",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist .turbo *.tsbuildinfo",
+    "lint": "eslint './src/**/*.{ts,tsx}' && tsc --noEmit"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.4.2",
+    "@testing-library/react": "^14.2.1",
+    "@types/node": "^20.11.19",
+    "@types/react": "18.2.73",
+    "eslint-plugin-jsdoc": "^48.1.0",
+    "eslint-plugin-tree-shaking": "^1.12.1",
+    "jsdom": "^24.0.0",
+    "react": "18.2.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.3.3",
+    "vitest": "^1.3.1"
+  },
+  "dependencies": {},
+  "peerDependencies": {
+    "react": "^16.8.0  || ^17 || ^18",
+    "viem": "^2",
+    "wagmi": "^2"
+  },
+  "engines": {
+    "node": ">=16.15.0"
+  },
+  "files": [
+    "dist"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TokenScript-Framework/token-kit/tree/main/packages/hooks"
+  },
+  "bugs": {
+    "url": "https://github.com/TokenScript-Framework/token-kit/issues"
+  }
+}
