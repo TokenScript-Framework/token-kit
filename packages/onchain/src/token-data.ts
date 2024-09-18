@@ -6,9 +6,10 @@ import {
   TokenDataOptions,
   TokenTypes,
 } from "./constant";
+import { ERC1155_ABI, OPENSEA_CONTRACT_URI_ABI } from "./libs/abi";
 import { tokenType } from "./token-type";
-import { ERC1155_ABI, OPENSEA_CONTRACT_URI_ABI } from "./abi";
-import { rewriteUrlIfIFPSUrl } from "./libs/url-rewrite";
+import { normalizeTokenId } from "./libs/normalizer";
+import { initFetchHandler } from "./libs/fetch-handler";
 
 const defaultOptions: TokenDataOptions = {
   includeTokenMetadata: false,
@@ -22,12 +23,7 @@ export async function tokenData(
   options?: TokenDataOptions,
 ): Promise<ERC20TokenData | ERC721TokenData | ERC1155TokenData> {
   const opts = { ...defaultOptions, ...options };
-  if (!opts.fetchHandler) {
-    opts.fetchHandler = async (uri: string) =>
-      await (
-        await fetch(rewriteUrlIfIFPSUrl(uri, opts.ipfsGatewayDomain))
-      ).json();
-  }
+  initFetchHandler(opts);
   const type = await tokenType(address, client);
 
   switch (type.type) {
@@ -67,12 +63,6 @@ export async function tokenData(
   }
 }
 
-function normalizeTokenId(tokenId: number | bigint) {
-  if (!["bigint", "number"].includes(typeof tokenId))
-    throw new Error("tokenId number is required for ERC721");
-  return BigInt(tokenId);
-}
-
 async function enrichMetadata(
   client: PublicClient,
   address: `0x${string}`,
@@ -101,7 +91,7 @@ async function fetchERC20TokenData(
     abi: erc20Abi,
   } as const;
 
-  const contracts = [
+  const contractParams = [
     {
       ...contractBase,
       functionName: "name" as const,
@@ -121,7 +111,7 @@ async function fetchERC20TokenData(
   ] as const;
 
   // PublicClient.multicall has type inference issue, need to revisit later
-  const results = await Promise.all(contracts.map(client.readContract));
+  const results = await Promise.all(contractParams.map(client.readContract));
 
   return {
     name: results[0] as string,
@@ -141,7 +131,7 @@ async function fetchERC721TokenData(
     abi: erc721Abi,
   } as const;
 
-  const contracts = [
+  const contractParams = [
     {
       ...contractBase,
       functionName: "ownerOf" as const,
@@ -155,7 +145,7 @@ async function fetchERC721TokenData(
   ] as const;
 
   // PublicClient.multicall has type inference issue, need to revisit later
-  const results = await Promise.all(contracts.map(client.readContract));
+  const results = await Promise.all(contractParams.map(client.readContract));
 
   return {
     owner: results[0] as `0x${string}`,
@@ -173,7 +163,7 @@ async function fetchERC1155TokenData(
     abi: ERC1155_ABI,
   } as const;
 
-  const contracts = [
+  const contractParams = [
     {
       ...contractBase,
       functionName: "uri" as const,
@@ -182,7 +172,7 @@ async function fetchERC1155TokenData(
   ] as const;
 
   // PublicClient.multicall has type inference issue, need to revisit later
-  const results = await Promise.all(contracts.map(client.readContract));
+  const results = await Promise.all(contractParams.map(client.readContract));
 
   return {
     uri: results[0],
