@@ -1,12 +1,16 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/shadcn-registry/ui/avatar";
+import { Badge } from "@/shadcn-registry/ui/badge";
+import { Card, CardContent } from "@/shadcn-registry/ui/card";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from "@/shadcn-registry/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { ShieldCheck, ShieldX } from "lucide-react";
 import React from "react";

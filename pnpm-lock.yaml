@@ -29,6 +29,9 @@ importers:
       tsup:
         specifier: ^8.2.4
         version: 8.2.4(@swc/core@1.3.78(@swc/helpers@0.5.5))(jiti@1.21.6)(postcss@8.4.47)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1)
+      tsx:
+        specifier: ^4.15.7
+        version: 4.19.1
       typescript:
         specifier: ^5.6.2
         version: 5.6.2
@@ -336,15 +339,24 @@ importers:
       '@types/jsdom':
         specifier: ^21.1.7
         version: 21.1.7
+      '@types/lodash.template':
+        specifier: ^4.5.1
+        version: 4.5.3
       '@types/react':
         specifier: ^18
         version: 18.3.5
+      lodash.template:
+        specifier: ^4.5.0
+        version: 4.5.0
       react:
         specifier: ^18
         version: 18.3.1
       tailwind-merge:
         specifier: ^2.4.0
         version: 2.5.2
+      ts-morph:
+        specifier: ^18.0.0
+        version: 18.0.0
       tslib:
         specifier: ^2.6.3
         version: 2.7.0
@@ -10711,7 +10723,7 @@ snapshots:
     dependencies:
       '@types/istanbul-lib-coverage': 2.0.6
       '@types/istanbul-reports': 3.0.4
-      '@types/node': 20.16.5
+      '@types/node': 22.5.4
       '@types/yargs': 15.0.19
       chalk: 4.1.2
 
@@ -12821,7 +12833,7 @@ snapshots:
 
   '@types/node-forge@1.3.11':
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 22.5.4
 
   '@types/node@18.15.13': {}
 
@@ -14474,7 +14486,7 @@ snapshots:
 
   chrome-launcher@0.15.2:
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 22.5.4
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
@@ -14485,7 +14497,7 @@ snapshots:
 
   chromium-edge-launcher@0.2.0:
     dependencies:
-      '@types/node': 20.16.5
+      '@types/node': 22.5.4
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 1.4.2
