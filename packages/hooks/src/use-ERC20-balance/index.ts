@@ -1,1 +1,1 @@
-export * from "./useERC20Balance";
+export * from "./use-ERC20-balance";
