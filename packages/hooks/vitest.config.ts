@@ -1,12 +1,9 @@
-import { defineConfig } from "tsup";
+import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-  entry: ["src/index.ts"],
-  dts: true,
-  outDir: "dist",
-  clean: true,
-  format: ["cjs", "esm"],
-  treeshake: true,
-  splitting: false,
-  cjsInterop: true,
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: "./tests/setup.ts",
+  },
 });

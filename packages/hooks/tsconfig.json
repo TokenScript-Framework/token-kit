@@ -10,6 +10,7 @@
     "lib": ["ESNEXT", "DOM", "DOM.Iterable"],
     // use global types for vite's expect, describe, etc.
     "types": ["vitest/globals"],
+    "target": "ES2020",
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
     "module": "ESNext",
