@@ -1,4 +1,4 @@
-# hooks
+# @token-kit/hooks
 
 ## useERC20Balance
 
