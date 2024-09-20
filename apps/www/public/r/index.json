@@ -41,5 +41,15 @@
         }
       }
     }
+  },
+  {
+    "name": "token-card",
+    "type": "registry:ui",
+    "files": [
+      {
+        "path": "ui/token-card.tsx",
+        "type": "registry:ui"
+      }
+    ]
   }
 ]

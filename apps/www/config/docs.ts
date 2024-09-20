@@ -128,8 +128,8 @@ export const docsConfig: DocsConfig = {
           items: [],
         },
         {
-          title: "Alert",
-          href: "/docs/components/alert",
+          title: "Token Card",
+          href: "/docs/components/token-card",
           items: [],
         },
       ],

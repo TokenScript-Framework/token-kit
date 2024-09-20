@@ -29,9 +29,9 @@ export const ui: Registry = [
       },
     },
   },
-  // {
-  //   name: "alert",
-  //   type: "registry:ui",
-  //   files: ["ui/alert.tsx"],
-  // },
+  {
+    name: "token-card",
+    type: "registry:ui",
+    files: ["ui/token-card.tsx"],
+  },
 ];

@@ -16,12 +16,34 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
+    "token-card": {
+      name: "token-card",
+      type: "registry:ui",
+      registryDependencies: undefined,
+      files: ["registry/default/ui/token-card.tsx"],
+      component: React.lazy(() => import("@/registry/default/ui/token-card.tsx")),
+      source: "",
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
     "accordion-demo": {
       name: "accordion-demo",
       type: "registry:example",
       registryDependencies: ["accordion"],
       files: ["registry/default/example/accordion-demo.tsx"],
       component: React.lazy(() => import("@/registry/default/example/accordion-demo.tsx")),
+      source: "",
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "token-card-demo": {
+      name: "token-card-demo",
+      type: "registry:example",
+      registryDependencies: ["token-card"],
+      files: ["registry/default/example/token-card-demo.tsx"],
+      component: React.lazy(() => import("@/registry/default/example/token-card-demo.tsx")),
       source: "",
       category: "undefined",
       subcategory: "undefined",
