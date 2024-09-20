@@ -7,16 +7,9 @@ export type UseApprovalInput = {
   contract: `0x${string}`;
   owner: `0x${string}`;
   operator: `0x${string}`;
-} & (
-  | {
-      tokenType: "ERC721";
-      tokenId: string;
-    }
-  | {
-      tokenType: "ERC1155";
-      tokenId?: string;
-    }
-);
+  tokenId?: string;
+  tokenType: "ERC721" | "ERC1155";
+};
 
 export type UseApprovalReturn =
   | {
@@ -41,39 +34,40 @@ export function useApproval({
     address: contract,
   };
 
-  const contracts =
-    tokenType === "ERC721"
-      ? [
-          {
-            ...baseContract,
-            abi: erc721Abi,
-            functionName: "getApproved",
-            args: [tokenId],
-          },
-          {
-            ...baseContract,
-            abi: erc721Abi,
-            functionName: "isApprovedForAll",
-            args: [owner, operator],
-          },
-        ]
-      : [
-          {
-            ...baseContract,
-            abi: erc1155Abi,
-            functionName: "isApprovedForAll",
-            args: [owner, operator],
-          },
-        ];
+  const isERC721 = tokenType === "ERC721";
+  const hasTokenId = tokenId !== undefined;
+
+  const isApprovedForAllContract = {
+    ...baseContract,
+    abi: isERC721 ? erc721Abi : erc1155Abi,
+    functionName: "isApprovedForAll",
+    args: [owner, operator],
+  };
+
+  const getApprovedContract = (
+    chainId: number,
+    contract: `0x${string}`,
+    tokenId: string,
+    abi: Abi,
+  ) => {
+    return {
+      chainId,
+      address: contract,
+      abi: abi,
+      functionName: "getApproved",
+      args: [BigInt(tokenId)],
+    };
+  };
 
   const { data: results, isLoading } = useReadContracts({
-    contracts: contracts as readonly {
-      abi: Abi;
-      address: `0x${string}`;
-      functionName: string;
-      chainId: number;
-      args: readonly unknown[];
-    }[],
+    allowFailure: false,
+    contracts:
+      isERC721 && hasTokenId
+        ? [
+            getApprovedContract(chainId, contract, tokenId, erc721Abi),
+            isApprovedForAllContract,
+          ]
+        : [isApprovedForAllContract],
   });
 
   if (isLoading || !results || results.some((result) => !result)) {
@@ -81,8 +75,9 @@ export function useApproval({
   }
   const isApproved = (
     tokenType === "ERC721" && tokenId
-      ? results[0].result === operator || Boolean(results[1].result)
-      : Boolean(results[0].result)
+      ? (results[0] as { result: `0x${string}` }).result === operator ||
+        Boolean((results[1] as { result: boolean }).result)
+      : Boolean((results[0] as { result: boolean }).result)
   ) as boolean;
 
   return {

@@ -34,8 +34,5 @@ export function useOwner({
     return { status: result?.status === "pending" ? "loading" : "error" };
   }
 
-  return {
-    status: "success",
-    data: result.data as `0x${string}`,
-  };
+  return result;
 }
