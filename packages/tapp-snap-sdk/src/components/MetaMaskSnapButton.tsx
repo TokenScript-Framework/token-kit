@@ -2,6 +2,7 @@ import React, { useState, useCallback, useEffect, useRef } from "react";
 import { useMetaMaskStatus } from "../hooks/useMetaMaskStatus";
 import { DEFAULT_CSS } from "../libs/constants";
 import { SpinIcon } from "../icons/SpinIcon";
+import { cn } from "../libs/utils";
 
 interface MetaMaskSnapButtonProps {
   snapId: string;
@@ -114,7 +115,11 @@ export const MetaMaskSnapButton: React.FC<MetaMaskSnapButtonProps> = ({
     buttonText = title;
   }
   return (
-    <button onClick={handleClick} disabled={isLoading} className={cssClass}>
+    <button
+      onClick={handleClick}
+      disabled={isLoading}
+      className={cn(DEFAULT_CSS, cssClass)}
+    >
       {isLoading ? (
         <>
           <SpinIcon className="h-5 w-5 animate-spin text-white" />
