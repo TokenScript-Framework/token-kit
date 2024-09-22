@@ -1,0 +1,70 @@
+name: "Build Registry"
+
+on:
+  push:
+    paths:
+      - apps/www/**
+  pull_request:
+    paths:
+      - apps/www/**
+  workflow_dispatch:
+
+env:
+  AWS_REGION: us-west-1
+  PROJ_PATH: apps/www/
+  PROD_URL: https://resources.smarttokenlabs.com/token-kit/ui/registry/index.json
+  S3_BUCKET: "smarttokenlabs-resources"
+  CLOUDFRONT_ID: "EEGAM5CNS5Q6V"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        name: Install pnpm
+        with:
+          version: latest
+          run_install: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+      - run: |
+          echo -n "Node version: "
+          node -v
+          echo -n "Pnpm version: "
+          pnpm -v
+      - name: build:registry
+        run: |
+          cd "${PROJ_PATH}"
+          pnpm i --config.recursive-install=false
+          pnpm build:registry
+      - uses: actions/upload-artifact@v4
+        with:
+          name: registry
+          path: ${{ env.PROJ_PATH }}/public/r/
+
+  deploy:
+    environment:
+      name: "cli-registry"
+      url: ${{ env.PROD_URL }}
+    if: contains(fromJson('["main"]'), github.ref_name) || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: registry
+          path: ${{ env.PROJ_PATH }}/public/r/
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+      - name: deploy
+        run: |
+          aws s3 sync "${PROJ_PATH}/public/r/" "s3://${S3_BUCKET}/token-kit/ui/registry/" --cache-control 'max-age=31536000' --delete --quiet \
+          && aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_ID}" --paths "/token-kit/ui/registry/*"
