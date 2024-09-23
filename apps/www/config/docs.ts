@@ -132,6 +132,11 @@ export const docsConfig: DocsConfig = {
           href: "/docs/components/token-card",
           items: [],
         },
+        {
+          title: "Token Thumbnail",
+          href: "/docs/components/token-thumbnail",
+          items: [],
+        },
       ],
     },
   ],

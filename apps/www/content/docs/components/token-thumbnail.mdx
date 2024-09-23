@@ -1,0 +1,65 @@
+---
+title: Token Thumbnail
+description: A token thumbnail is a component that displays a token thumbnail information, like a logo, name, address and verified status.
+component: true
+---
+
+<ComponentPreview
+  name="token-thumbnail-demo"
+  className="[&_.preview>[data-orientation=vertical]]:sm:max-w-[70%]"
+  description="A token thumbnail"
+/>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx shadcn@latest add token-thumbnail
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="token-thumbnail" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { TokenThumbnail } from "@/registry/default/ui/token-thumbnail";
+```
+
+```tsx
+<TokenThumbnail
+  token={{
+    address: "0xdac17f958d2ee523a2206206994597c13d831ec7",
+    name: "Tether USD",
+    chainId: 1,
+    logoURI:
+      "https://assets.coingecko.com/coins/images/325/standard/Tether.png",
+    verified: true,
+  }}
+/>
+```
