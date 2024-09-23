@@ -16,5 +16,5 @@ cache
 .vscode
 *.tgz
 coverage
-
+.pnpm-store/
 .idea/
