@@ -24,7 +24,6 @@ jobs:
       - uses: pnpm/action-setup@v4
         name: Install pnpm
         with:
-          version: latest
           run_install: false
       - uses: actions/setup-node@v4
         with:
@@ -49,9 +48,13 @@ jobs:
     environment:
       name: "cli-registry"
       url: ${{ env.PROD_URL }}
-    if:
-      (contains(fromJson('["main"]'), github.ref_name) && github.event_name == 'push') ||
-      github.event_name == 'workflow_dispatch'
+    if: ${{ contains(
+      fromJson('["push", "workflow_dispatch"]'),
+      github.event_name) &&
+      contains(
+      fromJson('["main"]'),
+      github.ref_name)
+      }}
     runs-on: ubuntu-latest
     needs:
       - build

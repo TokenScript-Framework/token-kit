@@ -12,7 +12,7 @@ on:
 env:
   ALIAS_DOMAIN_PREV: "token-kit.vercel.app"
   ALIAS_DOMAIN_PROD: "token-kit.vercel.app"
-  PROJ_PATH: ""
+  PROJ_PATH: "apps/www"
 
 jobs:
   deploy:
