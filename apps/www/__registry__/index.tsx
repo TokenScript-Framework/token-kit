@@ -27,12 +27,34 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
-    "token-card-demo": {
-      name: "token-card-demo",
+    "token-card-erc20-demo": {
+      name: "token-card-erc20-demo",
       type: "registry:example",
       registryDependencies: ["token-card"],
-      files: ["registry/default/example/token-card-demo.tsx"],
-      component: React.lazy(() => import("@/registry/default/example/token-card-demo.tsx")),
+      files: ["registry/default/example/token-card-erc20-demo.tsx"],
+      component: React.lazy(() => import("@/registry/default/example/token-card-erc20-demo.tsx")),
+      source: "",
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "token-card-erc721-demo": {
+      name: "token-card-erc721-demo",
+      type: "registry:example",
+      registryDependencies: ["token-card"],
+      files: ["registry/default/example/token-card-erc721-demo.tsx"],
+      component: React.lazy(() => import("@/registry/default/example/token-card-erc721-demo.tsx")),
+      source: "",
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "token-card-erc1155-demo": {
+      name: "token-card-erc1155-demo",
+      type: "registry:example",
+      registryDependencies: ["token-card"],
+      files: ["registry/default/example/token-card-erc1155-demo.tsx"],
+      component: React.lazy(() => import("@/registry/default/example/token-card-erc1155-demo.tsx")),
       source: "",
       category: "undefined",
       subcategory: "undefined",

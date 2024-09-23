@@ -122,7 +122,7 @@ function ERC721TokenCard({
   tokenId,
   ...props
 }: ERC721TokenCardProps) {
-  const { data } = useReadContracts({
+  const { data, ...v } = useReadContracts({
     allowFailure: false,
     contracts: [
       {
@@ -140,6 +140,7 @@ function ERC721TokenCard({
       },
     ],
   });
+  console.log(v, "===========v");
 
   const [erc721TokenURI, name] = data || [];
 

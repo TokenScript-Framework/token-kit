@@ -2,10 +2,22 @@ import { Registry } from "@/registry/schema";
 
 export const examples: Registry = [
   {
-    name: "token-card-demo",
+    name: "token-card-erc20-demo",
     type: "registry:example",
     registryDependencies: ["token-card"],
-    files: ["example/token-card-demo.tsx"],
+    files: ["example/token-card-erc20-demo.tsx"],
+  },
+  {
+    name: "token-card-erc721-demo",
+    type: "registry:example",
+    registryDependencies: ["token-card"],
+    files: ["example/token-card-erc721-demo.tsx"],
+  },
+  {
+    name: "token-card-erc1155-demo",
+    type: "registry:example",
+    registryDependencies: ["token-card"],
+    files: ["example/token-card-erc1155-demo.tsx"],
   },
   {
     name: "token-thumbnail-demo",
