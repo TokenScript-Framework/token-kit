@@ -11,7 +11,6 @@ The directory structure is as follows:
 
 ## Usage
 
-- [@token-kit/ui](packages/ui/README.md)
 - [@token-kit/onchain](packages/onchain/README.md)
 - [@token-kit/cli](packages/cli/README.md)
 - [@token-kit/hooks](packages/hooks/README.md)
