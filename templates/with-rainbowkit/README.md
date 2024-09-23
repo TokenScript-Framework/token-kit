@@ -35,5 +35,3 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 ## Learn More
 
 To learn more about web3 development, take a look at the following resources:
-
-- [Token Kit](Next.js Documentation) - learn about TokenKit
