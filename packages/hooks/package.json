@@ -66,5 +66,8 @@
   },
   "bugs": {
     "url": "https://github.com/TokenScript-Framework/token-kit/issues"
+  },
+  "dependencies": {
+    "@token-kit/onchain": "^0.0.1"
   }
 }

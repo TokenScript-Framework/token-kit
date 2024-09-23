@@ -1,6 +1,6 @@
-import { erc1155Abi } from "../libs/abi";
 import { Abi, erc721Abi } from "viem";
 import { useReadContracts } from "wagmi";
+import { ERC1155_ABI } from "@token-kit/onchain";
 
 export type UseApprovalInput = {
   chainId: number;
@@ -39,7 +39,7 @@ export function useApproval({
 
   const isApprovedForAllContract = {
     ...baseContract,
-    abi: isERC721 ? erc721Abi : erc1155Abi,
+    abi: isERC721 ? erc721Abi : ERC1155_ABI,
     functionName: "isApprovedForAll",
     args: [owner, operator],
   };

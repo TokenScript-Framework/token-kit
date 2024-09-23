@@ -1,6 +1,6 @@
-import { erc1155Abi } from "../libs/abi";
 import { erc20Abi, erc721Abi } from "viem";
 import { useReadContracts } from "wagmi";
+import { ERC1155_ABI } from "@token-kit/onchain";
 
 export type UseAllowanceInput = {
   chainId: number;
@@ -78,7 +78,7 @@ export function useAllowance({
               {
                 chainId,
                 address: contract,
-                abi: erc1155Abi,
+                abi: ERC1155_ABI,
                 functionName: "balanceOf",
                 args: [owner, BigInt(tokenId!)],
               },
