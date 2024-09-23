@@ -18,7 +18,7 @@ export const ERC165_ABI = [
     stateMutability: "view",
     type: "function",
   },
-];
+] as const;
 
 export const ERC5169_ABI = [
   {
@@ -34,7 +34,48 @@ export const ERC5169_ABI = [
     stateMutability: "view",
     type: "function",
   },
-];
+] as const;
+
+export const ERC7738_ABI = [
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "tokenId",
+        type: "uint256",
+      },
+    ],
+    name: "getScriptURI",
+    outputs: [
+      {
+        internalType: "string",
+        name: "",
+        type: "string",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "contractAddress",
+        type: "address",
+      },
+    ],
+    name: "scriptURI",
+    outputs: [
+      {
+        internalType: "string[]",
+        name: "",
+        type: "string[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const;
 
 export const ERC1155_ABI = [
   {
@@ -349,7 +390,7 @@ export const ERC1155_ABI = [
     stateMutability: "view",
     type: "function",
   },
-];
+] as const;
 
 export const ERC721Enumerable_ABI = [
   {
@@ -375,7 +416,7 @@ export const ERC721Enumerable_ABI = [
     stateMutability: "view",
     type: "function",
   },
-];
+] as const;
 
 export const OPENSEA_CONTRACT_URI_ABI = [
   {
@@ -391,4 +432,4 @@ export const OPENSEA_CONTRACT_URI_ABI = [
     stateMutability: "view",
     type: "function",
   },
-];
+] as const;
