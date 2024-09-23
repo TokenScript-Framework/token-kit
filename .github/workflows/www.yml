@@ -14,6 +14,8 @@ env:
   ALIAS_DOMAIN_PROD: "token-kit.vercel.app"
   PROJ_PATH: "apps/www"
 
+permissions: write-all
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
