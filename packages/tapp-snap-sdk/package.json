@@ -17,7 +17,6 @@
   },
   "scripts": {
     "build": "tsup",
-    "prepare": "tsup",
     "lint": "eslint",
     "test": "vitest run",
     "test:watch": "vitest"

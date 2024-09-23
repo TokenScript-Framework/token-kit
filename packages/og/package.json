@@ -28,8 +28,7 @@
     "dist/"
   ],
   "scripts": {
-    "build": "tsup",
-    "prepare": "tsup"
+    "build": "tsup"
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
