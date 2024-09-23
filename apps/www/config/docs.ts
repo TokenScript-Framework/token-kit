@@ -14,7 +14,7 @@ export const docsConfig: DocsConfig = {
     },
     {
       title: "Components",
-      href: "/docs/components/accordion",
+      href: "/docs/components/token-card",
     },
     {
       title: "Blocks",
@@ -122,11 +122,6 @@ export const docsConfig: DocsConfig = {
     {
       title: "Components",
       items: [
-        {
-          title: "Accordion",
-          href: "/docs/components/accordion",
-          items: [],
-        },
         {
           title: "Token Card",
           href: "/docs/components/token-card",

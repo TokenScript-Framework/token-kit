@@ -5,17 +5,6 @@ import * as React from "react"
 
 export const Index: Record<string, any> = {
   "default": {
-    "accordion": {
-      name: "accordion",
-      type: "registry:ui",
-      registryDependencies: undefined,
-      files: ["registry/default/ui/accordion.tsx"],
-      component: React.lazy(() => import("@/registry/default/ui/accordion.tsx")),
-      source: "",
-      category: "undefined",
-      subcategory: "undefined",
-      chunks: []
-    },
     "token-card": {
       name: "token-card",
       type: "registry:ui",
@@ -33,17 +22,6 @@ export const Index: Record<string, any> = {
       registryDependencies: undefined,
       files: ["registry/default/ui/token-thumbnail.tsx"],
       component: React.lazy(() => import("@/registry/default/ui/token-thumbnail.tsx")),
-      source: "",
-      category: "undefined",
-      subcategory: "undefined",
-      chunks: []
-    },
-    "accordion-demo": {
-      name: "accordion-demo",
-      type: "registry:example",
-      registryDependencies: ["accordion"],
-      files: ["registry/default/example/accordion-demo.tsx"],
-      component: React.lazy(() => import("@/registry/default/example/accordion-demo.tsx")),
       source: "",
       category: "undefined",
       subcategory: "undefined",

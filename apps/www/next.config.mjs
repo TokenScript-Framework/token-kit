@@ -1,4 +1,4 @@
-import { createContentlayerPlugin } from "next-contentlayer2"
+import { createContentlayerPlugin } from "next-contentlayer2";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -18,16 +18,6 @@ const nextConfig = {
   },
   redirects() {
     return [
-      {
-        source: "/components",
-        destination: "/docs/components/accordion",
-        permanent: true,
-      },
-      {
-        source: "/docs/components",
-        destination: "/docs/components/accordion",
-        permanent: true,
-      },
       {
         source: "/examples",
         destination: "/examples/mail",
@@ -53,12 +43,12 @@ const nextConfig = {
         destination: "/docs/components/form",
         permanent: false,
       },
-    ]
+    ];
   },
-}
+};
 
 const withContentlayer = createContentlayerPlugin({
   // Additional Contentlayer config options
-})
+});
 
-export default withContentlayer(nextConfig)
+export default withContentlayer(nextConfig);
