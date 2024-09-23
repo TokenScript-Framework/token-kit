@@ -1,0 +1,32 @@
+[
+  {
+    "name": "token-card",
+    "type": "registry:ui",
+    "dependencies": [
+      "react",
+      "viem",
+      "wagmi"
+    ],
+    "files": [
+      {
+        "path": "ui/token-card.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  {
+    "name": "token-thumbnail",
+    "type": "registry:ui",
+    "dependencies": [
+      "react",
+      "viem",
+      "wagmi"
+    ],
+    "files": [
+      {
+        "path": "ui/token-thumbnail.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  }
+]
