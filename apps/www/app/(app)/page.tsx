@@ -1,6 +1,5 @@
 import Link from "next/link";
 
-import { Announcement } from "@/components/announcement";
 import {
   PageActions,
   PageHeader,
@@ -14,7 +13,6 @@ export default function IndexPage() {
   return (
     <div className="container relative">
       <PageHeader>
-        <Announcement />
         <PageHeaderHeading>Build your component library</PageHeaderHeading>
         <PageHeaderDescription>
           Beautifully designed components that you can copy and paste into your
