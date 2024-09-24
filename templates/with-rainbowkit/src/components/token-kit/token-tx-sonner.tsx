@@ -1,55 +1,90 @@
-import { useEffect } from "react";
-import { toast } from "@/hooks/token-kit/use-tx-toast";
-import { useTransaction } from "wagmi";
+"use client";
 
-const isValidTxHash = (hash: string): hash is `0x${string}` => {
-  return /^0x[a-fA-F0-9]{64}$/.test(hash);
+import { toast } from "@/hooks/token-kit/use-tx-toast";
+import { http, createConfig } from '@wagmi/core';
+import { mainnet, sepolia, polygon, avalanche, avalancheFuji, base, baseSepolia } from '@wagmi/core/chains';
+import { waitForTransactionReceipt } from '@wagmi/core';
+
+const config = createConfig({
+  chains: [mainnet, sepolia, polygon, avalanche, avalancheFuji, base, baseSepolia],
+  transports: {
+    [mainnet.id]: http(),
+    [sepolia.id]: http(),
+    [polygon.id]: http(),
+    [avalanche.id]: http(),
+    [avalancheFuji.id]: http(),
+    [base.id]: http(),
+    [baseSepolia.id]: http(),
+  },
+});
+
+type TxError = {
+  message: string;
 };
 
-export const useTokenTxSonner = (txHash: string, txBaseUrl?: string) => {
-  const { isLoading, isSuccess, isError } = useTransaction({
-    hash: isValidTxHash(txHash) ? txHash : undefined,
-  });
+export const showTxSonner = (txHash: string, txBaseUrl?: string, duration?:number) => {
+  const toastId = txMessageStatusHandler(true, false, false, txHash, txBaseUrl);
 
-  const showTxToastTimer = 2500;
+  waitForTransactionReceipt(config, {
+    confirmations: 2,
+    hash: txHash as `0x${string}`,
+  })
+    .then(() => {
+      txMessageStatusHandler(false, true, false, txHash, txBaseUrl, undefined, toastId?.toString(), duration);
+    })
+    .catch((error) => {
+      txMessageStatusHandler(false, false, true, txHash, txBaseUrl, error, toastId?.toString(), duration);
+    })
+    .finally(() => {
+      if (toastId) {
+        toast.dismiss(toastId);
+      }
+    });
+};
 
-  useEffect(() => {
-    if (!isValidTxHash(txHash)) {
-      return;
-    }
-    if (isLoading) {
-      toast.message("Transaction is pending...", {
-        description: "Waiting for confirmation...",
-        duration: showTxToastTimer,
-      });
-    } else if (isSuccess) {
-      toast.success("Transaction successful!", {
-        description: (
-          <span>
-            Your transaction has been confirmed.
-            {txBaseUrl && (
-              <>
-                {" "}
-                See details{" "}
-                <a
-                  className="underline"
-                  href={`${txBaseUrl}${txHash}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  here
-                </a>.
-              </>
-            )}
-          </span>
-        ),
-        duration: showTxToastTimer,
-      });
-    } else if (isError) {
-      toast.error("Transaction failed", {
-        description: "Something went wrong, please try again.",
-        duration: showTxToastTimer,
-        });
-    } 
-  }, [isLoading, isSuccess, isError, txHash, txBaseUrl]);
+const txMessageStatusHandler = (
+  isLoading: boolean,
+  isSuccess: boolean,
+  isError: boolean,
+  txHash: string,
+  txBaseUrl?: string,
+  error?: TxError,
+  toastId?: string,
+  toastDuration: number = 5000
+) => {
+  if (isLoading) {
+    return toast.loading("Transaction is pending...", {
+      description: "Waiting for confirmation...",
+      duration: 30000,
+    });
+  } else if (isSuccess && toastId) {
+    toast.success("Transaction successful!", {
+      description: (
+        <span>
+          Your transaction has been confirmed.
+          {txBaseUrl && (
+            <>
+              {" "}
+              See details{" "}
+              <a
+                className="underline"
+                href={`${txBaseUrl}${txHash}`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                here
+              </a>.
+            </>
+          )}
+        </span>
+      ),
+      duration: toastDuration,
+    });
+  } else if (isError && toastId) {
+    toast.error("Transaction failed", {
+      description: `Something went wrong: ${error?.message || 'Unknown error'}`,
+      duration: toastDuration,
+    });
+    console.error('error:', error);
+  }
 };

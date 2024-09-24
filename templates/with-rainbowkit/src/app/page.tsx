@@ -1,19 +1,16 @@
+"use client"
 import { TokenCard } from "@/components/token-kit/token-card";
 import { TokenThumbnail } from "@/components/token-kit/token-thumbnail";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useTokenTxSonner } from "@/components/token-kit/token-tx-sonner";
-import { useEffect, useState } from "react";
+import { showTxSonner } from "@/components/token-kit/token-tx-sonner";
+import { useEffect } from "react";
 
 export default function Home() {
 
-  const [mockTxHash, setMockTxHash] = useState<string>("");
-  const [mockTxBaseUrl, setMockTxBaseURL] = useState<string | undefined>("");
-
-  useTokenTxSonner(mockTxHash || "", mockTxBaseUrl);
-
   useEffect(() => {
-    setMockTxHash('0x98241040429b818d969523ebf8ec915296767224d3ce8ecb0aadbffa8ba0065d');
-    setMockTxBaseURL('https://etherscan.io/tx/');
+    setTimeout(() => {
+      showTxSonner('0x6ab620baa39d4bf784a229c1aa4df0b25267863a4e623785d8937c48c6b4170d', 'https://etherscan.io/tx/', 5000);
+    }, 0);
   }, []);
   
   return (
