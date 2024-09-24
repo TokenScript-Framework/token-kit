@@ -13,7 +13,7 @@ export default function IndexPage() {
   return (
     <div className="container relative">
       <PageHeader>
-        <PageHeaderHeading>Build your component library</PageHeaderHeading>
+        <PageHeaderHeading>Build your web3 component library</PageHeaderHeading>
         <PageHeaderDescription>
           Beautifully designed components that you can copy and paste into your
           web3 apps.
@@ -33,10 +33,6 @@ export default function IndexPage() {
           </Button>
         </PageActions>
       </PageHeader>
-
-      <section className="hidden md:block">
-        <div className="overflow-hidden rounded-lg border bg-background shadow"></div>
-      </section>
     </div>
   );
 }
