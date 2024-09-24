@@ -3,10 +3,20 @@
 import { TokenCard } from "@/components/token-kit/token-card";
 import { TokenThumbnail } from "@/components/token-kit/token-thumbnail";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useSonnerTransactionStatus } from "@/hooks/token-kit/use-sonner-transaction-status";
+import { useTokenTxSonner } from "@/components/token-kit/token-tx-sonner";
+import { useEffect, useState } from "react";
+
 export default function Home() {
 
-  useSonnerTransactionStatus({ txHash: "0x98241040429b818d969523ebf8ec915296767224d3ce8ecb0aadbffa8ba0065d", txBaseUrl: "https://etherscan.io/tx/"});
+  const [mockTxHash, setMockTxHash] = useState<string>("");
+  const [mockTxBaseUrl, setMockTxBaseURL] = useState<string | undefined>("");
+
+  useTokenTxSonner(mockTxHash || "", mockTxBaseUrl);
+
+  useEffect(() => {
+    setMockTxHash('0x98241040429b818d969523ebf8ec915296767224d3ce8ecb0aadbffa8ba0065d');
+    setMockTxBaseURL('https://etherscan.io/tx/');
+  }, []);
   
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
