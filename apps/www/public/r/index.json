@@ -28,5 +28,20 @@
         "type": "registry:ui"
       }
     ]
+  },
+  {
+    "name": "token-tx-sonner",
+    "type": "registry:ui",
+    "dependencies": [
+      "react",
+      "viem",
+      "wagmi"
+    ],
+    "files": [
+      {
+        "path": "ui/token-tx-sonner.tsx",
+        "type": "registry:ui"
+      }
+    ]
   }
 ]

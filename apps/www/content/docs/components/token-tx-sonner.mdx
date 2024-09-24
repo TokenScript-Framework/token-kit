@@ -1,0 +1,92 @@
+---
+title: Token Tx Sonner
+description: A token tx sonner is a component that displays a token transaction information, when it's pending, verified or an error occured.
+component: true
+---
+
+import { ToastProvider } from "@/components/token-kit/token-tx-sonner";
+
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={client}>
+        <ToastProvider />
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
+}
+
+import { showTxSonner } from "@/components/token-kit/token-tx-sonner";
+
+showTxSonner('0x6ab620baa39d4bf784a229c1aa4df0b25267863a4e623785d8937c48c6b4170d', 'https://etherscan.io/tx/', 5000);
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @token-kit/cli@latest add token-tx-sonner
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+<Step>Copy and paste the following code where your providers are.</Step>
+
+<ComponentSource name="ToastProvider" />
+
+<Step>When a transaction is made in your application trigger the showTxSonner function to show the status.</Step>
+
+<ComponentSource name="token-tx-sonner" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { ToastProvider } from "@/components/token-kit/token-tx-sonner";
+```
+
+```tsx
+export function Providers({ children }: { children: React.ReactNode }) {
+  return (
+    <WagmiProvider config={config}>
+      <QueryClientProvider client={client}>
+        <ToastProvider />
+      </QueryClientProvider>
+    </WagmiProvider>
+  );
+}
+```
+
+```tsx
+import { showTxSonner } from "@/components/token-kit/token-tx-sonner";
+```
+
+```tsx
+showTxSonner('0x6ab620baa39d4bf784a229c1aa4df0b25267863a4e623785d8937c48c6b4170d', 'https://etherscan.io/tx/', 5000);
+```
+
+
+
+
+
+

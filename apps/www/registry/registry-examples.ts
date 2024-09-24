@@ -25,4 +25,10 @@ export const examples: Registry = [
     registryDependencies: ["token-thumbnail"],
     files: ["example/token-thumbnail-demo.tsx"],
   },
+  {
+    name: "token-tx-sonner",
+    type: "registry:example",
+    registryDependencies: ["token-tx-sonner"],
+    files: ["example/token-tx-sonner-demo.tsx"],
+  },
 ];

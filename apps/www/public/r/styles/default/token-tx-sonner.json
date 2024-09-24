@@ -1,0 +1,17 @@
+{
+  "name": "token-tx-sonner",
+  "type": "registry:ui",
+  "dependencies": [
+    "react",
+    "viem",
+    "wagmi"
+  ],
+  "files": [
+    {
+      "path": "ui/token-tx-sonner.tsx",
+      "content": "\"use client\";\n\nimport { waitForTransactionReceipt } from '@wagmi/core';\nimport { config } from './../wagmi';\nimport { toast } from \"sonner\";\nimport { Toaster } from \"@/components/ui/sonner\";\n\nconst ToastProvider = () => {\n  return <Toaster />;\n}\n\ntype TxError = {\n  message: string;\n};\n\nconst showTxSonner = (txHash: string, txBaseUrl?: string, duration?:number) => {\n  const toastId = txMessageStatusHandler(true, false, false, txHash, txBaseUrl);\n\n  waitForTransactionReceipt(config, {\n    confirmations: 2,\n    hash: txHash as `0x${string}`,\n  })\n    .then(() => {\n      txMessageStatusHandler(false, true, false, txHash, txBaseUrl, undefined, toastId?.toString(), duration);\n    })\n    .catch((error:TxError) => {\n      txMessageStatusHandler(false, false, true, txHash, txBaseUrl, error, toastId?.toString(), duration);\n    })\n    .finally(() => {\n      if (toastId) {\n        toast.dismiss(toastId);\n      }\n    });\n};\n\nconst txMessageStatusHandler = (\n  isLoading: boolean,\n  isSuccess: boolean,\n  isError: boolean,\n  txHash: string,\n  txBaseUrl?: string,\n  error?: TxError,\n  toastId?: string,\n  toastDuration: number = 5000\n) => {\n  if (isLoading) {\n    return toast.loading(\"Transaction is pending...\", {\n      description: \"Waiting for confirmation...\",\n      duration: 30000,\n    });\n  } else if (isSuccess && toastId) {\n    toast.success(\"Transaction successful!\", {\n      description: (\n        <span>\n          Your transaction has been confirmed.\n          {txBaseUrl && (\n            <>\n              {\" \"}\n              See details{\" \"}\n              <a\n                className=\"underline\"\n                href={`${txBaseUrl}${txHash}`}\n                target=\"_blank\"\n                rel=\"noopener noreferrer\"\n              >\n                here\n              </a>.\n            </>\n          )}\n        </span>\n      ),\n      duration: toastDuration,\n    });\n  } else if (isError && toastId) {\n    toast.error(\"Transaction failed\", {\n      description: `Something went wrong: ${error?.message || 'Unknown error'}`,\n      duration: toastDuration,\n    });\n    console.error('error:', error);\n  }\n};\n\nexport { toast, ToastProvider, showTxSonner };",
+      "type": "registry:ui",
+      "target": ""
+    }
+  ]
+}

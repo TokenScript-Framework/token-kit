@@ -13,4 +13,10 @@ export const ui: Registry = [
     files: ["ui/token-thumbnail.tsx"],
     dependencies: ["react", "viem", "wagmi"],
   },
+  {
+    name: "token-tx-sonner",
+    type: "registry:ui",
+    files: ["ui/token-tx-sonner.tsx"],
+    dependencies: ["react", "viem", "wagmi"],
+  },
 ];
