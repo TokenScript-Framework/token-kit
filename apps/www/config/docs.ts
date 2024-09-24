@@ -52,21 +52,6 @@ export const docsConfig: DocsConfig = {
           items: [],
         },
         {
-          title: "components.json",
-          href: "/docs/components-json",
-          items: [],
-        },
-        {
-          title: "Theming",
-          href: "/docs/theming",
-          items: [],
-        },
-        {
-          title: "Dark mode",
-          href: "/docs/dark-mode",
-          items: [],
-        },
-        {
           title: "CLI",
           href: "/docs/cli",
           label: "Updated",
@@ -75,46 +60,6 @@ export const docsConfig: DocsConfig = {
         {
           title: "Changelog",
           href: "/docs/changelog",
-          items: [],
-        },
-      ],
-    },
-    {
-      title: "Installation",
-      items: [
-        {
-          title: "Next.js",
-          href: "/docs/installation/next",
-          items: [],
-        },
-        {
-          title: "Vite",
-          href: "/docs/installation/vite",
-          items: [],
-        },
-        {
-          title: "Remix",
-          href: "/docs/installation/remix",
-          items: [],
-        },
-        {
-          title: "Astro",
-          href: "/docs/installation/astro",
-          items: [],
-        },
-        {
-          title: "Laravel",
-          href: "/docs/installation/laravel",
-          items: [],
-        },
-        {
-          title: "Gatsby",
-          href: "/docs/installation/gatsby",
-          items: [],
-        },
-        {
-          title: "Manual",
-          href: "/docs/installation/manual",
           items: [],
         },
       ],
