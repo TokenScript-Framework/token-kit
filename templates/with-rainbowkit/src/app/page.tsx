@@ -1,5 +1,3 @@
-"use client";
-
 import { TokenCard } from "@/components/token-kit/token-card";
 import { TokenThumbnail } from "@/components/token-kit/token-thumbnail";
 import { ConnectButton } from "@rainbow-me/rainbowkit";

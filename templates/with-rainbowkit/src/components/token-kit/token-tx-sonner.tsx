@@ -1,5 +1,3 @@
-"use client";
-
 import { useEffect } from "react";
 import { toast } from "@/hooks/token-kit/use-tx-toast";
 import { useTransaction } from "wagmi";
