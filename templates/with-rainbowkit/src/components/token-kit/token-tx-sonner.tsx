@@ -1,22 +1,8 @@
 "use client";
 
 import { toast } from "@/hooks/token-kit/use-tx-toast";
-import { http, createConfig } from '@wagmi/core';
-import { mainnet, sepolia, polygon, avalanche, avalancheFuji, base, baseSepolia } from '@wagmi/core/chains';
 import { waitForTransactionReceipt } from '@wagmi/core';
-
-const config = createConfig({
-  chains: [mainnet, sepolia, polygon, avalanche, avalancheFuji, base, baseSepolia],
-  transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-    [polygon.id]: http(),
-    [avalanche.id]: http(),
-    [avalancheFuji.id]: http(),
-    [base.id]: http(),
-    [baseSepolia.id]: http(),
-  },
-});
+import { config } from './../../wagmi';
 
 type TxError = {
   message: string;
