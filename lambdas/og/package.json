@@ -16,11 +16,10 @@
     "package": "cd dist && zip -9vddr - . > ../token-kit-og-lambda.zip"
   },
   "dependencies": {
-    "@token-kit/og": "workspace:*",
-    "ethers": "^6.13.1"
+    "@token-kit/og": "workspace:*"
   },
   "devDependencies": {
-    "@types/node": "^22.5.4",
+    "@types/node": "^22.7.0",
     "source-map-support": "^0.5.21"
   }
 }

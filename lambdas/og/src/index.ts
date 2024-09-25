@@ -1,7 +1,6 @@
 import { svg2WebpBuffer, TsRender } from "@token-kit/og";
 import { parse } from "querystring";
 import "source-map-support/register";
-import { getProvider } from "./providerHelper";
 import { CloudFrontEvent, CloudFrontResponse } from "./types";
 
 export const handler = async (event: CloudFrontEvent) => {
@@ -25,19 +24,15 @@ export const handler = async (event: CloudFrontEvent) => {
       const chainId = parsedQueryString.chainId;
       const contract = parsedQueryString.contract;
       const tokenId = parsedQueryString.tokenId;
-      if (!(chainId && contract)) {
+      const scriptId = parsedQueryString.scriptId;
+      if (!(chainId && contract && tokenId)) {
         return request;
       }
-      const provider = getProvider(Number(chainId));
       const render = await TsRender.from({
-        provider,
-        chainId: Number(chainId),
-        contract: contract as `0x${string}`,
-        // TODO: image buffer from token data
-        imgBuffer: Buffer.from(""),
-        context: {
-          tokenId: tokenId!,
-        },
+        chainId: chainId,
+        contract: contract,
+        tokenId: tokenId,
+        scriptId: scriptId,
       });
       const svg = await render.toSvg();
       const webp = await svg2WebpBuffer(Buffer.from(svg));
@@ -71,15 +66,16 @@ function parseQueryString(queryString: string): {
   chainId?: string;
   contract?: string;
   tokenId?: string;
+  scriptId?: string;
 } {
   const parsedQueryString = parse(queryString);
-  const parsedChainId = parsedQueryString.chainId as string | string[];
+  const parsedChain = parsedQueryString.chain as string | string[];
   const parsedContract = parsedQueryString.contract as string | string[];
   const parsedTokenId = parsedQueryString.tokenId as string | string[];
+  const parsedScriptId = parsedQueryString.scriptId as string | string[];
   let chainId;
-  if (parsedChainId) {
-    chainId =
-      typeof parsedChainId === "string" ? parsedChainId : parsedChainId[0];
+  if (parsedChain) {
+    chainId = typeof parsedChain === "string" ? parsedChain : parsedChain[0];
   }
   let contract;
   if (parsedContract) {
@@ -91,5 +87,11 @@ function parseQueryString(queryString: string): {
     tokenId =
       typeof parsedTokenId === "string" ? parsedTokenId : parsedTokenId[0];
   }
-  return { chainId, contract, tokenId };
+  let scriptId;
+  if (parsedScriptId) {
+    scriptId =
+      typeof parsedScriptId === "string" ? parsedScriptId : parsedScriptId[0];
+    scriptId = scriptId.split("_")[1];
+  }
+  return { chainId, contract, tokenId, scriptId };
 }
