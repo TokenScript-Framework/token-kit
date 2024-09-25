@@ -3,7 +3,7 @@
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import { waitForTransactionReceipt } from "@wagmi/core";
-import { config } from "@/config/wagmi-config";
+import { wagmiActionChainConfig } from "@/config/wagmi-config";
 
 const ToastProvider = () => {
   return <Toaster />;
@@ -26,7 +26,7 @@ const showTxSonner = (
     txBaseUrl,
   });
 
-  waitForTransactionReceipt(config, {
+  waitForTransactionReceipt(wagmiActionChainConfig, {
     confirmations: 2,
     hash: txHash as `0x${string}`,
   })
