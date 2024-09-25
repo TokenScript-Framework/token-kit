@@ -1,11 +1,14 @@
+import { createConfig as actionConfig } from "@wagmi/core";
 import { createConfig, http } from "wagmi";
-import { mainnet, polygon, sepolia } from "wagmi/chains";
+import { mainnet, sepolia, polygon } from "wagmi/chains";
 
-export const config = createConfig({
-  chains: [mainnet, polygon, sepolia],
-  transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-    [polygon.id]: http(),
-  },
-});
+const chains = [mainnet, sepolia, polygon] as const;
+const transports = {
+  [mainnet.id]: http(),
+  [sepolia.id]: http(),
+  [polygon.id]: http(),
+} as const;
+
+const config = createConfig({ chains, transports });
+const wagmiActionChainConfig = actionConfig({ chains, transports });
+export { config, wagmiActionChainConfig };

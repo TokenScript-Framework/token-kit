@@ -57,6 +57,11 @@ export const docsConfig: DocsConfig = {
           href: "/docs/components/token-thumbnail",
           items: [],
         },
+        {
+          title: "Token Tx Sonner",
+          href: "/docs/components/token-tx-sonner",
+          items: [],
+        },
       ],
     },
   ],

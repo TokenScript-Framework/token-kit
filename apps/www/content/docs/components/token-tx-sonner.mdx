@@ -1,0 +1,98 @@
+---
+title: Token Tx Sonner
+description: The Token Transaction Sonner is a component that displays real-time transaction status updates for users, including pending transactions, successful verifications, or errors encountered during processing.
+component: true
+---
+
+<ComponentPreview
+  name="token-tx-sonner-demo"
+  className="[&_.preview>[data-orientation=vertical]]:sm:max-w-[70%]"
+  description="A token transaction sonner"
+/>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+<Steps>
+
+<Step>Run the following command:</Step>
+
+```bash
+npx @token-kit/cli@latest add token-tx-sonner
+```
+
+<Step>Add the Toaster Component</Step>
+
+```tsx title="app/layout.tsx" {1,9}
+import { Toaster } from "@/components/ui/sonner";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head />
+      <body>
+        <main>{children}</main>
+        <Toaster />
+      </body>
+    </html>
+  );
+}
+```
+
+</Steps>
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="token-tx-sonner" />
+
+<Step>Add the Toaster Component</Step>
+
+```tsx title="app/layout.tsx" {1,9}
+import { Toaster } from "@/components/ui/sonner";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head />
+      <body>
+        <main>{children}</main>
+        <Toaster />
+      </body>
+    </html>
+  );
+}
+```
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { showTxSonner } from "@/components/token-kit/token-tx-sonner";
+```
+
+```tsx
+showTxSonner(
+  "0x6ab620baa39d4bf784a229c1aa4df0b25267863a4e623785d8937c48c6b4170d",
+  "https://etherscan.io/tx/",
+  5000,
+);
+```
