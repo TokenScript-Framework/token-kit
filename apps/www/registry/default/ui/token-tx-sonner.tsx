@@ -1,39 +1,9 @@
 "use client";
 
-// import { config } from "@/registry/default/wagmi";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
-import {
-  mainnet,
-  sepolia,
-  polygon,
-  avalanche,
-  avalancheFuji,
-  base,
-  baseSepolia,
-} from "@wagmi/core/chains";
-import { waitForTransactionReceipt, http, createConfig } from "@wagmi/core";
-
-const config = createConfig({
-  chains: [
-    mainnet,
-    sepolia,
-    polygon,
-    avalanche,
-    avalancheFuji,
-    base,
-    baseSepolia,
-  ],
-  transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-    [polygon.id]: http(),
-    [avalanche.id]: http(),
-    [avalancheFuji.id]: http(),
-    [base.id]: http(),
-    [baseSepolia.id]: http(),
-  },
-});
+import { waitForTransactionReceipt } from "@wagmi/core";
+import { config } from "@/config/wagmi-config";
 
 const ToastProvider = () => {
   return <Toaster />;
@@ -50,6 +20,7 @@ const showTxSonner = (
 ) => {
   const toastId = txMessageStatusHandler(true, false, false, txHash, txBaseUrl);
 
+  // @ts-ignore
   waitForTransactionReceipt(config, {
     confirmations: 2,
     hash: txHash as `0x${string}`,
