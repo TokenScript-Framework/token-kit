@@ -26,7 +26,6 @@ const showTxSonner = (
     txBaseUrl,
   });
 
-  // @ts-ignore
   waitForTransactionReceipt(config, {
     confirmations: 2,
     hash: txHash as `0x${string}`,
