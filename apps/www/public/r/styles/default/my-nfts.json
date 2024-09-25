@@ -1,0 +1,13 @@
+{
+  "name": "my-nfts",
+  "type": "registry:ui",
+  "dependencies": [],
+  "files": [
+    {
+      "path": "ui/my-nfts.tsx",
+      "content": "export const MyNfts = () => {\n  return <div>My NFTs</div>;\n};\n",
+      "type": "registry:ui",
+      "target": ""
+    }
+  ]
+}

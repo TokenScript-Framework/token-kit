@@ -27,12 +27,12 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
-    "token-tx-sonner": {
-      name: "token-tx-sonner",
+    "my-nfts": {
+      name: "my-nfts",
       type: "registry:ui",
       registryDependencies: undefined,
-      files: ["registry/default/ui/token-tx-sonner.tsx"],
-      component: React.lazy(() => import("@/registry/default/ui/token-tx-sonner.tsx")),
+      files: ["registry/default/ui/my-nfts.tsx"],
+      component: React.lazy(() => import("@/registry/default/ui/my-nfts.tsx")),
       source: "",
       category: "undefined",
       subcategory: "undefined",
@@ -82,12 +82,12 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
-    "token-tx-sonner-demo": {
-      name: "token-tx-sonner-demo",
+    "my-nfts-demo": {
+      name: "my-nfts-demo",
       type: "registry:example",
-      registryDependencies: ["token-tx-sonner"],
-      files: ["registry/default/example/token-tx-sonner-demo.tsx"],
-      component: React.lazy(() => import("@/registry/default/example/token-tx-sonner-demo.tsx")),
+      registryDependencies: ["my-nfts"],
+      files: ["registry/default/example/my-nfts-demo.tsx"],
+      component: React.lazy(() => import("@/registry/default/example/my-nfts-demo.tsx")),
       source: "",
       category: "undefined",
       subcategory: "undefined",

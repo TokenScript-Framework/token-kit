@@ -45,6 +45,6 @@ Now you should be able to see the doc page with url `http://localhost:3333/docs/
 
 then `npm run build:registry` to generate the registry files.
 
-6. Implement your component under `apps/www/registry/default/ui/my-component.tsx`
+8. Implement your component under `apps/www/registry/default/ui/my-component.tsx`
 
-7. Implement your preview demo under `apps/www/registry/default/examples/my-component-demo.tsx`
+9. Implement your preview demo under `apps/www/registry/default/examples/my-component-demo.tsx`

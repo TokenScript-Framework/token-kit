@@ -26,6 +26,12 @@ export const examples: Registry = [
     files: ["example/token-thumbnail-demo.tsx"],
   },
   {
+    name: "my-nfts-demo",
+    type: "registry:example",
+    registryDependencies: ["my-nfts"],
+    files: ["example/my-nfts-demo.tsx"],
+  },
+  {
     name: "token-tx-sonner-demo",
     type: "registry:example",
     registryDependencies: ["token-tx-sonner"],

@@ -58,6 +58,11 @@ export const docsConfig: DocsConfig = {
           items: [],
         },
         {
+          title: "My NFTs",
+          href: "/docs/components/my-nfts",
+          items: [],
+        },
+        {
           title: "Token Tx Sonner",
           href: "/docs/components/token-tx-sonner",
           items: [],
