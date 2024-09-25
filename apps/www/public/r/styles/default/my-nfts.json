@@ -5,7 +5,7 @@
   "files": [
     {
       "path": "ui/my-nfts.tsx",
-      "content": "export const MyNfts = () => {\n  return <div>My NFTs</div>;\n};\n",
+      "content": "import { ScrollArea, ScrollBar } from \"@/components/ui/scroll-area\";\nimport { cn } from \"@/registry/default/lib/utils\";\nimport { NFTCardSkeleton, TokenCard } from \"@/registry/default/ui/token-card\";\nimport { useQuery } from \"@tanstack/react-query\";\nimport { myNfts, MyNftsInput } from \"@token-kit/onchain\";\n\nexport const MyNfts = (\n  props: MyNftsInput & { chainId: number; className?: string },\n) => {\n  const { data, isLoading } = useQuery({\n    queryKey: [\"myNfts\", props.address, props.chainId],\n    queryFn: () => myNfts(props),\n  });\n\n  return (\n    <ScrollArea\n      className={cn(\n        \"w-[500px] whitespace-nowrap rounded-md border\",\n        props.className,\n      )}\n    >\n      <div className=\"flex w-max space-x-4 p-4\">\n        {isLoading\n          ? [...Array(3)].map((_, index) => <NFTCardSkeleton key={index} />)\n          : data?.tokens.map((nft) => (\n              <TokenCard\n                key={nft.tokenId.toString()}\n                type=\"ERC721\"\n                chainId={props.chainId}\n                contract={props.address}\n                tokenId={nft.tokenId.toString()}\n              />\n            ))}\n      </div>\n      <ScrollBar orientation=\"horizontal\" />\n    </ScrollArea>\n  );\n};\n",
       "type": "registry:ui",
       "target": ""
     }
