@@ -21,21 +21,36 @@ const defaultOptions: MyNftsOptions = {
   includeTokenMetadata: false,
 };
 
-export async function myNfts(v: {
-  client: PublicClient;
-  address: `0x${string}`;
-  tokenId: number | bigint;
-  options?: MyNftsOptions;
-}): Promise<MyNfts> {
-  const { client, address, tokenId, options } = v;
+export async function myNfts(
+  v:
+    | {
+        client: PublicClient;
+        address: `0x${string}`;
+        tokenId: number | bigint;
+        options?: MyNftsOptions;
+      }
+    | {
+        client: PublicClient;
+        address: `0x${string}`;
+        userWallet: `0x${string}`;
+        options?: MyNftsOptions;
+      },
+): Promise<MyNfts> {
+  const { client, address, options } = v;
   const opts = { ...defaultOptions, ...options };
 
   const { type, subTypes } = await tokenType(address, client);
   if (type !== TokenTypes.ERC721 || !subTypes.includes("IERC721Enumerable"))
     throw new Error("Only support Enumberable ERC721 token");
 
-  const id = normalizeTokenId(tokenId);
-  const owner = await getOwner(client, address, id);
+  let owner: `0x${string}`;
+  if ("userWallet" in v && v.userWallet) {
+    owner = v.userWallet;
+  } else if ("tokenId" in v) {
+    const id = normalizeTokenId(v.tokenId);
+    owner = await getOwner(client, address, id);
+  }
+
   const tokenIds = await fetchTokenIds(client, address, owner);
   let tokens = await fetchTokenURIs(client, address, tokenIds);
 

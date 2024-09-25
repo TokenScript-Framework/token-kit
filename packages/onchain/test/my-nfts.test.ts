@@ -42,6 +42,37 @@ test("should get all user tokens for an erc721 enumerable token", async (t) => {
   });
 });
 
+test("should get all user tokens for an erc721 enumerable token with user wallet", async (t) => {
+  const client = createPublicClient({
+    chain: baseSepolia,
+    transport: http(getRPCURL(84532)),
+  });
+
+  const results = (await myNfts({
+    client: client as PublicClient,
+    address: "0x250eb01a55d7E462ad478465581344521B01CD6b",
+    userWallet: "0xae749AE248d9c7014b6a2E951542cdAa619e14C1",
+  })) as MyNfts;
+
+  t.like(results, {
+    owner: "0xae749AE248d9c7014b6a2E951542cdAa619e14C1",
+    tokens: [
+      {
+        tokenId: 0n,
+        tokenURI: "ipfs://QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/0",
+      },
+      {
+        tokenId: 1n,
+        tokenURI: "ipfs://QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/0",
+      },
+      {
+        tokenId: 2n,
+        tokenURI: "ipfs://QmeSjSinHpPnmXmspMjwiXyN6zS4E9zccariGR3jxcaWtq/0",
+      },
+    ],
+  });
+});
+
 test("should get all user tokens with metadata", async (t) => {
   const client = createPublicClient({
     chain: baseSepolia,
