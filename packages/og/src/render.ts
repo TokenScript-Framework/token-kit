@@ -17,7 +17,7 @@ const Node = new jsdom.JSDOM().window.Node;
 export type MetadataOptions = {
   chainId: string;
   contract: string;
-  tokenId: string;
+  tokenId?: string;
   scriptId?: string;
 };
 
@@ -599,14 +599,14 @@ async function imageUrl2Buffer(url: string): Promise<Buffer> {
 async function getTokenViewData(params: {
   chain: string;
   contract: string;
-  tokenId: string;
+  tokenId?: string;
   scriptId?: string;
 }): Promise<TokenViewData> {
   return axios
     .get(
-      `https://api.smarttokenlabs.com/token-view/${params.chain}/${params.contract}/${params.tokenId}`,
+      `https://api.smarttokenlabs.com/token-view/${params.chain}/${params.contract}`,
       {
-        params: { entry: params.scriptId },
+        params: { tokenId: params.tokenId, entry: params.scriptId },
         headers: {
           Accept: "application/json",
           "Accept-Encoding": "deflate, gzip, br",

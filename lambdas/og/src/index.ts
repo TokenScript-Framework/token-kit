@@ -25,7 +25,7 @@ export const handler = async (event: CloudFrontEvent) => {
       const contract = parsedQueryString.contract;
       const tokenId = parsedQueryString.tokenId;
       const scriptId = parsedQueryString.scriptId;
-      if (!(chainId && contract && tokenId)) {
+      if (!(chainId && contract)) {
         return request;
       }
       const render = await TsRender.from({
