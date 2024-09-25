@@ -10,19 +10,19 @@ export const transformImport: Transformer = async ({
   for (const importDeclaration of importDeclarations) {
     const moduleSpecifier = importDeclaration.getModuleSpecifierValue();
 
-    // Replace @/shadcn-registry/[style] with the shadcn components alias.
-    if (moduleSpecifier.startsWith("@/shadcn-registry/")) {
+    // Replace @/components/[style] with the shadcn components alias.
+    if (moduleSpecifier.startsWith("@/components/")) {
       if (shadcnConfig.aliases.ui) {
         importDeclaration.setModuleSpecifier(
           moduleSpecifier.replace(
-            /^@\/shadcn-registry\/[^/]+\/ui/,
+            /^@\/components\/[^/]+\/ui/,
             shadcnConfig.aliases.ui,
           ),
         );
       } else {
         importDeclaration.setModuleSpecifier(
           moduleSpecifier.replace(
-            /^@\/shadcn-registry\/[^/]+/,
+            /^@\/components\/[^/]+/,
             shadcnConfig.aliases.components,
           ),
         );
