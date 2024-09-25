@@ -11,22 +11,23 @@ import {
   MyNftTokenWithoutMetadata,
   TokenTypes,
 } from "./constant";
-import { tokenType } from "./token-type";
-import { normalizeTokenId } from "./libs/normalizer";
 import { ERC721Enumerable_ABI } from "./libs/abi";
 import { batchExecutor } from "./libs/batch-executor";
 import { initFetchHandler } from "./libs/fetch-handler";
+import { normalizeTokenId } from "./libs/normalizer";
+import { tokenType } from "./token-type";
 
 const defaultOptions: MyNftsOptions = {
   includeTokenMetadata: false,
 };
 
-export async function myNfts(
-  client: PublicClient,
-  address: `0x${string}`,
-  tokenId: number | bigint,
-  options?: MyNftsOptions,
-): Promise<MyNfts> {
+export async function myNfts(v: {
+  client: PublicClient;
+  address: `0x${string}`;
+  tokenId: number | bigint;
+  options?: MyNftsOptions;
+}): Promise<MyNfts> {
+  const { client, address, tokenId, options } = v;
   const opts = { ...defaultOptions, ...options };
 
   const { type, subTypes } = await tokenType(address, client);
