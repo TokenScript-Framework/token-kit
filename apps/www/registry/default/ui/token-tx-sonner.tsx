@@ -18,7 +18,13 @@ const showTxSonner = (
   txBaseUrl?: string,
   duration?: number,
 ) => {
-  const toastId = txMessageStatusHandler(true, false, false, txHash, txBaseUrl);
+  const toastId = txMessageStatusHandler({
+    isLoading: true,
+    isSuccess: false,
+    isError: false,
+    txHash,
+    txBaseUrl,
+  });
 
   // @ts-ignore
   waitForTransactionReceipt(config, {
@@ -26,28 +32,28 @@ const showTxSonner = (
     hash: txHash as `0x${string}`,
   })
     .then(() => {
-      txMessageStatusHandler(
-        false,
-        true,
-        false,
+      txMessageStatusHandler({
+        isLoading: false,
+        isSuccess: true,
+        isError: false,
         txHash,
         txBaseUrl,
-        undefined,
-        toastId?.toString(),
-        duration,
-      );
+        error: undefined,
+        toastId: toastId?.toString(),
+        toastDuration: duration,
+      });
     })
     .catch((error: TxError) => {
-      txMessageStatusHandler(
-        false,
-        false,
-        true,
+      txMessageStatusHandler({
+        isLoading: false,
+        isSuccess: false,
+        isError: true,
         txHash,
         txBaseUrl,
         error,
-        toastId?.toString(),
-        duration,
-      );
+        toastId: toastId?.toString(),
+        toastDuration: duration,
+      });
     })
     .finally(() => {
       if (toastId) {
@@ -56,16 +62,25 @@ const showTxSonner = (
     });
 };
 
-const txMessageStatusHandler = (
-  isLoading: boolean,
-  isSuccess: boolean,
-  isError: boolean,
-  txHash: string,
-  txBaseUrl?: string,
-  error?: TxError,
-  toastId?: string,
-  toastDuration: number = 5000,
-) => {
+const txMessageStatusHandler = ({
+  isLoading,
+  isSuccess,
+  isError,
+  txHash,
+  txBaseUrl,
+  error,
+  toastId,
+  toastDuration = 5000,
+}: {
+  isLoading: boolean;
+  isSuccess: boolean;
+  isError: boolean;
+  txHash: string;
+  txBaseUrl?: string;
+  error?: TxError;
+  toastId?: string;
+  toastDuration?: number;
+}) => {
   if (isLoading) {
     return toast.loading("Transaction is pending...", {
       description: "Waiting for confirmation...",

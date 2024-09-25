@@ -31,11 +31,19 @@ npx @token-kit/cli@latest add token-tx-sonner
 
 <Steps>
 
-<Step>Install the following dependencies:</Step>
+<Step>Copy and paste the ToastProvider into your app's root provider component to enable toast notifications globally.</Step>
 
-<Step>Copy and paste the following code where your providers are.</Step>
+```tsx
+  import { ToastProvider } from "@/components/token-kit/token-tx-sonner";
 
-<ComponentSource name="ToastProvider" />
+  export function Providers({ children }: { children: React.ReactNode }) {
+    return (
+      <WagmiProvider config={config}>
+        <ToastProvider />
+      </WagmiProvider>
+    );
+  }
+```
 
 <Step>When a transaction is made in your application trigger the showTxSonner function to show the status.</Step>
 
