@@ -20,7 +20,6 @@ import { ADDRESSTYPE, CheckResult, State, TokenMetadata } from "./libs/types";
 import { Dialog } from "./components/Dialog";
 import { HomePage } from "./components/HomePage";
 import { TokenPage } from "./components/TokenPage";
-import { VIEWER_ROOT } from "./libs/constants";
 
 export const onHomePage: OnHomePageHandler = async () => {
   const state: State = (await getState()) as State;
