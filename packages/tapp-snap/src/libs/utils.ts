@@ -2,7 +2,36 @@ import { assert, Json, ManageStateOperation } from "@metamask/snaps-sdk";
 import { bytesToBase64 } from "@metamask/utils";
 import { ADDRESSTYPE, Token, TokenListState } from "./types";
 import { BrowserProvider, ethers } from "ethers";
-import { ABI } from "./contants";
+import { ABI, API_KEY, COMMON_API_ROOT } from "./constants";
+
+export async function getTokenMetdata(
+  chain: string,
+  contract: ADDRESSTYPE,
+  tokenId: string,
+) {
+  const response = await fetch(
+    `${COMMON_API_ROOT}/token-view/${chain}/${contract}/${tokenId}`,
+    {
+      headers: {
+        "x-stl-key": API_KEY,
+      },
+    },
+  );
+  if (!response.ok) {
+    throw new Error(
+      `Failed to fetch token metadata: ${response.status} ${response.statusText}`,
+    );
+  }
+  const { tokenMetadata, tsMetadata } = await response.json();
+  return {
+    actions: tsMetadata.actions,
+    name: tsMetadata.name,
+    description: tsMetadata.meta.description,
+    aboutUrl: tsMetadata.meta.aboutUrl,
+    tokenMetadata: tokenMetadata,
+    signed: tsMetadata.signed,
+  };
+}
 
 export async function getSVG(url: string) {
   if (!url) {
@@ -136,12 +165,16 @@ export function truncateAddress(address: string, start: number = 38) {
   return `${address.slice(0, 6)}...${address.slice(start)}`;
 }
 
-export async function detectChain(chain: string) {
-  const permissions = await ethereum.request({
+export async function detectChain(expectedChainId: string): Promise<boolean> {
+  const chainId = await ethereum.request<string>({
     method: "eth_chainId",
   });
-  const currentChain = typeof permissions === "string" ? permissions : "0x0";
-  return BigInt(currentChain).toString(10) === chain.toString();
+
+  if (typeof chainId !== "string") {
+    throw new Error("Invalid chainId response");
+  }
+
+  return BigInt(chainId).toString(10) === expectedChainId.toString();
 }
 
 export async function detectOwner(contract: ADDRESSTYPE, tokenId: string) {
