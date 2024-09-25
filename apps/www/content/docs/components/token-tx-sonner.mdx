@@ -4,21 +4,11 @@ description: The Token Transaction Sonner is a component that displays real-time
 component: true
 ---
 
-import { ToastProvider } from "@/components/token-kit/token-tx-sonner";
-
-export function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <WagmiProvider config={config}>
-      <QueryClientProvider client={client}>
-        <ToastProvider />
-      </QueryClientProvider>
-    </WagmiProvider>
-  );
-}
-
-import { showTxSonner } from "@/components/token-kit/token-tx-sonner";
-
-showTxSonner('0x6ab620baa39d4bf784a229c1aa4df0b25267863a4e623785d8937c48c6b4170d', 'https://etherscan.io/tx/', 5000);
+<ComponentPreview
+  name="token-tx-sonner-demo"
+  className="[&_.preview>[data-orientation=vertical]]:sm:max-w-[70%]"
+  description="A token transaction sonner"
+/>
 
 ## Installation
 
@@ -69,9 +59,7 @@ import { ToastProvider } from "@/components/token-kit/token-tx-sonner";
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={config}>
-      <QueryClientProvider client={client}>
-        <ToastProvider />
-      </QueryClientProvider>
+      <ToastProvider />
     </WagmiProvider>
   );
 }

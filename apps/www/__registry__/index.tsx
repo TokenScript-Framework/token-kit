@@ -82,8 +82,8 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
-    "token-tx-sonner": {
-      name: "token-tx-sonner",
+    "token-tx-sonner-demo": {
+      name: "token-tx-sonner-demo",
       type: "registry:example",
       registryDependencies: ["token-tx-sonner"],
       files: ["registry/default/example/token-tx-sonner-demo.tsx"],

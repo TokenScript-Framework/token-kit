@@ -2,17 +2,21 @@ import {
   showTxSonner,
   ToastProvider,
 } from "@/registry/default/ui/token-tx-sonner";
-import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
 
 export default function TokenTxSonnerDemo() {
-  useEffect(() => {
-    setTimeout(() => {
-      showTxSonner(
-        "0x6ab620baa39d4bf784a229c1aa4df0b25267863a4e623785d8937c48c6b4170d",
-        "https://etherscan.io/tx/",
-        5000,
-      );
-    }, 1000);
-  }, []);
-  return <ToastProvider />;
+  const simulateTx = (txHash:string, txUrl?:string, duration?:number) => {
+    showTxSonner(
+      txHash,
+      txUrl,
+      duration
+    )
+  };
+
+  return (
+    <div>
+      <ToastProvider />
+      <Button onClick={() => simulateTx("0x4ee12786284e8a4a0d2f6e3235db37a96b47d473d67526135895ee80cfb349cb", "https://etherscan.io/tx/", 5000)}>Click me</Button>
+    </div>
+  );
 }
