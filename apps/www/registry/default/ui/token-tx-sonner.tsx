@@ -1,13 +1,8 @@
 "use client";
 
 import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
 import { waitForTransactionReceipt } from "@wagmi/core";
 import { wagmiActionChainConfig } from "@/config/wagmi-config";
-
-const ToastProvider = () => {
-  return <Toaster />;
-};
 
 type TxError = {
   message: string;
@@ -118,4 +113,4 @@ const txMessageStatusHandler = ({
   }
 };
 
-export { toast, ToastProvider, showTxSonner };
+export { toast, showTxSonner };

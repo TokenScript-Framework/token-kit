@@ -1,13 +1,11 @@
-import {
-  showTxSonner,
-  ToastProvider,
-} from "@/registry/default/ui/token-tx-sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { Button } from "@/components/ui/button";
+import { showTxSonner } from "@/registry/default/ui/token-tx-sonner";
 
 export default function TokenTxSonnerDemo() {
   return (
-    <div>
-      <ToastProvider />
+    <>
+      <Toaster />
       <Button
         onClick={() =>
           showTxSonner(
@@ -19,6 +17,6 @@ export default function TokenTxSonnerDemo() {
       >
         Click me
       </Button>
-    </div>
+    </>
   );
 }

@@ -1,6 +1,6 @@
-import { createConfig as actionConfig } from '@wagmi/core';
-import { createConfig, http } from 'wagmi';
-import { mainnet, sepolia, polygon } from 'wagmi/chains';
+import { createConfig as actionConfig } from "@wagmi/core";
+import { createConfig, http } from "wagmi";
+import { mainnet, sepolia, polygon } from "wagmi/chains";
 
 const chains = [mainnet, sepolia, polygon] as const;
 const transports = {

@@ -21,9 +21,35 @@ component: true
 
 <TabsContent value="cli">
 
+<Steps>
+
+<Step>Run the following command:</Step>
+
 ```bash
 npx @token-kit/cli@latest add token-tx-sonner
 ```
+
+<Step>Add the Toaster Component</Step>
+
+```tsx
+import { Toaster } from "@/components/ui/sonner";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head />
+      <body>
+        <main>{children}</main>
+        <Toaster />
+      </body>
+    </html>
+  );
+}
+```
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
 
 </TabsContent>
 
@@ -34,6 +60,24 @@ npx @token-kit/cli@latest add token-tx-sonner
 <Step>Copy and paste the following code into your project.</Step>
 
 <ComponentSource name="token-tx-sonner" />
+
+<Step>Add the Toaster Component</Step>
+
+```tsx
+import { Toaster } from "@/components/ui/sonner";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head />
+      <body>
+        <main>{children}</main>
+        <Toaster />
+      </body>
+    </html>
+  );
+}
+```
 
 <Step>Update the import paths to match your project setup.</Step>
 
@@ -46,29 +90,13 @@ npx @token-kit/cli@latest add token-tx-sonner
 ## Usage
 
 ```tsx
-import { ToastProvider } from "@/components/token-kit/token-tx-sonner";
-```
-
-```tsx
-export function Providers({ children }: { children: React.ReactNode }) {
-  return (
-    <WagmiProvider config={config}>
-      <ToastProvider />
-    </WagmiProvider>
-  );
-}
-```
-
-```tsx
 import { showTxSonner } from "@/components/token-kit/token-tx-sonner";
 ```
 
 ```tsx
-showTxSonner('0x6ab620baa39d4bf784a229c1aa4df0b25267863a4e623785d8937c48c6b4170d', 'https://etherscan.io/tx/', 5000);
+showTxSonner(
+  "0x6ab620baa39d4bf784a229c1aa4df0b25267863a4e623785d8937c48c6b4170d",
+  "https://etherscan.io/tx/",
+  5000,
+);
 ```
-
-
-
-
-
-
