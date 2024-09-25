@@ -30,7 +30,7 @@ app.frame("/view/:chain/:contract", async (c) => {
     chain,
     contract as `0x${string}`,
     tokenId,
-    Number(scriptId),
+    scriptId,
   );
 
   const intents =
