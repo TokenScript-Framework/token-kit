@@ -10,11 +10,13 @@
   },
   "dependencies": {
     "axios": "^1.7.2",
+    "clsx": "^1.2.1",
     "frog": "^0.15.9",
     "next": "14.2.5",
     "react": "^18",
     "react-dom": "^18",
-    "sharp": "^0.33.4"
+    "sharp": "^0.33.4",
+    "tailwind-merge": "^1.14.0"
   },
   "devDependencies": {
     "@types/node": "^20",
