@@ -71,5 +71,5 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       - name: deploy
         run: |
-          aws s3 sync "${PROJ_PATH}/public/r/" "s3://${S3_BUCKET}/token-kit/ui/registry/" --cache-control 'max-age=31536000' --delete --quiet \
+          aws s3 sync "${PROJ_PATH}/public/r/" "s3://${S3_BUCKET}/token-kit/ui/registry/" --cache-control 'max-age=31536000' --quiet \
           && aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_ID}" --paths "/token-kit/ui/registry/*"
