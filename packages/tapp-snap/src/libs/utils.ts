@@ -10,7 +10,7 @@ export async function getTokenMetdata(
   tokenId: string,
 ) {
   const response = await fetch(
-    `${COMMON_API_ROOT}/token-view/${chain}/${contract}/${tokenId}`,
+    `${COMMON_API_ROOT}/token-view/${chain}/${contract}${tokenId ? "?tokenId=" + tokenId : ""}`,
     {
       headers: {
         "x-stl-key": API_KEY,
@@ -22,13 +22,13 @@ export async function getTokenMetdata(
       `Failed to fetch token metadata: ${response.status} ${response.statusText}`,
     );
   }
-  const { tokenMetadata, tsMetadata } = await response.json();
+  const { tokenMetadata, tsMetadata, explorerUrl } = await response.json();
   return {
     actions: tsMetadata.actions,
     name: tsMetadata.name,
     description: tsMetadata.meta.description,
-    aboutUrl: tsMetadata.meta.aboutUrl,
-    tokenMetadata: tokenMetadata,
+    aboutUrl: tsMetadata.meta.aboutUrl || explorerUrl,
+    tokenMetadata: tokenMetadata || {},
     signed: tsMetadata.signed,
   };
 }
