@@ -1,0 +1,65 @@
+---
+title: My Tokens
+description: A component that displays a list of tokens that the user has.
+component: true
+---
+
+<ComponentPreview
+  name="my-nfts-demo"
+  className="[&_.preview>[data-orientation=vertical]]:sm:max-w-[70%]"
+  description="An accordion with three items"
+/>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @token-kit/cli@latest add my-nfts
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Install the following dependencies:</Step>
+
+```bash
+npm install @token-kit/onchain
+```
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="my-nfts" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import { MyNfts } from "@/registry/default/ui/my-nfts";
+```
+
+```tsx
+<MyNfts
+  client={client as PublicClient}
+  address="0x250eb01a55d7E462ad478465581344521B01CD6b"
+  tokenId={0n}
+  chainId={84532}
+/>
+```

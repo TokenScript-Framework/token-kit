@@ -2,11 +2,7 @@
   {
     "name": "token-card",
     "type": "registry:ui",
-    "dependencies": [
-      "react",
-      "viem",
-      "wagmi"
-    ],
+    "dependencies": [],
     "files": [
       {
         "path": "ui/token-card.tsx",
@@ -17,14 +13,32 @@
   {
     "name": "token-thumbnail",
     "type": "registry:ui",
-    "dependencies": [
-      "react",
-      "viem",
-      "wagmi"
-    ],
+    "dependencies": [],
     "files": [
       {
         "path": "ui/token-thumbnail.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  {
+    "name": "token-tx-sonner",
+    "type": "registry:ui",
+    "dependencies": [],
+    "files": [
+      {
+        "path": "ui/token-tx-sonner.tsx",
+        "type": "registry:ui"
+      }
+    ]
+  },
+  {
+    "name": "my-nfts",
+    "type": "registry:ui",
+    "dependencies": [],
+    "files": [
+      {
+        "path": "ui/my-nfts.tsx",
         "type": "registry:ui"
       }
     ]

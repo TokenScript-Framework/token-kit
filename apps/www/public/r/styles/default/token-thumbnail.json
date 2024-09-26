@@ -1,11 +1,7 @@
 {
   "name": "token-thumbnail",
   "type": "registry:ui",
-  "dependencies": [
-    "react",
-    "viem",
-    "wagmi"
-  ],
+  "dependencies": [],
   "files": [
     {
       "path": "ui/token-thumbnail.tsx",

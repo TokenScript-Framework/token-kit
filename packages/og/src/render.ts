@@ -1,9 +1,8 @@
+import axios from "axios";
 import fs from "fs";
 import jsdom from "jsdom";
 import path from "path";
-import { getTokenscriptMetadata, TsMetadata } from "token-kit";
 
-import { Eip1193Provider, JsonRpcApiProvider } from "ethers";
 import satori, { SatoriOptions } from "satori";
 
 const SpaceGroteskFont = fs.readFileSync(
@@ -16,15 +15,37 @@ const SpaceGroteskFontBold = fs.readFileSync(
 const Node = new jsdom.JSDOM().window.Node;
 
 export type MetadataOptions = {
-  provider: Eip1193Provider | JsonRpcApiProvider;
-  chainId: number;
-  contract: `0x${string}`;
-  imgBuffer: Buffer;
-  context?: {
-    tokenId: string;
-    originIndex?: number;
+  chainId: string;
+  contract: string;
+  tokenId?: string;
+  scriptId?: string;
+};
+
+export type TsMetadata = {
+  name: string;
+  label: string;
+  meta: {
+    description?: string;
+    aboutUrl?: string;
+    iconUrl?: string;
+    imageUrl?: string;
+    backgroundImageUrl?: string;
   };
-  index?: number;
+  signed: boolean;
+  actions: { name: string; label: string; buttonClass?: string }[];
+  cssStr: string;
+};
+
+export type TokenMetadata = {
+  image: string;
+  description: string;
+  name: string;
+};
+
+export type TokenViewData = {
+  tokenMetadata?: TokenMetadata;
+  tsMetadata: TsMetadata;
+  signed: boolean;
 };
 
 export default class TsRender {
@@ -175,29 +196,25 @@ export default class TsRender {
   }
 
   static async from(params: MetadataOptions): Promise<TsRender> {
-    const metadata = await getTokenscriptMetadata(
-      params.provider,
-      params.chainId,
-      params.contract,
-      params.context,
-      { css: true, cards: true },
-      params.index,
-    );
+    const tokenViewData = await getTokenViewData({
+      chain: params.chainId,
+      contract: params.contract,
+      tokenId: params.tokenId,
+      scriptId: params.scriptId,
+    });
+
     return new TsRender({
-      metadata,
-      image: params.imgBuffer,
-      name: metadata.name,
-      description: metadata.name,
+      metadata: tokenViewData.tsMetadata,
+      image: await imageUrl2Buffer(tokenViewData.tokenMetadata!.image),
+      name: tokenViewData.tokenMetadata!.name,
+      description: tokenViewData.tokenMetadata!.description,
     });
   }
 
   async toDocument() {
-    const cards = this.params.metadata.cards;
-    const allCards = cards?.getAllCards();
-    const featuredCard = allCards?.find(
-      (card) => card.buttonClass === "featured",
-    );
-    const nonFeaturedCards = allCards?.filter(
+    const cards = this.params.metadata.actions;
+    const featuredCard = cards?.find((card) => card.buttonClass === "featured");
+    const nonFeaturedCards = cards?.filter(
       (card) => card.buttonClass !== "featured",
     );
 
@@ -569,4 +586,34 @@ function truncateString(str: string): string {
 
 async function buffer2DataUri(buf: Buffer): Promise<string> {
   return `data:image/png;base64,${buf.toString("base64")}`;
+}
+
+async function imageUrl2Buffer(url: string): Promise<Buffer> {
+  return axios
+    .get(url, {
+      responseType: "arraybuffer",
+    })
+    .then((res) => Buffer.from(res.data));
+}
+
+async function getTokenViewData(params: {
+  chain: string;
+  contract: string;
+  tokenId?: string;
+  scriptId?: string;
+}): Promise<TokenViewData> {
+  return axios
+    .get(
+      `https://api.smarttokenlabs.com/token-view/${params.chain}/${params.contract}`,
+      {
+        params: { tokenId: params.tokenId, entry: params.scriptId },
+        headers: {
+          Accept: "application/json",
+          "Accept-Encoding": "deflate, gzip, br",
+          "x-stl-key":
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0IjoibXVsdGktY2hhbm5lbC1yZW5kZXJpbmctb2ciLCJpYXQiOjE3MjcyNDA1MDd9.M05idSQCSyEktxOAH377iKe9J080U5O4eab1Yv1YOLc",
+        },
+      },
+    )
+    .then((res) => res.data);
 }

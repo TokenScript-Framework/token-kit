@@ -9,6 +9,7 @@ export default defineConfig({
   format: ["cjs", "esm"],
   treeshake: true,
   minify: true,
+  shims: true,
   dts: true,
   onSuccess: () => {
     const dest = "dist/";

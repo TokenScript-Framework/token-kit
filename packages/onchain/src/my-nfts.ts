@@ -11,30 +11,47 @@ import {
   MyNftTokenWithoutMetadata,
   TokenTypes,
 } from "./constant";
-import { tokenType } from "./token-type";
-import { normalizeTokenId } from "./libs/normalizer";
+import { rewriteUrlIfIFPSUrl } from "./libs";
 import { ERC721Enumerable_ABI } from "./libs/abi";
 import { batchExecutor } from "./libs/batch-executor";
 import { initFetchHandler } from "./libs/fetch-handler";
+import { normalizeTokenId } from "./libs/normalizer";
+import { tokenType } from "./token-type";
 
 const defaultOptions: MyNftsOptions = {
   includeTokenMetadata: false,
 };
 
-export async function myNfts(
-  client: PublicClient,
-  address: `0x${string}`,
-  tokenId: number | bigint,
-  options?: MyNftsOptions,
-): Promise<MyNfts> {
+export type MyNftsInput =
+  | {
+      client: PublicClient;
+      address: `0x${string}`;
+      tokenId: number | bigint;
+      options?: MyNftsOptions;
+    }
+  | {
+      client: PublicClient;
+      address: `0x${string}`;
+      userWallet: `0x${string}`;
+      options?: MyNftsOptions;
+    };
+
+export async function myNfts(v: MyNftsInput): Promise<MyNfts> {
+  const { client, address, options } = v;
   const opts = { ...defaultOptions, ...options };
 
   const { type, subTypes } = await tokenType(address, client);
   if (type !== TokenTypes.ERC721 || !subTypes.includes("IERC721Enumerable"))
     throw new Error("Only support Enumberable ERC721 token");
 
-  const id = normalizeTokenId(tokenId);
-  const owner = await getOwner(client, address, id);
+  let owner: `0x${string}`;
+  if ("userWallet" in v && v.userWallet) {
+    owner = v.userWallet;
+  } else if ("tokenId" in v) {
+    const id = normalizeTokenId(v.tokenId);
+    owner = await getOwner(client, address, id);
+  }
+
   const tokenIds = await fetchTokenIds(client, address, owner);
   let tokens = await fetchTokenURIs(client, address, tokenIds);
 
@@ -126,8 +143,20 @@ async function fetchTokenMetadatas(
   return await batchExecutor<MyNftTokenWithoutMetadata, MyNftToken>(
     tokens,
     async (token) => {
-      const tokenMetadata = await opts.fetchHandler(token.tokenURI);
-      return { ...token, tokenMetadata };
+      const tokenMetadata = (await opts.fetchHandler(token.tokenURI)) as {
+        image: string;
+        attributes: Array<{ trait_type: string; value: string }>;
+      };
+      return {
+        ...token,
+        tokenMetadata: {
+          ...tokenMetadata,
+          image: rewriteUrlIfIFPSUrl(
+            tokenMetadata.image,
+            opts.ipfsGatewayDomain,
+          ),
+        },
+      };
     },
   );
 }

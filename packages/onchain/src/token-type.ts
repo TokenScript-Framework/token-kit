@@ -89,7 +89,7 @@ async function detectSubTokenType(
 
 async function isSupported(
   address: string,
-  interfaceId: string,
+  interfaceId: `0x${string}`,
   client: PublicClient,
 ) {
   const contract = {

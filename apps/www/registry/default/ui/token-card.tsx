@@ -44,7 +44,7 @@ function TokenCardSkeleton(props: { className?: string }) {
   );
 }
 
-function NFTCardSkeleton(props: { className?: string }) {
+export function NFTCardSkeleton(props: { className?: string }) {
   return (
     <Card className={cn("w-[350px] overflow-hidden", props.className)}>
       <CardHeader className="p-0">
