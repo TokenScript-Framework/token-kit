@@ -1,5 +1,5 @@
 {
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "This is a snap for tapp",
   "proposedName": "Tapp Snap",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/TokenScript-Framework/token-kit/tree/main/packages/tapp-snap"
   },
   "source": {
-    "shasum": "vTCLrqO+5unKbUgYTIOYA7abXxJzzOxLQ44QDgp7DpE=",
+    "shasum": "g6uimBNMi0MfvcQuM8TCOjNIy4dO5NdltgMIJLww7kc=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
