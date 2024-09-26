@@ -10,7 +10,7 @@ import {
 } from "@metamask/snaps-sdk/jsx";
 
 import { Metadata } from "../libs/types";
-import { UNDEFINED, VIEWER_ROOT } from "../libs/contants";
+import { UNDEFINED, VIEWER_ROOT } from "../libs/constants";
 
 type FormProps = {
   metadata?: Metadata;
@@ -37,17 +37,17 @@ export const TokenPage: SnapComponent<FormProps> = ({
       <Box key={`box-${i}`} direction="horizontal" alignment="space-between">
         <Text>
           <Link
-            href={`${VIEWER_ROOT}/?chain=${chain}&contract=${contract}#card=${metadata.actions[i]}&tokenId=${tokenId}`}
+            href={`${VIEWER_ROOT}/?chain=${chain}&contract=${contract}#card=${metadata.actions[i]?.name}&tokenId=${tokenId}`}
           >
-            {metadata.actions[i]?.toUpperCase()}
+            {metadata.actions[i]?.label}
           </Link>
         </Text>
         {metadata.actions[i + 1] && (
           <Text>
             <Link
-              href={`${VIEWER_ROOT}/?chain=${chain}&contract=${contract}#card=${metadata.actions[i + 1]}&tokenId=${tokenId}`}
+              href={`${VIEWER_ROOT}/?chain=${chain}&contract=${contract}#card=${metadata.actions[i + 1]?.name}&tokenId=${tokenId}`}
             >
-              {metadata.actions[i + 1]?.toUpperCase()}
+              {metadata.actions[i + 1]?.label}
             </Link>
           </Text>
         )}

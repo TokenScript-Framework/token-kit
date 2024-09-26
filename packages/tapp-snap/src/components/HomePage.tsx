@@ -11,7 +11,7 @@ import {
 } from "@metamask/snaps-sdk/jsx";
 import { truncateAddress, chainPipe } from "../libs/utils";
 import { ADDRESSTYPE, State } from "../libs/types";
-import { UNDEFINED } from "../libs/contants";
+import { UNDEFINED } from "../libs/constants";
 
 type FormProps = {
   state?: State | null;

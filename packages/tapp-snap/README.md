@@ -19,13 +19,24 @@ This project uses `@metamask/snaps-sdk` to develop the Snap. The features are:
     - `HomePage.tsx`: HomePage page component
     - `TokenPage.tsx`: Interactive form component
   - `libs/`: Library
-    - `types.tsx`: Some types
-    - `utils.tsx`: Some common functions
+    - `constants.ts`: Some const
+    - `types.ts`: Some types
+    - `utils.ts`: Some common functions
   - `TokenPage.tsx`: Interactive form component
   - `index.tsx`: Entry file for the Snap
   - `index.test.tsx`: Test file
 - `tsconfig.json`: TypeScript configuration file
 - `package.json`: Project dependencies and scripts
+
+## Setting enviroment
+
+There are three params for env:
+
+1. COMMON_API_ROOT: The root url for getting metadata
+2. API_KEY: The api key for COMMON_API_ROOT
+3. VIEWER_ROOT: The root url for token actions
+
+You can copy `.env.example` and rename to `.env`, then set your own env params.
 
 ## Usage
 
@@ -56,15 +67,6 @@ The params are:
 - `chain`:  ID of the blockchain network.
 - `contract`: Address of the token contract.
 - `tokenId`: Token ID.
-- `name`: Name of the contract.
-- `description`: Description of Contract.
-- `aboutUrl`: Link providing more related information for contract.
-- `actions`: List of actions that can be performed on the token.
-- `tokenMetadata`: Metadata containing additional information about the token, such as images, attributes, etc.
-  - `name` : Name of the token.
-  - `description` : Description of the token.
-  - `image` : Image of the token.
-  - `attributes` : An array attributes of the token, the format is `{ trait_type: "something", value: "some value" }`.
 
 ## Testing
 

@@ -3,6 +3,7 @@ import type {
   OnRpcRequestHandler,
   OnUserInputHandler,
 } from "@metamask/snaps-sdk";
+
 import { MethodNotFoundError, UserInputEventType } from "@metamask/snaps-sdk";
 
 import { operateForActions } from "./components/Actions";
@@ -12,6 +13,7 @@ import {
   detectOwner,
   getState,
   getSVG,
+  getTokenMetdata,
   importTokenToState,
 } from "./libs/utils";
 import { ADDRESSTYPE, CheckResult, State, TokenMetadata } from "./libs/types";
@@ -39,26 +41,23 @@ type RequestParams = {
 export const onRpcRequest: OnRpcRequestHandler = async ({ request }) => {
   switch (request.method) {
     case "import": {
-      const {
-        chain,
-        contract,
-        tokenId,
-        actions,
-        name,
-        description,
-        aboutUrl,
-        tokenMetadata,
-      } = request.params as RequestParams;
-
+      const { chain, contract, tokenId } = request.params as RequestParams;
       const detectResult = await checkChainAndOwner(chain, contract, tokenId);
+
       if (!detectResult.result) {
         return detectResult.dialog;
       }
 
       const owner = detectResult.owner;
+      const { actions, name, description, aboutUrl, tokenMetadata, signed } =
+        await getTokenMetdata(chain, contract, tokenId);
+      if (!signed) {
+        return await showWarningDialog(
+          "The token is not signed, please change one.",
+        );
+      }
 
       const tokenSVG = await getSVG(tokenMetadata.image);
-
       await importTokenToState(
         {
           chain,

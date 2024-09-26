@@ -7,12 +7,17 @@ export type Attribute = {
   value: string | number;
 };
 
+type Action = {
+  name: string;
+  label: string;
+};
+
 type BaseTokenInfo = {
   chain: string;
   contract: ADDRESSTYPE;
   tokenId: string;
   owner: ADDRESSTYPE;
-  actions: string[];
+  actions: Action[];
   name: string;
   description: string;
   aboutUrl: string;
