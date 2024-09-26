@@ -11,6 +11,7 @@ import {
   MyNftTokenWithoutMetadata,
   TokenTypes,
 } from "./constant";
+import { rewriteUrlIfIFPSUrl } from "./libs";
 import { ERC721Enumerable_ABI } from "./libs/abi";
 import { batchExecutor } from "./libs/batch-executor";
 import { initFetchHandler } from "./libs/fetch-handler";
@@ -21,21 +22,21 @@ const defaultOptions: MyNftsOptions = {
   includeTokenMetadata: false,
 };
 
-export async function myNfts(
-  v:
-    | {
-        client: PublicClient;
-        address: `0x${string}`;
-        tokenId: number | bigint;
-        options?: MyNftsOptions;
-      }
-    | {
-        client: PublicClient;
-        address: `0x${string}`;
-        userWallet: `0x${string}`;
-        options?: MyNftsOptions;
-      },
-): Promise<MyNfts> {
+export type MyNftsInput =
+  | {
+      client: PublicClient;
+      address: `0x${string}`;
+      tokenId: number | bigint;
+      options?: MyNftsOptions;
+    }
+  | {
+      client: PublicClient;
+      address: `0x${string}`;
+      userWallet: `0x${string}`;
+      options?: MyNftsOptions;
+    };
+
+export async function myNfts(v: MyNftsInput): Promise<MyNfts> {
   const { client, address, options } = v;
   const opts = { ...defaultOptions, ...options };
 
@@ -142,8 +143,20 @@ async function fetchTokenMetadatas(
   return await batchExecutor<MyNftTokenWithoutMetadata, MyNftToken>(
     tokens,
     async (token) => {
-      const tokenMetadata = await opts.fetchHandler(token.tokenURI);
-      return { ...token, tokenMetadata };
+      const tokenMetadata = (await opts.fetchHandler(token.tokenURI)) as {
+        image: string;
+        attributes: Array<{ trait_type: string; value: string }>;
+      };
+      return {
+        ...token,
+        tokenMetadata: {
+          ...tokenMetadata,
+          image: rewriteUrlIfIFPSUrl(
+            tokenMetadata.image,
+            opts.ipfsGatewayDomain,
+          ),
+        },
+      };
     },
   );
 }

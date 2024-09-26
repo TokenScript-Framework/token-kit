@@ -1,11 +1,7 @@
 {
   "name": "token-tx-sonner",
   "type": "registry:ui",
-  "dependencies": [
-    "react",
-    "viem",
-    "wagmi"
-  ],
+  "dependencies": [],
   "files": [
     {
       "path": "ui/token-tx-sonner.tsx",
