@@ -1,17 +1,20 @@
-import chalk from "chalk";
+import { highlighter } from "@/src/utils/highlighter";
 
 export const logger = {
   error(...args: unknown[]) {
-    console.log(chalk.red(...args));
+    console.log(highlighter.error(args.join(" ")));
   },
   warn(...args: unknown[]) {
-    console.log(chalk.yellow(...args));
+    console.log(highlighter.warn(args.join(" ")));
   },
   info(...args: unknown[]) {
-    console.log(chalk.cyan(...args));
+    console.log(highlighter.info(args.join(" ")));
   },
   success(...args: unknown[]) {
-    console.log(chalk.green(...args));
+    console.log(highlighter.success(args.join(" ")));
+  },
+  log(...args: unknown[]) {
+    console.log(args.join(" "));
   },
   break() {
     console.log("");

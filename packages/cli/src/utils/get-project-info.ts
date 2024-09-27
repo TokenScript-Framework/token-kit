@@ -1,5 +1,5 @@
-import { existsSync } from "fs";
 import path from "path";
+import { FRAMEWORKS, Framework } from "@/src/utils/frameworks";
 import {
   Config,
   RawConfig,
@@ -7,19 +7,18 @@ import {
   resolveConfigPaths,
 } from "@/src/utils/get-config";
 import fg from "fast-glob";
-import fs, { pathExists } from "fs-extra";
+import fs from "fs-extra";
 import { loadConfig } from "tsconfig-paths";
 
-// TODO: Add support for more frameworks.
-// We'll start with Next.js for now.
-const PROJECT_TYPES = [
-  "next-app",
-  "next-app-src",
-  "next-pages",
-  "next-pages-src",
-] as const;
-
-type ProjectType = (typeof PROJECT_TYPES)[number];
+type ProjectInfo = {
+  framework: Framework;
+  isSrcDir: boolean;
+  isRSC: boolean;
+  isTsx: boolean;
+  tailwindConfigFile: string | null;
+  tailwindCssFile: string | null;
+  aliasPrefix: string | null;
+};
 
 const PROJECT_SHARED_IGNORE = [
   "**/node_modules/**",
@@ -29,113 +28,89 @@ const PROJECT_SHARED_IGNORE = [
   "build",
 ];
 
-export async function getProjectInfo() {
-  const info = {
-    tsconfig: null,
-    srcDir: false,
-    appDir: false,
-    srcComponentsUiDir: false,
-    componentsUiDir: false,
-  };
+export async function getProjectInfo(cwd: string): Promise<ProjectInfo | null> {
+  const [
+    configFiles,
+    isSrcDir,
+    isTsx,
+    tailwindConfigFile,
+    tailwindCssFile,
+    aliasPrefix,
+  ] = await Promise.all([
+    fg.glob("**/{next,vite,astro}.config.*|gatsby-config.*|composer.json", {
+      cwd,
+      deep: 3,
+      ignore: PROJECT_SHARED_IGNORE,
+    }),
+    fs.pathExists(path.resolve(cwd, "src")),
+    isTypeScriptProject(cwd),
+    getTailwindConfigFile(cwd),
+    getTailwindCssFile(cwd),
+    getTsConfigAliasPrefix(cwd),
+  ]);
 
-  try {
-    const tsconfig = await getTsConfig();
-
-    return {
-      tsconfig,
-      srcDir: existsSync(path.resolve("./src")),
-      appDir:
-        existsSync(path.resolve("./app")) ||
-        existsSync(path.resolve("./src/app")),
-      srcComponentsUiDir: existsSync(path.resolve("./src/components/ui")),
-      componentsUiDir: existsSync(path.resolve("./components/ui")),
-    };
-  } catch (error) {
-    return info;
-  }
-}
-
-export async function getTsConfig() {
-  try {
-    const tsconfigPath = path.join("tsconfig.json");
-    const tsconfig = await fs.readJSON(tsconfigPath);
-
-    if (!tsconfig) {
-      throw new Error("tsconfig.json is missing");
-    }
-
-    return tsconfig;
-  } catch (error) {
-    return null;
-  }
-}
-
-export async function getProjectConfig(cwd: string): Promise<Config | null> {
-  // Check for existing component config.
-  const existingConfig = await getConfig(cwd);
-  if (existingConfig) {
-    return existingConfig;
-  }
-
-  const projectType = await getProjectType(cwd);
-  const tailwindCssFile = await getTailwindCssFile(cwd);
-  const tsConfigAliasPrefix = await getTsConfigAliasPrefix(cwd);
-
-  if (!projectType || !tailwindCssFile || !tsConfigAliasPrefix) {
-    return null;
-  }
-
-  const isTsx = await isTypeScriptProject(cwd);
-
-  const config: RawConfig = {
-    $schema: "https://ui.shadcn.com/schema.json",
-    rsc: ["next-app", "next-app-src"].includes(projectType),
-    tsx: isTsx,
-    style: "new-york",
-    tailwind: {
-      config: isTsx ? "tailwind.config.ts" : "tailwind.config.js",
-      baseColor: "zinc",
-      css: tailwindCssFile,
-      cssVariables: true,
-      prefix: "",
-    },
-    aliases: {
-      utils: `${tsConfigAliasPrefix}/lib/utils`,
-      components: `${tsConfigAliasPrefix}/components/token-kit`,
-    },
-  };
-
-  return await resolveConfigPaths(cwd, config);
-}
-
-export async function getProjectType(cwd: string): Promise<ProjectType | null> {
-  const files = await fg.glob("**/*", {
-    cwd,
-    deep: 3,
-    ignore: PROJECT_SHARED_IGNORE,
-  });
-
-  const isNextProject = files.find((file) => file.startsWith("next.config."));
-  if (!isNextProject) {
-    return null;
-  }
-
-  const isUsingSrcDir = await fs.pathExists(path.resolve(cwd, "src"));
   const isUsingAppDir = await fs.pathExists(
-    path.resolve(cwd, `${isUsingSrcDir ? "src/" : ""}app`),
+    path.resolve(cwd, `${isSrcDir ? "src/" : ""}app`),
   );
 
-  if (isUsingAppDir) {
-    return isUsingSrcDir ? "next-app-src" : "next-app";
+  const type: ProjectInfo = {
+    framework: FRAMEWORKS["manual"],
+    isSrcDir,
+    isRSC: false,
+    isTsx,
+    tailwindConfigFile,
+    tailwindCssFile,
+    aliasPrefix,
+  };
+
+  if (!configFiles.length) {
+    return type;
   }
 
-  return isUsingSrcDir ? "next-pages-src" : "next-pages";
+  // Next.js.
+  if (configFiles.find((file) => file.startsWith("next.config."))?.length) {
+    type.framework = isUsingAppDir
+      ? FRAMEWORKS["next-app"]
+      : FRAMEWORKS["next-pages"];
+    type.isRSC = isUsingAppDir;
+    return type;
+  }
+
+  // Astro.
+  if (configFiles.find((file) => file.startsWith("astro.config."))?.length) {
+    type.framework = FRAMEWORKS["astro"];
+    return type;
+  }
+
+  // Gatsby.
+  if (configFiles.find((file) => file.startsWith("gatsby-config."))?.length) {
+    type.framework = FRAMEWORKS["gatsby"];
+    return type;
+  }
+
+  // Laravel.
+  if (configFiles.find((file) => file.startsWith("composer.json"))?.length) {
+    type.framework = FRAMEWORKS["laravel"];
+    return type;
+  }
+
+  // Vite and Remix.
+  // They both have a vite.config.* file.
+  if (configFiles.find((file) => file.startsWith("vite.config."))?.length) {
+    // We'll assume that if the project has an app dir, it's a Remix project.
+    // Otherwise, it's a Vite project.
+    // TODO: Maybe check for `@remix-run/react` in package.json?
+    type.framework = isUsingAppDir ? FRAMEWORKS["remix"] : FRAMEWORKS["vite"];
+    return type;
+  }
+
+  return type;
 }
 
 export async function getTailwindCssFile(cwd: string) {
-  const files = await fg.glob("**/*.css", {
+  const files = await fg.glob(["**/*.css", "**/*.scss"], {
     cwd,
-    deep: 3,
+    deep: 5,
     ignore: PROJECT_SHARED_IGNORE,
   });
 
@@ -154,6 +129,20 @@ export async function getTailwindCssFile(cwd: string) {
   return null;
 }
 
+export async function getTailwindConfigFile(cwd: string) {
+  const files = await fg.glob("tailwind.config.*", {
+    cwd,
+    deep: 3,
+    ignore: PROJECT_SHARED_IGNORE,
+  });
+
+  if (!files.length) {
+    return null;
+  }
+
+  return files[0];
+}
+
 export async function getTsConfigAliasPrefix(cwd: string) {
   const tsConfig = await loadConfig(cwd);
 
@@ -163,8 +152,13 @@ export async function getTsConfigAliasPrefix(cwd: string) {
 
   // This assume that the first alias is the prefix.
   for (const [alias, paths] of Object.entries(tsConfig.paths)) {
-    if (paths.includes("./*") || paths.includes("./src/*")) {
-      return alias.at(0);
+    if (
+      paths.includes("./*") ||
+      paths.includes("./src/*") ||
+      paths.includes("./app/*") ||
+      paths.includes("./resources/js/*") // Laravel.
+    ) {
+      return alias.at(0) ?? null;
     }
   }
 
@@ -172,23 +166,74 @@ export async function getTsConfigAliasPrefix(cwd: string) {
 }
 
 export async function isTypeScriptProject(cwd: string) {
-  // Check if cwd has a tsconfig.json file.
-  return pathExists(path.resolve(cwd, "tsconfig.json"));
-}
-
-export async function preFlight(cwd: string) {
-  // We need Tailwind CSS to be configured.
-  const tailwindConfig = await fg.glob("tailwind.config.*", {
+  const files = await fg.glob("tsconfig.*", {
     cwd,
-    deep: 3,
+    deep: 1,
     ignore: PROJECT_SHARED_IGNORE,
   });
 
-  if (!tailwindConfig.length) {
-    throw new Error(
-      "Tailwind CSS is not installed. Visit https://tailwindcss.com/docs/installation to get started.",
-    );
+  return files.length > 0;
+}
+
+export async function getTsConfig() {
+  try {
+    const tsconfigPath = path.join("tsconfig.json");
+    const tsconfig = await fs.readJSON(tsconfigPath);
+
+    if (!tsconfig) {
+      throw new Error("tsconfig.json is missing");
+    }
+
+    return tsconfig;
+  } catch (error) {
+    return null;
+  }
+}
+
+export async function getProjectConfig(
+  cwd: string,
+  defaultProjectInfo: ProjectInfo | null = null,
+): Promise<Config | null> {
+  // Check for existing component config.
+  const [existingConfig, projectInfo] = await Promise.all([
+    getConfig(cwd),
+    !defaultProjectInfo
+      ? getProjectInfo(cwd)
+      : Promise.resolve(defaultProjectInfo),
+  ]);
+
+  if (existingConfig) {
+    return existingConfig;
   }
 
-  return true;
+  if (
+    !projectInfo ||
+    !projectInfo.tailwindConfigFile ||
+    !projectInfo.tailwindCssFile
+  ) {
+    return null;
+  }
+
+  const config: RawConfig = {
+    $schema: "https://ui.shadcn.com/schema.json",
+    rsc: projectInfo.isRSC,
+    tsx: projectInfo.isTsx,
+    style: "default",
+    tailwind: {
+      config: projectInfo.tailwindConfigFile,
+      baseColor: "slate",
+      css: projectInfo.tailwindCssFile,
+      cssVariables: true,
+      prefix: "",
+    },
+    aliases: {
+      components: `${projectInfo.aliasPrefix}/components/token-kit`,
+      ui: `${projectInfo.aliasPrefix}/components/token-kit/ui`,
+      hooks: `${projectInfo.aliasPrefix}/hooks/token-kit`,
+      lib: `${projectInfo.aliasPrefix}/lib`,
+      utils: `${projectInfo.aliasPrefix}/lib/utils`,
+    },
+  };
+
+  return await resolveConfigPaths(cwd, config);
 }
