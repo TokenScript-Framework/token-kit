@@ -7,6 +7,7 @@ import { logger } from "@/src/utils/logger";
 import { spinner } from "@/src/utils/spinner";
 import fs from "fs-extra";
 import { z } from "zod";
+import { CONFIG_FILE_NAME } from "../utils/get-config";
 
 export async function preFlightInit(
   options: z.infer<typeof initOptionsSchema>,
@@ -31,18 +32,18 @@ export async function preFlightInit(
   }).start();
 
   if (
-    fs.existsSync(path.resolve(options.cwd, "components.json")) &&
+    fs.existsSync(path.resolve(options.cwd, CONFIG_FILE_NAME)) &&
     !options.force
   ) {
     projectSpinner?.fail();
     logger.break();
     logger.error(
       `A ${highlighter.info(
-        "components.json",
+        CONFIG_FILE_NAME,
       )} file already exists at ${highlighter.info(
         options.cwd,
       )}.\nTo start over, remove the ${highlighter.info(
-        "components.json",
+        CONFIG_FILE_NAME,
       )} file and run ${highlighter.info("init")} again.`,
     );
     logger.break();

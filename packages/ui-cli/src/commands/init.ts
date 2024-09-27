@@ -5,6 +5,7 @@ import { addComponents } from "@/src/utils/add-components";
 import { createProject } from "@/src/utils/create-project";
 import * as ERRORS from "@/src/utils/errors";
 import {
+  CONFIG_FILE_NAME,
   DEFAULT_COMPONENTS,
   DEFAULT_TAILWIND_CONFIG,
   DEFAULT_TAILWIND_CSS,
@@ -111,7 +112,7 @@ export async function runInit(
       type: "confirm",
       name: "proceed",
       message: `Write configuration to ${highlighter.info(
-        "components.json",
+        CONFIG_FILE_NAME,
       )}. Proceed?`,
       initial: true,
     });
@@ -121,9 +122,9 @@ export async function runInit(
     }
   }
 
-  // Write components.json.
-  const componentSpinner = spinner(`Writing components.json.`).start();
-  const targetPath = path.resolve(options.cwd, "components.json");
+  // Write token-kit-ui-components.json.
+  const componentSpinner = spinner(`Writing ${CONFIG_FILE_NAME}.`).start();
+  const targetPath = path.resolve(options.cwd, CONFIG_FILE_NAME);
   await fs.writeFile(targetPath, JSON.stringify(config, null, 2), "utf8");
   componentSpinner.succeed();
 

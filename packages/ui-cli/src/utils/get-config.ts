@@ -12,10 +12,12 @@ export const DEFAULT_TAILWIND_CSS = "app/globals.css";
 export const DEFAULT_TAILWIND_CONFIG = "tailwind.config.js";
 export const DEFAULT_TAILWIND_BASE_COLOR = "slate";
 
+export const CONFIG_FILE_NAME = "token-kit-ui-components.json";
+
 // TODO: Figure out if we want to support all cosmiconfig formats.
-// A simple components.json file would be nice.
+// A simple token-kit-ui-components.json file would be nice.
 const explorer = cosmiconfig("components", {
-  searchPlaces: ["components.json"],
+  searchPlaces: [CONFIG_FILE_NAME],
 });
 
 export const rawConfigSchema = z

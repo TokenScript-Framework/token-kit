@@ -1,6 +1,6 @@
 import { existsSync, promises as fs } from "fs";
 import path from "path";
-import { Config, getConfig } from "@/src/utils/get-config";
+import { Config, CONFIG_FILE_NAME, getConfig } from "@/src/utils/get-config";
 import { handleError } from "@/src/utils/handle-error";
 import { highlighter } from "@/src/utils/highlighter";
 import { logger } from "@/src/utils/logger";
@@ -52,7 +52,7 @@ export const diff = new Command()
         logger.warn(
           `Configuration is missing. Please run ${highlighter.success(
             `init`,
-          )} to create a components.json file.`,
+          )} to create a ${CONFIG_FILE_NAME} file.`,
         );
         process.exit(1);
       }

@@ -12,6 +12,7 @@ import { updateAppIndex } from "@/src/utils/update-app-index";
 import { Command } from "commander";
 import prompts from "prompts";
 import { z } from "zod";
+import { CONFIG_FILE_NAME } from "../utils/get-config";
 
 export const addOptionsSchema = z.object({
   components: z.array(z.string()).optional(),
@@ -88,7 +89,7 @@ export const add = new Command()
           type: "confirm",
           name: "proceed",
           message: `You need to create a ${highlighter.info(
-            "component.json",
+            CONFIG_FILE_NAME,
           )} file to add components. Proceed?`,
           initial: true,
         });

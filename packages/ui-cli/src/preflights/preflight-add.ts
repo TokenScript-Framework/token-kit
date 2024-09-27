@@ -1,7 +1,7 @@
 import path from "path";
 import { addOptionsSchema } from "@/src/commands/add";
 import * as ERRORS from "@/src/utils/errors";
-import { getConfig } from "@/src/utils/get-config";
+import { CONFIG_FILE_NAME, getConfig } from "@/src/utils/get-config";
 import { highlighter } from "@/src/utils/highlighter";
 import { logger } from "@/src/utils/logger";
 import fs from "fs-extra";
@@ -23,8 +23,8 @@ export async function preFlightAdd(options: z.infer<typeof addOptionsSchema>) {
     };
   }
 
-  // Check for existing components.json file.
-  if (!fs.existsSync(path.resolve(options.cwd, "components.json"))) {
+  // Check for existing token-kit-ui-components.json file.
+  if (!fs.existsSync(path.resolve(options.cwd, CONFIG_FILE_NAME))) {
     errors[ERRORS.MISSING_CONFIG] = true;
     return {
       errors,
@@ -43,11 +43,11 @@ export async function preFlightAdd(options: z.infer<typeof addOptionsSchema>) {
     logger.break();
     logger.error(
       `An invalid ${highlighter.info(
-        "components.json",
+        CONFIG_FILE_NAME,
       )} file was found at ${highlighter.info(
         options.cwd,
       )}.\nBefore you can add components, you must create a valid ${highlighter.info(
-        "components.json",
+        CONFIG_FILE_NAME,
       )} file by running the ${highlighter.info("init")} command.`,
     );
     logger.error(
