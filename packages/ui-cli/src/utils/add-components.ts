@@ -5,6 +5,7 @@ import { registryResolveItemsTree } from "@/src/utils/registry";
 import { spinner } from "@/src/utils/spinner";
 import { updateCssVars } from "@/src/utils/updaters/update-css-vars";
 import { updateDependencies } from "@/src/utils/updaters/update-dependencies";
+import { updateShadcnDependencies } from "@/src/utils/updaters/update-shadcn-dependencies";
 import { updateFiles } from "@/src/utils/updaters/update-files";
 import { updateTailwindConfig } from "@/src/utils/updaters/update-tailwind-config";
 
@@ -45,6 +46,11 @@ export async function addComponents(
   await updateDependencies(tree.dependencies, config, {
     silent: options.silent,
   });
+
+  await updateShadcnDependencies(tree.shadcnDependencies, config, {
+    silent: options.silent,
+  });
+
   await updateFiles(tree.files, config, {
     overwrite: options.overwrite,
     silent: options.silent,

@@ -326,6 +326,9 @@ export async function registryResolveItemsTree(
       devDependencies: deepmerge.all(
         payload.map((item) => item.devDependencies ?? []),
       ),
+      shadcnDependencies: deepmerge.all(
+        payload.map((item) => item.shadcnDependencies ?? []),
+      ),
       files: deepmerge.all(payload.map((item) => item.files ?? [])),
       tailwind,
       cssVars,
