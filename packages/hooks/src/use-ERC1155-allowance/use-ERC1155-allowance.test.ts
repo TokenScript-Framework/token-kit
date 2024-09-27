@@ -15,15 +15,10 @@ describe("useAllowance", () => {
     vi.clearAllMocks();
   });
 
-  test("ERC1155 balance check", async () => {
+  test("ERC1155 balance insufficient", async () => {
     vi.mocked(useReadContracts).mockReturnValue({
-      data: [{ result: "1" }],
+      data: [{ result: "500000000000000000" }],
       status: "success",
-      error: null,
-      isError: false,
-      isPending: false,
-      isLoading: false,
-      isSuccess: true,
     } as UseReadContractsReturnType<readonly unknown[], boolean, unknown>);
 
     const { result } = renderHook(() =>
@@ -31,32 +26,53 @@ describe("useAllowance", () => {
         chainId: 1,
         contract: mockContractAddress,
         owner: mockOwner,
-        amount: "100000000000000000",
+        amount: "1",
+        tokenId: "1",
+      }),
+    );
+
+    expect(result.current.status).toBe("success");
+    expect(result.current.isAllowed).toBe(false);
+  });
+
+  test("Error status", async () => {
+    vi.mocked(useReadContracts).mockReturnValue({
+      data: undefined,
+      status: "error",
+      error: new Error("Mock error"),
+    } as UseReadContractsReturnType<readonly unknown[], boolean, unknown>);
+
+    const { result } = renderHook(() =>
+      useERC1155Allowance({
+        chainId: 1,
+        contract: mockContractAddress,
+        owner: mockOwner,
+        amount: "1",
+        tokenId: "1",
+      }),
+    );
+
+    expect(result.current.status).toBe("error");
+    expect(result.current.isAllowed).toBeUndefined();
+  });
+
+  test("Large amount check", async () => {
+    vi.mocked(useReadContracts).mockReturnValue({
+      data: [{ result: "1000000000000000000000000" }],
+      status: "success",
+    } as UseReadContractsReturnType<readonly unknown[], boolean, unknown>);
+
+    const { result } = renderHook(() =>
+      useERC1155Allowance({
+        chainId: 1,
+        contract: mockContractAddress,
+        owner: mockOwner,
+        amount: "1000",
         tokenId: "1",
       }),
     );
 
     expect(result.current.status).toBe("success");
     expect(result.current.isAllowed).toBe(true);
-  });
-
-  test("Pending status", async () => {
-    vi.mocked(useReadContracts).mockReturnValue({
-      data: undefined,
-      status: "pending",
-    } as UseReadContractsReturnType<readonly unknown[], boolean, unknown>);
-
-    const { result } = renderHook(() =>
-      useERC1155Allowance({
-        chainId: 1,
-        contract: mockContractAddress,
-        owner: mockOwner,
-        amount: "100000000000000000",
-        tokenId: "1",
-      }),
-    );
-
-    expect(result.current.status).toBe("pending");
-    expect(result.current.isAllowed).toBeUndefined();
   });
 });
