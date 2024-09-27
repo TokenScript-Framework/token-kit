@@ -24,7 +24,7 @@ describe("useAllowance", () => {
       isPending: false,
       isLoading: false,
       isSuccess: true,
-    } as UseReadContractsReturnType<readonly unknown[], boolean, unknown>);
+    } as unknown as UseReadContractsReturnType);
 
     const { result } = renderHook(() =>
       useERC721Allowance({
@@ -43,7 +43,7 @@ describe("useAllowance", () => {
     vi.mocked(useReadContracts).mockReturnValue({
       data: undefined,
       status: "pending",
-    } as UseReadContractsReturnType<readonly unknown[], boolean, unknown>);
+    } as UseReadContractsReturnType);
 
     const { result } = renderHook(() =>
       useERC721Allowance({

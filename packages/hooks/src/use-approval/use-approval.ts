@@ -1,4 +1,4 @@
-import { Abi, erc721Abi } from "viem";
+import { erc721Abi } from "viem";
 import { useReadContracts } from "wagmi";
 import { ERC1155_ABI } from "@token-kit/onchain";
 
@@ -29,45 +29,39 @@ export function useApproval({
   operator,
   tokenType,
 }: UseApprovalInput): UseApprovalReturn {
-  const baseContract = {
-    chainId,
-    address: contract,
-  };
-
   const isERC721 = tokenType === "ERC721";
   const hasTokenId = tokenId !== undefined;
 
-  const isApprovedForAllContract = {
-    ...baseContract,
-    abi: isERC721 ? erc721Abi : ERC1155_ABI,
-    functionName: "isApprovedForAll",
-    args: [owner, operator],
-  };
-
-  const getApprovedContract = (
-    chainId: number,
-    contract: `0x${string}`,
-    tokenId: string,
-    abi: Abi,
-  ) => {
-    return {
-      chainId,
-      address: contract,
-      abi: abi,
-      functionName: "getApproved",
-      args: [BigInt(tokenId)],
-    };
-  };
 
   const { data: results, isLoading } = useReadContracts({
     allowFailure: false,
     contracts:
       isERC721 && hasTokenId
         ? [
-            getApprovedContract(chainId, contract, tokenId, erc721Abi),
-            isApprovedForAllContract,
+            {
+              chainId,
+              address: contract,
+              abi: erc721Abi,
+              functionName: "getApproved",
+              args: [BigInt(tokenId)],
+            },
+            {
+              chainId,
+              address: contract,
+              abi: isERC721 ? erc721Abi : ERC1155_ABI,
+              functionName: "isApprovedForAll",
+              args: [owner, operator],
+            },
           ]
-        : [isApprovedForAllContract],
+        : [
+            {
+              chainId,
+              address: contract,
+              abi: isERC721 ? erc721Abi : ERC1155_ABI,
+              functionName: "isApprovedForAll",
+              args: [owner, operator],
+            },
+          ],
   });
 
   if (isLoading || !results || results.some((result) => !result)) {
@@ -75,9 +69,8 @@ export function useApproval({
   }
   const isApproved = (
     tokenType === "ERC721" && tokenId
-      ? (results[0] as { result: `0x${string}` }).result === operator ||
-        Boolean((results[1] as { result: boolean }).result)
-      : Boolean((results[0] as { result: boolean }).result)
+      ? results[0] === operator || results[1]
+      : results[0]
   ) as boolean;
 
   return {

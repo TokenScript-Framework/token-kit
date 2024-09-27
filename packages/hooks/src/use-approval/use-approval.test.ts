@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { useApproval } from "./use-approval";
+import { useApproval, UseApprovalInput } from "./use-approval";
 import { useReadContracts, UseReadContractsReturnType } from "wagmi";
 
 vi.mock("wagmi", () => ({
@@ -7,107 +7,56 @@ vi.mock("wagmi", () => ({
 }));
 
 describe("useApproval", () => {
-  const mockInput = {
+  const mockInput: UseApprovalInput = {
     chainId: 1,
-    contract: "0x1234567890123456789012345678901234567890" as `0x${string}`,
-    owner: "0x1111111111111111111111111111111111111111" as `0x${string}`,
-    operator: "0x2222222222222222222222222222222222222222" as `0x${string}`,
+    contract: "0x1234567890123456789012345678901234567890",
+    owner: "0xowner",
+    operator: "0xoperator",
+    tokenId: "1",
+    tokenType: "ERC721",
   };
 
   beforeEach(() => {
     vi.resetAllMocks();
   });
 
-  it("should return loading status when isLoading is true", () => {
+  it("should return loading status when data is loading", () => {
     vi.mocked(useReadContracts).mockReturnValue({
-      data: undefined,
-      error: null,
-      isError: false,
-      isPending: true,
       isLoading: true,
-      status: "pending",
+      data: undefined,
     } as UseReadContractsReturnType);
 
-    const result = useApproval({
-      ...mockInput,
-      tokenType: "ERC721",
-      tokenId: "1",
-    });
+    const result = useApproval(mockInput);
     expect(result).toEqual({ status: "loading" });
   });
 
-  it("should return correct approval status for ERC721 token", () => {
+  it("should return success status with approved data for ERC721 with tokenId", () => {
     vi.mocked(useReadContracts).mockReturnValue({
-      isLoading: false,
-      data: [{ result: mockInput.operator }, { result: false }],
-      error: null,
-      isError: false,
-      isPending: false,
-      isSuccess: true,
       status: "success",
-    } as UseReadContractsReturnType);
+      data: ["0xoperator", true],
+    } as unknown as UseReadContractsReturnType);
 
-    const result = useApproval({
-      ...mockInput,
-      tokenType: "ERC721",
-      tokenId: "1",
-    });
+    const result = useApproval(mockInput);
     expect(result).toEqual({ status: "success", data: { isApproved: true } });
   });
 
-  it("should return correct approval status for ERC721 token with isApprovedForAll", () => {
+  it("should return success status with approved data for ERC721 without tokenId", () => {
     vi.mocked(useReadContracts).mockReturnValue({
       isLoading: false,
-      data: [
-        { result: "0x3333333333333333333333333333333333333333" },
-        { result: true },
-      ],
-      error: null,
-      isError: false,
-      isPending: false,
-      isSuccess: true,
-      status: "success",
-    } as UseReadContractsReturnType);
+      data: [true],
+    } as unknown as UseReadContractsReturnType);
 
-    const result = useApproval({
-      ...mockInput,
-      tokenType: "ERC721",
-      tokenId: "1",
-    });
+    const result = useApproval({ ...mockInput, tokenId: undefined });
     expect(result).toEqual({ status: "success", data: { isApproved: true } });
   });
 
-  it("should return correct approval status for ERC1155 token", () => {
+  it("should return success status with approved data for ERC1155", () => {
     vi.mocked(useReadContracts).mockReturnValue({
       isLoading: false,
-      data: [{ result: true }],
-      error: null,
-      isError: false,
-      isPending: false,
-      isSuccess: true,
-      status: "success",
-    } as UseReadContractsReturnType);
+      data: [true],
+    } as unknown as UseReadContractsReturnType);
 
     const result = useApproval({ ...mockInput, tokenType: "ERC1155" });
-    expect(result).toEqual({ status: "success", data: { isApproved: true } });
-  });
-
-  it("should handle ERC721 without tokenId", () => {
-    vi.mocked(useReadContracts).mockReturnValue({
-      isLoading: false,
-      data: [{ result: mockInput.operator }, { result: false }],
-      error: null,
-      isError: false,
-      isPending: false,
-      isSuccess: true,
-      status: "success",
-    } as UseReadContractsReturnType);
-
-    const result = useApproval({
-      ...mockInput,
-      tokenType: "ERC721",
-      tokenId: "1",
-    });
     expect(result).toEqual({ status: "success", data: { isApproved: true } });
   });
 });
