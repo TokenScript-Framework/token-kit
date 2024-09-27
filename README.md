@@ -16,5 +16,4 @@ The directory structure is as follows:
 - [@token-kit/hooks](packages/hooks/README.md)
 - [@token-kit/og](packages/og/README.md)
 - [@tokne-kit/farcaster](packages/farcaster/README.md)
-- [@token-kit/tapp-snap-sdk](packages/tapp-snap-sdk/README.md)
 - [@token-kit/tapp-snap](packages/tapp-snap/README.md)
