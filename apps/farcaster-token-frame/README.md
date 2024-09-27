@@ -1,4 +1,4 @@
-# farcaster-token-frame
+# @token-kit/farcaster-token-frame
 
 This is a Farcaster frame for token preview.
 
@@ -39,7 +39,7 @@ The project includes a dev console for developer to preview the frame locally, o
 
 developer provider the following attributes in the url at the top of the console to preview the frame
 
-- chain (path)
-- contract (path)
+- chain (path param)
+- contract (path param)
 - tokenId (optional, query string)
 - scriptId (optional, query string)
