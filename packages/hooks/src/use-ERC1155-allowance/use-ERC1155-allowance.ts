@@ -38,9 +38,9 @@ export function useERC1155Allowance({
     return { status, isAllowed: undefined };
   }
 
-  const result = data[0] as { result: unknown };
+  const result = data[0] as { result: string };
   const amountBigInt = BigInt(amount!) * BigInt(10 ** 18);
-  const isAllowed = BigInt(result.result as string) > BigInt(amountBigInt);
+  const isAllowed = BigInt(result.result) > BigInt(amountBigInt);
 
   return { status, isAllowed };
 }
