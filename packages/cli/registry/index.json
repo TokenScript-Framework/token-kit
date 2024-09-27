@@ -9,8 +9,22 @@
   {
     "name": "token-thumbnail",
     "dependencies": ["lucide-react"],
-    "shadcnDependencies": ["card", "tooltip", "badge", "avatar"],
+    "shadcnDependencies": ["card", "tooltip", "avatar"],
     "files": ["ui/token-thumbnial.tsx"],
+    "type": "components:ui"
+  },
+  {
+    "name": "token-tx-sooner",
+    "dependencies": ["wagmi", "sonner", "@wagmi/core"],
+    "files": ["ui/token-tx-sooner.tsx"],
+    "type": "components:ui"
+  },
+  {
+    "name": "my-nfts",
+    "dependencies": ["@tanstack/react-query", "@token-kit/onchain"],
+    "shadcnDependencies": ["scroll-area"],
+    "registryDependencies": ["token-card"],
+    "files": ["ui/my-nfts.tsx"],
     "type": "components:ui"
   }
 ]
