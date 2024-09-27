@@ -7,7 +7,7 @@
     "url": "https://github.com/TokenScript-Framework/token-kit/tree/main/packages/tapp-snap"
   },
   "source": {
-    "shasum": "g6uimBNMi0MfvcQuM8TCOjNIy4dO5NdltgMIJLww7kc=",
+    "shasum": "BJf7qBP76/CKtZ3rAla440jEQBWA6ETfuxhac2Z0Pp4=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
@@ -20,11 +20,9 @@
   "initialPermissions": {
     "snap_dialog": {},
     "endowment:rpc": {
-      "dapps": true,
-      "snaps": true
+      "dapps": true
     },
     "snap_manageState": {},
-    "snap_manageAccounts": {},
     "endowment:network-access": {},
     "endowment:page-home": {},
     "endowment:ethereum-provider": {}
