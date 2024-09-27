@@ -12,7 +12,7 @@ on:
 env:
   AWS_REGION: us-west-1
   PROJ_PATH: apps/www/
-  PROD_URL: https://resources.smarttokenlabs.com/token-kit/ui/registry/index.json
+  PROD_URL: https://resources.smarttokenlabs.com/token-kit/ui/r/index.json
   S3_BUCKET: "smarttokenlabs-resources"
   CLOUDFRONT_ID: "EEGAM5CNS5Q6V"
 
@@ -71,5 +71,5 @@ jobs:
           aws-region: ${{ env.AWS_REGION }}
       - name: deploy
         run: |
-          aws s3 sync "${PROJ_PATH}/public/r/" "s3://${S3_BUCKET}/token-kit/ui/registry/" --cache-control 'max-age=31536000' --quiet \
-          && aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_ID}" --paths "/token-kit/ui/registry/*"
+          aws s3 sync "${PROJ_PATH}/public/r/" "s3://${S3_BUCKET}/token-kit/ui/r/" --cache-control 'max-age=31536000' --quiet \
+          && aws cloudfront create-invalidation --distribution-id "${CLOUDFRONT_ID}" --paths "/token-kit/ui/r/*"
