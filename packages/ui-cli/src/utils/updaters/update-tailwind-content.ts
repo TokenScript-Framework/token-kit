@@ -1,52 +1,52 @@
-import { promises as fs } from "fs"
-import path from "path"
-import { Config } from "@/src/utils/get-config"
-import { highlighter } from "@/src/utils/highlighter"
-import { spinner } from "@/src/utils/spinner"
+import { promises as fs } from "fs";
+import path from "path";
+import { Config } from "@/src/utils/get-config";
+import { highlighter } from "@/src/utils/highlighter";
+import { spinner } from "@/src/utils/spinner";
 import {
   _createSourceFile,
   _getQuoteChar,
-} from "@/src/utils/updaters/update-tailwind-config"
-import { ObjectLiteralExpression, SyntaxKind } from "ts-morph"
+} from "@/src/utils/updaters/update-tailwind-config";
+import { ObjectLiteralExpression, SyntaxKind } from "ts-morph";
 
 export async function updateTailwindContent(
   content: string[],
   config: Config,
   options: {
-    silent?: boolean
-  }
+    silent?: boolean;
+  },
 ) {
   if (!content) {
-    return
+    return;
   }
 
   options = {
     silent: false,
     ...options,
-  }
+  };
 
   const tailwindFileRelativePath = path.relative(
     config.resolvedPaths.cwd,
-    config.resolvedPaths.tailwindConfig
-  )
+    config.resolvedPaths.tailwindConfig,
+  );
   const tailwindSpinner = spinner(
     `Updating ${highlighter.info(tailwindFileRelativePath)}`,
     {
       silent: options.silent,
-    }
-  ).start()
-  const raw = await fs.readFile(config.resolvedPaths.tailwindConfig, "utf8")
-  const output = await transformTailwindContent(raw, content, config)
-  await fs.writeFile(config.resolvedPaths.tailwindConfig, output, "utf8")
-  tailwindSpinner?.succeed()
+    },
+  ).start();
+  const raw = await fs.readFile(config.resolvedPaths.tailwindConfig, "utf8");
+  const output = await transformTailwindContent(raw, content, config);
+  await fs.writeFile(config.resolvedPaths.tailwindConfig, output, "utf8");
+  tailwindSpinner?.succeed();
 }
 
 export async function transformTailwindContent(
   input: string,
   content: string[],
-  config: Config
+  config: Config,
 ) {
-  const sourceFile = await _createSourceFile(input, config)
+  const sourceFile = await _createSourceFile(input, config);
   // Find the object with content property.
   // This is faster than traversing the default export.
   // TODO: maybe we do need to traverse the default export?
@@ -58,47 +58,47 @@ export async function transformTailwindContent(
         .some(
           (property) =>
             property.isKind(SyntaxKind.PropertyAssignment) &&
-            property.getName() === "content"
-        )
-    )
+            property.getName() === "content",
+        ),
+    );
 
   // We couldn't find the config object, so we return the input as is.
   if (!configObject) {
-    return input
+    return input;
   }
 
-  addTailwindConfigContent(configObject, content)
+  addTailwindConfigContent(configObject, content);
 
-  return sourceFile.getFullText()
+  return sourceFile.getFullText();
 }
 
 async function addTailwindConfigContent(
   configObject: ObjectLiteralExpression,
-  content: string[]
+  content: string[],
 ) {
-  const quoteChar = _getQuoteChar(configObject)
+  const quoteChar = _getQuoteChar(configObject);
 
-  const existingProperty = configObject.getProperty("content")
+  const existingProperty = configObject.getProperty("content");
 
   if (!existingProperty) {
     const newProperty = {
       name: "content",
       initializer: `[${quoteChar}${content.join(
-        `${quoteChar}, ${quoteChar}`
+        `${quoteChar}, ${quoteChar}`,
       )}${quoteChar}]`,
-    }
-    configObject.addPropertyAssignment(newProperty)
+    };
+    configObject.addPropertyAssignment(newProperty);
 
-    return configObject
+    return configObject;
   }
 
   if (existingProperty.isKind(SyntaxKind.PropertyAssignment)) {
-    const initializer = existingProperty.getInitializer()
+    const initializer = existingProperty.getInitializer();
 
     // If property is an array, append.
     if (initializer?.isKind(SyntaxKind.ArrayLiteralExpression)) {
       for (const contentItem of content) {
-        const newValue = `${quoteChar}${contentItem}${quoteChar}`
+        const newValue = `${quoteChar}${contentItem}${quoteChar}`;
 
         // Check if the array already contains the value.
         if (
@@ -107,15 +107,15 @@ async function addTailwindConfigContent(
             .map((element) => element.getText())
             .includes(newValue)
         ) {
-          continue
+          continue;
         }
 
-        initializer.addElement(newValue)
+        initializer.addElement(newValue);
       }
     }
 
-    return configObject
+    return configObject;
   }
 
-  return configObject
+  return configObject;
 }

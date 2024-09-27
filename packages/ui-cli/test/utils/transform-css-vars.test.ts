@@ -1,7 +1,7 @@
-import { expect, test } from "vitest"
+import { expect, test } from "vitest";
 
-import { transform } from "../../src/utils/transformers"
-import stone from "../fixtures/colors/stone.json"
+import { transform } from "../../src/utils/transformers";
+import stone from "../fixtures/colors/stone.json";
 
 test("transform css vars", async () => {
   expect(
@@ -24,8 +24,8 @@ export function Foo() {
         },
       },
       baseColor: stone,
-    })
-  ).toMatchSnapshot()
+    }),
+  ).toMatchSnapshot();
 
   expect(
     await transform({
@@ -47,8 +47,8 @@ export function Foo() {
         },
       },
       baseColor: stone,
-    })
-  ).toMatchSnapshot()
+    }),
+  ).toMatchSnapshot();
 
   expect(
     await transform({
@@ -70,8 +70,8 @@ export function Foo() {
         },
       },
       baseColor: stone,
-    })
-  ).toMatchSnapshot()
+    }),
+  ).toMatchSnapshot();
 
   expect(
     await transform({
@@ -93,6 +93,6 @@ export function Foo() {
         },
       },
       baseColor: stone,
-    })
-  ).toMatchSnapshot()
-})
+    }),
+  ).toMatchSnapshot();
+});

@@ -1,6 +1,6 @@
-import { describe, expect, test } from "vitest"
+import { describe, expect, test } from "vitest";
 
-import { applyPrefix } from "../../src/utils/transformers/transform-tw-prefix"
+import { applyPrefix } from "../../src/utils/transformers/transform-tw-prefix";
 
 describe("apply tailwind prefix", () => {
   test.each([
@@ -37,6 +37,6 @@ describe("apply tailwind prefix", () => {
         "tw-absolute tw-right-4 tw-top-4 tw-bg-primary tw-rounded-sm tw-opacity-70 tw-ring-offset-background tw-transition-opacity hover:tw-opacity-100 focus:tw-outline-none focus:tw-ring-2 focus:tw-ring-ring focus:tw-ring-offset-2 disabled:tw-pointer-events-none data-[state=open]:tw-bg-secondary",
     },
   ])(`applyTwPrefix($input) -> $output`, ({ input, output }) => {
-    expect(applyPrefix(input, "tw-")).toBe(output)
-  })
-})
+    expect(applyPrefix(input, "tw-")).toBe(output);
+  });
+});

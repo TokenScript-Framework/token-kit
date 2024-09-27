@@ -1,19 +1,15 @@
 {
-  "name": "shadcn",
-  "version": "2.0.8",
+  "name": "@token-kit/ui-cli",
+  "version": "0.0.3",
   "description": "Add components to your apps.",
   "publishConfig": {
     "access": "public"
   },
-  "license": "MIT",
-  "author": {
-    "name": "shadcn",
-    "url": "https://twitter.com/shadcn"
-  },
+  "license": "GPL-3.0-only",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shadcn/ui.git",
-    "directory": "packages/shadcn"
+    "url": "git+https://github.com/TokenScript-Framework/token-kit.git",
+    "directory": "packages/ui-cli"
   },
   "files": [
     "dist"
@@ -33,7 +29,7 @@
     "build": "tsup",
     "typecheck": "tsc --noEmit",
     "clean": "rimraf dist && rimraf components",
-    "start:dev": "cross-env REGISTRY_URL=http://localhost:3333/r node dist/index.js",
+    "start:dev": "cross-env REGISTRY_URL=http://localhost:3003 node dist/index.js",
     "start": "node dist/index.js",
     "format:write": "prettier --write \"**/*.{ts,tsx,mdx}\" --cache",
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache",

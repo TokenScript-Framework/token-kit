@@ -1,7 +1,7 @@
-import path from "path"
-import { describe, expect, test } from "vitest"
+import path from "path";
+import { describe, expect, test } from "vitest";
 
-import { isTypeScriptProject } from "../../src/utils/get-project-info"
+import { isTypeScriptProject } from "../../src/utils/get-project-info";
 
 describe("is TypeScript project", async () => {
   test.each([
@@ -32,8 +32,8 @@ describe("is TypeScript project", async () => {
   ])(`isTypeScriptProject($name) -> $result`, async ({ name, result }) => {
     expect(
       await isTypeScriptProject(
-        path.resolve(__dirname, `../fixtures/frameworks/${name}`)
-      )
-    ).toBe(result)
-  })
-})
+        path.resolve(__dirname, `../fixtures/frameworks/${name}`),
+      ),
+    ).toBe(result);
+  });
+});

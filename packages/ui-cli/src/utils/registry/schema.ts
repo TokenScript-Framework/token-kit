@@ -1,4 +1,4 @@
-import { z } from "zod"
+import { z } from "zod";
 
 // TODO: Extract this to a shared package.
 export const registryItemTypeSchema = z.enum([
@@ -11,14 +11,14 @@ export const registryItemTypeSchema = z.enum([
   "registry:hook",
   "registry:theme",
   "registry:page",
-])
+]);
 
 export const registryItemFileSchema = z.object({
   path: z.string(),
   content: z.string().optional(),
   type: registryItemTypeSchema,
   target: z.string().optional(),
-})
+});
 
 export const registryItemTailwindSchema = z.object({
   config: z
@@ -28,12 +28,12 @@ export const registryItemTailwindSchema = z.object({
       plugins: z.array(z.string()).optional(),
     })
     .optional(),
-})
+});
 
 export const registryItemCssVarsSchema = z.object({
   light: z.record(z.string(), z.string()).optional(),
   dark: z.record(z.string(), z.string()).optional(),
-})
+});
 
 export const registryItemSchema = z.object({
   name: z.string(),
@@ -47,22 +47,22 @@ export const registryItemSchema = z.object({
   cssVars: registryItemCssVarsSchema.optional(),
   meta: z.record(z.string(), z.any()).optional(),
   docs: z.string().optional(),
-})
+});
 
-export type RegistryItem = z.infer<typeof registryItemSchema>
+export type RegistryItem = z.infer<typeof registryItemSchema>;
 
 export const registryIndexSchema = z.array(
   registryItemSchema.extend({
     files: z.array(z.union([z.string(), registryItemFileSchema])).optional(),
-  })
-)
+  }),
+);
 
 export const stylesSchema = z.array(
   z.object({
     name: z.string(),
     label: z.string(),
-  })
-)
+  }),
+);
 
 export const registryBaseColorSchema = z.object({
   inlineColors: z.object({
@@ -75,7 +75,7 @@ export const registryBaseColorSchema = z.object({
   }),
   inlineColorsTemplate: z.string(),
   cssVarsTemplate: z.string(),
-})
+});
 
 export const registryResolvedItemsTreeSchema = registryItemSchema.pick({
   dependencies: true,
@@ -84,4 +84,4 @@ export const registryResolvedItemsTreeSchema = registryItemSchema.pick({
   tailwind: true,
   cssVars: true,
   docs: true,
-})
+});

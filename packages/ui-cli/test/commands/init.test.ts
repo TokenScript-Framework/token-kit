@@ -1,22 +1,22 @@
-import fs from "fs"
-import path from "path"
-import { execa } from "execa"
-import { afterEach, expect, test, vi } from "vitest"
+import fs from "fs";
+import path from "path";
+import { execa } from "execa";
+import { afterEach, expect, test, vi } from "vitest";
 
-import { runInit } from "../../src/commands/init"
-import { getConfig } from "../../src/utils/get-config"
-import * as getPackageManger from "../../src/utils/get-package-manager"
-import * as registry from "../../src/utils/registry"
+import { runInit } from "../../src/commands/init";
+import { getConfig } from "../../src/utils/get-config";
+import * as getPackageManger from "../../src/utils/get-package-manager";
+import * as registry from "../../src/utils/registry";
 
-vi.mock("execa")
+vi.mock("execa");
 vi.mock("fs/promises", () => ({
   writeFile: vi.fn(),
   mkdir: vi.fn(),
-}))
-vi.mock("ora")
+}));
+vi.mock("ora");
 
 test.skip("init config-full", async () => {
-  vi.spyOn(getPackageManger, "getPackageManager").mockResolvedValue("pnpm")
+  vi.spyOn(getPackageManger, "getPackageManager").mockResolvedValue("pnpm");
   vi.spyOn(registry, "getRegistryBaseColor").mockResolvedValue({
     inlineColors: {},
     cssVars: {},
@@ -24,7 +24,7 @@ test.skip("init config-full", async () => {
       "@tailwind base;\n@tailwind components;\n@tailwind utilities;\n",
     cssVarsTemplate:
       "@tailwind base;\n@tailwind components;\n@tailwind utilities;\n",
-  })
+  });
   vi.spyOn(registry, "getRegistryItem").mockResolvedValue({
     name: "new-york",
     dependencies: [
@@ -56,37 +56,37 @@ test.skip("init config-full", async () => {
         "--radius": "0.5rem",
       },
     },
-  })
-  const mockMkdir = vi.spyOn(fs.promises, "mkdir").mockResolvedValue(undefined)
-  const mockWriteFile = vi.spyOn(fs.promises, "writeFile").mockResolvedValue()
+  });
+  const mockMkdir = vi.spyOn(fs.promises, "mkdir").mockResolvedValue(undefined);
+  const mockWriteFile = vi.spyOn(fs.promises, "writeFile").mockResolvedValue();
 
-  const targetDir = path.resolve(__dirname, "../fixtures/config-full")
-  const config = await getConfig(targetDir)
+  const targetDir = path.resolve(__dirname, "../fixtures/config-full");
+  const config = await getConfig(targetDir);
 
-  await runInit(config)
+  await runInit(config);
 
   expect(mockMkdir).toHaveBeenNthCalledWith(
     1,
     expect.stringMatching(/src\/lib$/),
-    expect.anything()
-  )
+    expect.anything(),
+  );
   expect(mockMkdir).toHaveBeenNthCalledWith(
     2,
     expect.stringMatching(/src\/components$/),
-    expect.anything()
-  )
+    expect.anything(),
+  );
   expect(mockWriteFile).toHaveBeenNthCalledWith(
     2,
     expect.stringMatching(/src\/app\/globals.css$/),
     expect.stringContaining(`@tailwind base`),
-    "utf8"
-  )
+    "utf8",
+  );
   expect(mockWriteFile).toHaveBeenNthCalledWith(
     3,
     expect.stringMatching(/src\/lib\/utils.ts$/),
     expect.stringContaining(`import { type ClassValue, clsx } from "clsx"`),
-    "utf8"
-  )
+    "utf8",
+  );
   expect(execa).toHaveBeenCalledWith(
     "pnpm",
     [
@@ -100,15 +100,15 @@ test.skip("init config-full", async () => {
     ],
     {
       cwd: targetDir,
-    }
-  )
+    },
+  );
 
-  mockMkdir.mockRestore()
-  mockWriteFile.mockRestore()
-})
+  mockMkdir.mockRestore();
+  mockWriteFile.mockRestore();
+});
 
 test.skip("init config-partial", async () => {
-  vi.spyOn(getPackageManger, "getPackageManager").mockResolvedValue("npm")
+  vi.spyOn(getPackageManger, "getPackageManager").mockResolvedValue("npm");
   vi.spyOn(registry, "getRegistryBaseColor").mockResolvedValue({
     inlineColors: {},
     cssVars: {},
@@ -116,7 +116,7 @@ test.skip("init config-partial", async () => {
       "@tailwind base;\n@tailwind components;\n@tailwind utilities;\n",
     cssVarsTemplate:
       "@tailwind base;\n@tailwind components;\n@tailwind utilities;\n",
-  })
+  });
   vi.spyOn(registry, "getRegistryItem").mockResolvedValue({
     name: "new-york",
     dependencies: [
@@ -147,36 +147,36 @@ test.skip("init config-partial", async () => {
         "--radius": "0.5rem",
       },
     },
-  })
-  const mockMkdir = vi.spyOn(fs.promises, "mkdir").mockResolvedValue(undefined)
-  const mockWriteFile = vi.spyOn(fs.promises, "writeFile").mockResolvedValue()
+  });
+  const mockMkdir = vi.spyOn(fs.promises, "mkdir").mockResolvedValue(undefined);
+  const mockWriteFile = vi.spyOn(fs.promises, "writeFile").mockResolvedValue();
 
-  const targetDir = path.resolve(__dirname, "../fixtures/config-partial")
-  const config = await getConfig(targetDir)
+  const targetDir = path.resolve(__dirname, "../fixtures/config-partial");
+  const config = await getConfig(targetDir);
 
-  await runInit(config)
+  await runInit(config);
 
   expect(mockMkdir).toHaveBeenNthCalledWith(
     1,
     expect.stringMatching(/src\/assets\/css$/),
-    expect.anything()
-  )
+    expect.anything(),
+  );
   expect(mockMkdir).toHaveBeenNthCalledWith(
     2,
     expect.stringMatching(/lib$/),
-    expect.anything()
-  )
+    expect.anything(),
+  );
   expect(mockMkdir).toHaveBeenNthCalledWith(
     3,
     expect.stringMatching(/components$/),
-    expect.anything()
-  )
+    expect.anything(),
+  );
   expect(mockWriteFile).toHaveBeenNthCalledWith(
     2,
     expect.stringMatching(/utils.ts$/),
     expect.stringContaining(`import { type ClassValue, clsx } from "clsx"`),
-    "utf8"
-  )
+    "utf8",
+  );
   expect(execa).toHaveBeenCalledWith(
     "npm",
     [
@@ -189,13 +189,13 @@ test.skip("init config-partial", async () => {
     ],
     {
       cwd: targetDir,
-    }
-  )
+    },
+  );
 
-  mockMkdir.mockRestore()
-  mockWriteFile.mockRestore()
-})
+  mockMkdir.mockRestore();
+  mockWriteFile.mockRestore();
+});
 
 afterEach(() => {
-  vi.resetAllMocks()
-})
+  vi.resetAllMocks();
+});

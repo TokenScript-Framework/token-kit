@@ -1,6 +1,6 @@
-import { describe, expect, test } from "vitest"
+import { describe, expect, test } from "vitest";
 
-import { registryResolveItemsTree } from "../../../src/utils/registry"
+import { registryResolveItemsTree } from "../../../src/utils/registry";
 
 describe("registryResolveItemTree", () => {
   test("should resolve items tree", async () => {
@@ -10,9 +10,9 @@ describe("registryResolveItemTree", () => {
         tailwind: {
           baseColor: "stone",
         },
-      })
-    ).toMatchSnapshot()
-  })
+      }),
+    ).toMatchSnapshot();
+  });
 
   test("should resolve multiple items tree", async () => {
     expect(
@@ -21,9 +21,9 @@ describe("registryResolveItemTree", () => {
         tailwind: {
           baseColor: "zinc",
         },
-      })
-    ).toMatchSnapshot()
-  })
+      }),
+    ).toMatchSnapshot();
+  });
 
   test("should resolve index", async () => {
     expect(
@@ -32,7 +32,7 @@ describe("registryResolveItemTree", () => {
         tailwind: {
           baseColor: "zinc",
         },
-      })
-    ).toMatchSnapshot()
-  })
-})
+      }),
+    ).toMatchSnapshot();
+  });
+});

@@ -1,9 +1,9 @@
-import { promises as fs } from "fs"
-import path from "path"
-import { preFlightInit } from "@/src/preflights/preflight-init"
-import { addComponents } from "@/src/utils/add-components"
-import { createProject } from "@/src/utils/create-project"
-import * as ERRORS from "@/src/utils/errors"
+import { promises as fs } from "fs";
+import path from "path";
+import { preFlightInit } from "@/src/preflights/preflight-init";
+import { addComponents } from "@/src/utils/add-components";
+import { createProject } from "@/src/utils/create-project";
+import * as ERRORS from "@/src/utils/errors";
 import {
   DEFAULT_COMPONENTS,
   DEFAULT_TAILWIND_CONFIG,
@@ -13,17 +13,17 @@ import {
   rawConfigSchema,
   resolveConfigPaths,
   type Config,
-} from "@/src/utils/get-config"
-import { getProjectConfig, getProjectInfo } from "@/src/utils/get-project-info"
-import { handleError } from "@/src/utils/handle-error"
-import { highlighter } from "@/src/utils/highlighter"
-import { logger } from "@/src/utils/logger"
-import { getRegistryBaseColors, getRegistryStyles } from "@/src/utils/registry"
-import { spinner } from "@/src/utils/spinner"
-import { updateTailwindContent } from "@/src/utils/updaters/update-tailwind-content"
-import { Command } from "commander"
-import prompts from "prompts"
-import { z } from "zod"
+} from "@/src/utils/get-config";
+import { getProjectConfig, getProjectInfo } from "@/src/utils/get-project-info";
+import { handleError } from "@/src/utils/handle-error";
+import { highlighter } from "@/src/utils/highlighter";
+import { logger } from "@/src/utils/logger";
+import { getRegistryBaseColors, getRegistryStyles } from "@/src/utils/registry";
+import { spinner } from "@/src/utils/spinner";
+import { updateTailwindContent } from "@/src/utils/updaters/update-tailwind-content";
+import { Command } from "commander";
+import prompts from "prompts";
+import { z } from "zod";
 
 export const initOptionsSchema = z.object({
   cwd: z.string(),
@@ -34,14 +34,14 @@ export const initOptionsSchema = z.object({
   silent: z.boolean(),
   isNewProject: z.boolean(),
   srcDir: z.boolean().optional(),
-})
+});
 
 export const init = new Command()
   .name("init")
   .description("initialize your project and install dependencies")
   .argument(
     "[components...]",
-    "the components to add or a url to the component."
+    "the components to add or a url to the component.",
   )
   .option("-y, --yes", "skip confirmation prompt.", true)
   .option("-d, --defaults,", "use default configuration.", false)
@@ -49,13 +49,13 @@ export const init = new Command()
   .option(
     "-c, --cwd <cwd>",
     "the working directory. defaults to the current directory.",
-    process.cwd()
+    process.cwd(),
   )
   .option("-s, --silent", "mute output.", false)
   .option(
     "--src-dir",
     "use the src directory when creating a new project.",
-    false
+    false,
   )
   .action(async (components, opts) => {
     try {
@@ -64,79 +64,79 @@ export const init = new Command()
         isNewProject: false,
         components,
         ...opts,
-      })
+      });
 
-      await runInit(options)
+      await runInit(options);
 
       logger.log(
         `${highlighter.success(
-          "Success!"
-        )} Project initialization completed.\nYou may now add components.`
-      )
-      logger.break()
+          "Success!",
+        )} Project initialization completed.\nYou may now add components.`,
+      );
+      logger.break();
     } catch (error) {
-      logger.break()
-      handleError(error)
+      logger.break();
+      handleError(error);
     }
-  })
+  });
 
 export async function runInit(
   options: z.infer<typeof initOptionsSchema> & {
-    skipPreflight?: boolean
-  }
+    skipPreflight?: boolean;
+  },
 ) {
-  let projectInfo
+  let projectInfo;
   if (!options.skipPreflight) {
-    const preflight = await preFlightInit(options)
+    const preflight = await preFlightInit(options);
     if (preflight.errors[ERRORS.MISSING_DIR_OR_EMPTY_PROJECT]) {
-      const { projectPath } = await createProject(options)
+      const { projectPath } = await createProject(options);
       if (!projectPath) {
-        process.exit(1)
+        process.exit(1);
       }
-      options.cwd = projectPath
-      options.isNewProject = true
+      options.cwd = projectPath;
+      options.isNewProject = true;
     }
-    projectInfo = preflight.projectInfo
+    projectInfo = preflight.projectInfo;
   } else {
-    projectInfo = await getProjectInfo(options.cwd)
+    projectInfo = await getProjectInfo(options.cwd);
   }
 
-  const projectConfig = await getProjectConfig(options.cwd, projectInfo)
+  const projectConfig = await getProjectConfig(options.cwd, projectInfo);
   const config = projectConfig
     ? await promptForMinimalConfig(projectConfig, options)
-    : await promptForConfig(await getConfig(options.cwd))
+    : await promptForConfig(await getConfig(options.cwd));
 
   if (!options.yes) {
     const { proceed } = await prompts({
       type: "confirm",
       name: "proceed",
       message: `Write configuration to ${highlighter.info(
-        "components.json"
+        "components.json",
       )}. Proceed?`,
       initial: true,
-    })
+    });
 
     if (!proceed) {
-      process.exit(0)
+      process.exit(0);
     }
   }
 
   // Write components.json.
-  const componentSpinner = spinner(`Writing components.json.`).start()
-  const targetPath = path.resolve(options.cwd, "components.json")
-  await fs.writeFile(targetPath, JSON.stringify(config, null, 2), "utf8")
-  componentSpinner.succeed()
+  const componentSpinner = spinner(`Writing components.json.`).start();
+  const targetPath = path.resolve(options.cwd, "components.json");
+  await fs.writeFile(targetPath, JSON.stringify(config, null, 2), "utf8");
+  componentSpinner.succeed();
 
   // Add components.
-  const fullConfig = await resolveConfigPaths(options.cwd, config)
-  const components = ["index", ...(options.components || [])]
+  const fullConfig = await resolveConfigPaths(options.cwd, config);
+  const components = ["index", ...(options.components || [])];
   await addComponents(components, fullConfig, {
     // Init will always overwrite files.
     overwrite: true,
     silent: options.silent,
     isNewProject:
       options.isNewProject || projectInfo?.framework.name === "next-app",
-  })
+  });
 
   // If a new project is using src dir, let's update the tailwind content config.
   // TODO: Handle this per framework.
@@ -146,26 +146,26 @@ export async function runInit(
       fullConfig,
       {
         silent: options.silent,
-      }
-    )
+      },
+    );
   }
 
-  return fullConfig
+  return fullConfig;
 }
 
 async function promptForConfig(defaultConfig: Config | null = null) {
   const [styles, baseColors] = await Promise.all([
     getRegistryStyles(),
     getRegistryBaseColors(),
-  ])
+  ]);
 
-  logger.info("")
+  logger.info("");
   const options = await prompts([
     {
       type: "toggle",
       name: "typescript",
       message: `Would you like to use ${highlighter.info(
-        "TypeScript"
+        "TypeScript",
       )} (recommended)?`,
       initial: defaultConfig?.tsx ?? true,
       active: "yes",
@@ -184,7 +184,7 @@ async function promptForConfig(defaultConfig: Config | null = null) {
       type: "select",
       name: "tailwindBaseColor",
       message: `Which color would you like to use as the ${highlighter.info(
-        "base color"
+        "base color",
       )}?`,
       choices: baseColors.map((color) => ({
         title: color.label,
@@ -201,7 +201,7 @@ async function promptForConfig(defaultConfig: Config | null = null) {
       type: "toggle",
       name: "tailwindCssVariables",
       message: `Would you like to use ${highlighter.info(
-        "CSS variables"
+        "CSS variables",
       )} for theming?`,
       initial: defaultConfig?.tailwind.cssVariables ?? true,
       active: "yes",
@@ -211,7 +211,7 @@ async function promptForConfig(defaultConfig: Config | null = null) {
       type: "text",
       name: "tailwindPrefix",
       message: `Are you using a custom ${highlighter.info(
-        "tailwind prefix eg. tw-"
+        "tailwind prefix eg. tw-",
       )}? (Leave blank if not)`,
       initial: "",
     },
@@ -219,7 +219,7 @@ async function promptForConfig(defaultConfig: Config | null = null) {
       type: "text",
       name: "tailwindConfig",
       message: `Where is your ${highlighter.info(
-        "tailwind.config.js"
+        "tailwind.config.js",
       )} located?`,
       initial: defaultConfig?.tailwind.config ?? DEFAULT_TAILWIND_CONFIG,
     },
@@ -227,7 +227,7 @@ async function promptForConfig(defaultConfig: Config | null = null) {
       type: "text",
       name: "components",
       message: `Configure the import alias for ${highlighter.info(
-        "components"
+        "components",
       )}:`,
       initial: defaultConfig?.aliases["components"] ?? DEFAULT_COMPONENTS,
     },
@@ -245,7 +245,7 @@ async function promptForConfig(defaultConfig: Config | null = null) {
       active: "yes",
       inactive: "no",
     },
-  ])
+  ]);
 
   return rawConfigSchema.parse({
     $schema: "https://ui.shadcn.com/schema.json",
@@ -266,22 +266,22 @@ async function promptForConfig(defaultConfig: Config | null = null) {
       lib: options.components.replace(/\/components$/, "lib"),
       hooks: options.components.replace(/\/components$/, "hooks"),
     },
-  })
+  });
 }
 
 async function promptForMinimalConfig(
   defaultConfig: Config,
-  opts: z.infer<typeof initOptionsSchema>
+  opts: z.infer<typeof initOptionsSchema>,
 ) {
-  let style = defaultConfig.style
-  let baseColor = defaultConfig.tailwind.baseColor
-  let cssVariables = defaultConfig.tailwind.cssVariables
+  let style = defaultConfig.style;
+  let baseColor = defaultConfig.tailwind.baseColor;
+  let cssVariables = defaultConfig.tailwind.cssVariables;
 
   if (!opts.defaults) {
     const [styles, baseColors] = await Promise.all([
       getRegistryStyles(),
       getRegistryBaseColors(),
-    ])
+    ]);
 
     const options = await prompts([
       {
@@ -298,7 +298,7 @@ async function promptForMinimalConfig(
         type: "select",
         name: "tailwindBaseColor",
         message: `Which color would you like to use as the ${highlighter.info(
-          "base color"
+          "base color",
         )}?`,
         choices: baseColors.map((color) => ({
           title: color.label,
@@ -309,17 +309,17 @@ async function promptForMinimalConfig(
         type: "toggle",
         name: "tailwindCssVariables",
         message: `Would you like to use ${highlighter.info(
-          "CSS variables"
+          "CSS variables",
         )} for theming?`,
         initial: defaultConfig?.tailwind.cssVariables,
         active: "yes",
         inactive: "no",
       },
-    ])
+    ]);
 
-    style = options.style
-    baseColor = options.tailwindBaseColor
-    cssVariables = options.tailwindCssVariables
+    style = options.style;
+    baseColor = options.tailwindBaseColor;
+    cssVariables = options.tailwindCssVariables;
   }
 
   return rawConfigSchema.parse({
@@ -333,5 +333,5 @@ async function promptForMinimalConfig(
     rsc: defaultConfig?.rsc,
     tsx: defaultConfig?.tsx,
     aliases: defaultConfig?.aliases,
-  })
+  });
 }

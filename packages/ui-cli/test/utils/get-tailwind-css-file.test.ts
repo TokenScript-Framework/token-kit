@@ -1,7 +1,7 @@
-import path from "path"
-import { describe, expect, test } from "vitest"
+import path from "path";
+import { describe, expect, test } from "vitest";
 
-import { getTailwindCssFile } from "../../src/utils/get-project-info"
+import { getTailwindCssFile } from "../../src/utils/get-project-info";
 
 describe("get tailwindcss file", async () => {
   test.each([
@@ -40,8 +40,8 @@ describe("get tailwindcss file", async () => {
   ])(`getTailwindCssFile($name) -> $file`, async ({ name, file }) => {
     expect(
       await getTailwindCssFile(
-        path.resolve(__dirname, `../fixtures/frameworks/${name}`)
-      )
-    ).toBe(file)
-  })
-})
+        path.resolve(__dirname, `../fixtures/frameworks/${name}`),
+      ),
+    ).toBe(file);
+  });
+});

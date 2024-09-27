@@ -1,8 +1,8 @@
-import path from "path"
-import { Config } from "@/src/utils/get-config"
-import { handleError } from "@/src/utils/handle-error"
-import { highlighter } from "@/src/utils/highlighter"
-import { logger } from "@/src/utils/logger"
+import path from "path";
+import { Config } from "@/src/utils/get-config";
+import { handleError } from "@/src/utils/handle-error";
+import { highlighter } from "@/src/utils/highlighter";
+import { logger } from "@/src/utils/logger";
 import {
   registryBaseColorSchema,
   registryIndexSchema,
@@ -10,39 +10,39 @@ import {
   registryItemSchema,
   registryResolvedItemsTreeSchema,
   stylesSchema,
-} from "@/src/utils/registry/schema"
-import { buildTailwindThemeColorsFromCssVars } from "@/src/utils/updaters/update-tailwind-config"
-import deepmerge from "deepmerge"
-import { HttpsProxyAgent } from "https-proxy-agent"
-import fetch from "node-fetch"
-import { z } from "zod"
+} from "@/src/utils/registry/schema";
+import { buildTailwindThemeColorsFromCssVars } from "@/src/utils/updaters/update-tailwind-config";
+import deepmerge from "deepmerge";
+import { HttpsProxyAgent } from "https-proxy-agent";
+import fetch from "node-fetch";
+import { z } from "zod";
 
-const REGISTRY_URL = process.env.REGISTRY_URL ?? "https://ui.shadcn.com/r"
+const REGISTRY_URL = process.env.REGISTRY_URL ?? "https://ui.shadcn.com/r";
 
 const agent = process.env.https_proxy
   ? new HttpsProxyAgent(process.env.https_proxy)
-  : undefined
+  : undefined;
 
 export async function getRegistryIndex() {
   try {
-    const [result] = await fetchRegistry(["index.json"])
+    const [result] = await fetchRegistry(["index.json"]);
 
-    return registryIndexSchema.parse(result)
+    return registryIndexSchema.parse(result);
   } catch (error) {
-    logger.error("\n")
-    handleError(error)
+    logger.error("\n");
+    handleError(error);
   }
 }
 
 export async function getRegistryStyles() {
   try {
-    const [result] = await fetchRegistry(["styles/index.json"])
+    const [result] = await fetchRegistry(["styles/index.json"]);
 
-    return stylesSchema.parse(result)
+    return stylesSchema.parse(result);
   } catch (error) {
-    logger.error("\n")
-    handleError(error)
-    return []
+    logger.error("\n");
+    handleError(error);
+    return [];
   }
 }
 
@@ -50,13 +50,13 @@ export async function getRegistryItem(name: string, style: string) {
   try {
     const [result] = await fetchRegistry([
       isUrl(name) ? name : `styles/${style}/${name}.json`,
-    ])
+    ]);
 
-    return registryItemSchema.parse(result)
+    return registryItemSchema.parse(result);
   } catch (error) {
-    logger.break()
-    handleError(error)
-    return null
+    logger.break();
+    handleError(error);
+    return null;
   }
 }
 
@@ -82,89 +82,89 @@ export async function getRegistryBaseColors() {
       name: "slate",
       label: "Slate",
     },
-  ]
+  ];
 }
 
 export async function getRegistryBaseColor(baseColor: string) {
   try {
-    const [result] = await fetchRegistry([`colors/${baseColor}.json`])
+    const [result] = await fetchRegistry([`colors/${baseColor}.json`]);
 
-    return registryBaseColorSchema.parse(result)
+    return registryBaseColorSchema.parse(result);
   } catch (error) {
-    handleError(error)
+    handleError(error);
   }
 }
 
 export async function resolveTree(
   index: z.infer<typeof registryIndexSchema>,
-  names: string[]
+  names: string[],
 ) {
-  const tree: z.infer<typeof registryIndexSchema> = []
+  const tree: z.infer<typeof registryIndexSchema> = [];
 
   for (const name of names) {
-    const entry = index.find((entry) => entry.name === name)
+    const entry = index.find((entry) => entry.name === name);
 
     if (!entry) {
-      continue
+      continue;
     }
 
-    tree.push(entry)
+    tree.push(entry);
 
     if (entry.registryDependencies) {
-      const dependencies = await resolveTree(index, entry.registryDependencies)
-      tree.push(...dependencies)
+      const dependencies = await resolveTree(index, entry.registryDependencies);
+      tree.push(...dependencies);
     }
   }
 
   return tree.filter(
     (component, index, self) =>
-      self.findIndex((c) => c.name === component.name) === index
-  )
+      self.findIndex((c) => c.name === component.name) === index,
+  );
 }
 
 export async function fetchTree(
   style: string,
-  tree: z.infer<typeof registryIndexSchema>
+  tree: z.infer<typeof registryIndexSchema>,
 ) {
   try {
-    const paths = tree.map((item) => `styles/${style}/${item.name}.json`)
-    const result = await fetchRegistry(paths)
-    return registryIndexSchema.parse(result)
+    const paths = tree.map((item) => `styles/${style}/${item.name}.json`);
+    const result = await fetchRegistry(paths);
+    return registryIndexSchema.parse(result);
   } catch (error) {
-    handleError(error)
+    handleError(error);
   }
 }
 
 export async function getItemTargetPath(
   config: Config,
   item: Pick<z.infer<typeof registryItemSchema>, "type">,
-  override?: string
+  override?: string,
 ) {
   if (override) {
-    return override
+    return override;
   }
 
   if (item.type === "registry:ui") {
-    return config.resolvedPaths.ui ?? config.resolvedPaths.components
+    return config.resolvedPaths.ui ?? config.resolvedPaths.components;
   }
 
-  const [parent, type] = item.type?.split(":") ?? []
+  const [parent, type] = item.type?.split(":") ?? [];
   if (!(parent in config.resolvedPaths)) {
-    return null
+    return null;
   }
 
   return path.join(
     config.resolvedPaths[parent as keyof typeof config.resolvedPaths],
-    type
-  )
+    type,
+  );
 }
 
 async function fetchRegistry(paths: string[]) {
   try {
     const results = await Promise.all(
       paths.map(async (path) => {
-        const url = getRegistryUrl(path)
-        const response = await fetch(url, { agent })
+        const url = getRegistryUrl(path);
+        const response = await fetch(url, { agent });
 
         if (!response.ok) {
           const errorMessages: { [key: number]: string } = {
@@ -173,118 +173,120 @@ async function fetchRegistry(paths: string[]) {
             403: "Forbidden",
             404: "Not found",
             500: "Internal server error",
-          }
+          };
 
           if (response.status === 401) {
             throw new Error(
               `You are not authorized to access the component at ${highlighter.info(
-                url
-              )}.\nIf this is a remote registry, you may need to authenticate.`
-            )
+                url,
+              )}.\nIf this is a remote registry, you may need to authenticate.`,
+            );
           }
 
           if (response.status === 404) {
             throw new Error(
               `The component at ${highlighter.info(
-                url
-              )} was not found.\nIt may not exist at the registry. Please make sure it is a valid component.`
-            )
+                url,
+              )} was not found.\nIt may not exist at the registry. Please make sure it is a valid component.`,
+            );
           }
 
           if (response.status === 403) {
             throw new Error(
               `You do not have access to the component at ${highlighter.info(
-                url
-              )}.\nIf this is a remote registry, you may need to authenticate or a token.`
-            )
+                url,
+              )}.\nIf this is a remote registry, you may need to authenticate or a token.`,
+            );
           }
 
-          const result = await response.json()
+          const result = await response.json();
           const message =
             result && typeof result === "object" && "error" in result
               ? result.error
-              : response.statusText || errorMessages[response.status]
+              : response.statusText || errorMessages[response.status];
           throw new Error(
-            `Failed to fetch from ${highlighter.info(url)}.\n${message}`
-          )
+            `Failed to fetch from ${highlighter.info(url)}.\n${message}`,
+          );
         }
 
-        return response.json()
-      })
-    )
+        return response.json();
+      }),
+    );
 
-    return results
+    return results;
   } catch (error) {
-    logger.error("\n")
-    handleError(error)
-    return []
+    logger.error("\n");
+    handleError(error);
+    return [];
   }
 }
 
 export function getRegistryItemFileTargetPath(
   file: z.infer<typeof registryItemFileSchema>,
   config: Config,
-  override?: string
+  override?: string,
 ) {
   if (override) {
-    return override
+    return override;
   }
 
   if (file.type === "registry:ui") {
-    return config.resolvedPaths.ui
+    return config.resolvedPaths.ui;
   }
 
   if (file.type === "registry:lib") {
-    return config.resolvedPaths.lib
+    return config.resolvedPaths.lib;
   }
 
   if (file.type === "registry:block" || file.type === "registry:component") {
-    return config.resolvedPaths.components
+    return config.resolvedPaths.components;
   }
 
   if (file.type === "registry:hook") {
-    return config.resolvedPaths.hooks
+    return config.resolvedPaths.hooks;
   }
 
   // TODO: we put this in components for now.
   // We should move this to pages as per framework.
   if (file.type === "registry:page") {
-    return config.resolvedPaths.components
+    return config.resolvedPaths.components;
   }
 
-  return config.resolvedPaths.components
+  return config.resolvedPaths.components;
 }
 
 export async function registryResolveItemsTree(
   names: z.infer<typeof registryItemSchema>["name"][],
-  config: Config
+  config: Config,
 ) {
   try {
-    const index = await getRegistryIndex()
+    const index = await getRegistryIndex();
     if (!index) {
-      return null
+      return null;
     }
 
     // If we're resolving the index, we want it to go first.
     if (names.includes("index")) {
-      names.unshift("index")
+      names.unshift("index");
     }
 
-    let registryDependencies: string[] = []
+    let registryDependencies: string[] = [];
     for (const name of names) {
       const itemRegistryDependencies = await resolveRegistryDependencies(
         name,
-        config
-      )
-      registryDependencies.push(...itemRegistryDependencies)
+        config,
+      );
+      registryDependencies.push(...itemRegistryDependencies);
     }
 
-    const uniqueRegistryDependencies = Array.from(new Set(registryDependencies))
-    let result = await fetchRegistry(uniqueRegistryDependencies)
-    const payload = z.array(registryItemSchema).parse(result)
+    const uniqueRegistryDependencies = Array.from(
+      new Set(registryDependencies),
+    );
+    let result = await fetchRegistry(uniqueRegistryDependencies);
+    const payload = z.array(registryItemSchema).parse(result);
 
     if (!payload) {
-      return null
+      return null;
     }
 
     // If we're resolving the index, we want to fetch
@@ -293,92 +295,92 @@ export async function registryResolveItemsTree(
     // Other components will ship with their theme tokens.
     if (names.includes("index")) {
       if (config.tailwind.baseColor) {
-        const theme = await registryGetTheme(config.tailwind.baseColor, config)
+        const theme = await registryGetTheme(config.tailwind.baseColor, config);
         if (theme) {
-          payload.unshift(theme)
+          payload.unshift(theme);
         }
       }
     }
 
-    let tailwind = {}
+    let tailwind = {};
     payload.forEach((item) => {
-      tailwind = deepmerge(tailwind, item.tailwind ?? {})
-    })
+      tailwind = deepmerge(tailwind, item.tailwind ?? {});
+    });
 
-    let cssVars = {}
+    let cssVars = {};
     payload.forEach((item) => {
-      cssVars = deepmerge(cssVars, item.cssVars ?? {})
-    })
+      cssVars = deepmerge(cssVars, item.cssVars ?? {});
+    });
 
-    let docs = ""
+    let docs = "";
     payload.forEach((item) => {
       if (item.docs) {
-        docs += `${item.docs}\n`
+        docs += `${item.docs}\n`;
       }
-    })
+    });
 
     return registryResolvedItemsTreeSchema.parse({
       dependencies: deepmerge.all(
-        payload.map((item) => item.dependencies ?? [])
+        payload.map((item) => item.dependencies ?? []),
       ),
       devDependencies: deepmerge.all(
-        payload.map((item) => item.devDependencies ?? [])
+        payload.map((item) => item.devDependencies ?? []),
       ),
       files: deepmerge.all(payload.map((item) => item.files ?? [])),
       tailwind,
       cssVars,
       docs,
-    })
+    });
   } catch (error) {
-    handleError(error)
-    return null
+    handleError(error);
+    return null;
   }
 }
 
 async function resolveRegistryDependencies(
   url: string,
-  config: Config
+  config: Config,
 ): Promise<string[]> {
-  const visited = new Set<string>()
-  const payload: string[] = []
+  const visited = new Set<string>();
+  const payload: string[] = [];
 
   async function resolveDependencies(itemUrl: string) {
     const url = getRegistryUrl(
-      isUrl(itemUrl) ? itemUrl : `styles/${config.style}/${itemUrl}.json`
-    )
+      isUrl(itemUrl) ? itemUrl : `styles/${config.style}/${itemUrl}.json`,
+    );
 
     if (visited.has(url)) {
-      return
+      return;
     }
 
-    visited.add(url)
+    visited.add(url);
 
     try {
-      const [result] = await fetchRegistry([url])
-      const item = registryItemSchema.parse(result)
-      payload.push(url)
+      const [result] = await fetchRegistry([url]);
+      const item = registryItemSchema.parse(result);
+      payload.push(url);
 
       if (item.registryDependencies) {
         for (const dependency of item.registryDependencies) {
-          await resolveDependencies(dependency)
+          await resolveDependencies(dependency);
         }
       }
     } catch (error) {
       console.error(
         `Error fetching or parsing registry item at ${itemUrl}:`,
-        error
-      )
+        error,
+      );
     }
   }
 
-  await resolveDependencies(url)
-  return Array.from(new Set(payload))
+  await resolveDependencies(url);
+  return Array.from(new Set(payload));
 }
 
 export async function registryGetTheme(name: string, config: Config) {
-  const baseColor = await getRegistryBaseColor(name)
+  const baseColor = await getRegistryBaseColor(name);
   if (!baseColor) {
-    return null
+    return null;
   }
 
   // TODO: Move this to the registry i.e registry:theme.
@@ -405,13 +407,13 @@ export async function registryGetTheme(name: string, config: Config) {
       },
       dark: {},
     },
-  } satisfies z.infer<typeof registryItemSchema>
+  } satisfies z.infer<typeof registryItemSchema>;
 
   if (config.tailwind.cssVariables) {
     theme.tailwind.config.theme.extend.colors = {
       ...theme.tailwind.config.theme.extend.colors,
       ...buildTailwindThemeColorsFromCssVars(baseColor.cssVars.dark),
-    }
+    };
     theme.cssVars = {
       light: {
         ...baseColor.cssVars.light,
@@ -421,32 +423,32 @@ export async function registryGetTheme(name: string, config: Config) {
         ...baseColor.cssVars.dark,
         ...theme.cssVars.dark,
       },
-    }
+    };
   }
 
-  return theme
+  return theme;
 }
 
 function getRegistryUrl(path: string) {
   if (isUrl(path)) {
     // If the url contains /chat/b/, we assume it's the v0 registry.
     // We need to add the /json suffix if it's missing.
-    const url = new URL(path)
+    const url = new URL(path);
     if (url.pathname.match(/\/chat\/b\//) && !url.pathname.endsWith("/json")) {
-      url.pathname = `${url.pathname}/json`
+      url.pathname = `${url.pathname}/json`;
     }
 
-    return url.toString()
+    return url.toString();
   }
 
-  return `${REGISTRY_URL}/${path}`
+  return `${REGISTRY_URL}/${path}`;
 }
 
 function isUrl(path: string) {
   try {
-    new URL(path)
-    return true
+    new URL(path);
+    return true;
   } catch (error) {
-    return false
+    return false;
   }
 }

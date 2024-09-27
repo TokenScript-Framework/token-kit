@@ -1,27 +1,27 @@
-import { existsSync, promises as fs } from "fs"
-import path from "path"
-import { Config, getConfig } from "@/src/utils/get-config"
-import { handleError } from "@/src/utils/handle-error"
-import { highlighter } from "@/src/utils/highlighter"
-import { logger } from "@/src/utils/logger"
+import { existsSync, promises as fs } from "fs";
+import path from "path";
+import { Config, getConfig } from "@/src/utils/get-config";
+import { handleError } from "@/src/utils/handle-error";
+import { highlighter } from "@/src/utils/highlighter";
+import { logger } from "@/src/utils/logger";
 import {
   fetchTree,
   getItemTargetPath,
   getRegistryBaseColor,
   getRegistryIndex,
-} from "@/src/utils/registry"
-import { registryIndexSchema } from "@/src/utils/registry/schema"
-import { transform } from "@/src/utils/transformers"
-import { Command } from "commander"
-import { diffLines, type Change } from "diff"
-import { z } from "zod"
+} from "@/src/utils/registry";
+import { registryIndexSchema } from "@/src/utils/registry/schema";
+import { transform } from "@/src/utils/transformers";
+import { Command } from "commander";
+import { diffLines, type Change } from "diff";
+import { z } from "zod";
 
 const updateOptionsSchema = z.object({
   component: z.string().optional(),
   yes: z.boolean(),
   cwd: z.string(),
   path: z.string().optional(),
-})
+});
 
 export const diff = new Command()
   .name("diff")
@@ -31,153 +31,153 @@ export const diff = new Command()
   .option(
     "-c, --cwd <cwd>",
     "the working directory. defaults to the current directory.",
-    process.cwd()
+    process.cwd(),
   )
   .action(async (name, opts) => {
     try {
       const options = updateOptionsSchema.parse({
         component: name,
         ...opts,
-      })
+      });
 
-      const cwd = path.resolve(options.cwd)
+      const cwd = path.resolve(options.cwd);
 
       if (!existsSync(cwd)) {
-        logger.error(`The path ${cwd} does not exist. Please try again.`)
-        process.exit(1)
+        logger.error(`The path ${cwd} does not exist. Please try again.`);
+        process.exit(1);
       }
 
-      const config = await getConfig(cwd)
+      const config = await getConfig(cwd);
       if (!config) {
         logger.warn(
           `Configuration is missing. Please run ${highlighter.success(
-            `init`
-          )} to create a components.json file.`
-        )
-        process.exit(1)
+            `init`,
+          )} to create a components.json file.`,
+        );
+        process.exit(1);
       }
 
-      const registryIndex = await getRegistryIndex()
+      const registryIndex = await getRegistryIndex();
 
       if (!registryIndex) {
-        handleError(new Error("Failed to fetch registry index."))
-        process.exit(1)
+        handleError(new Error("Failed to fetch registry index."));
+        process.exit(1);
       }
 
       if (!options.component) {
-        const targetDir = config.resolvedPaths.components
+        const targetDir = config.resolvedPaths.components;
 
         // Find all components that exist in the project.
         const projectComponents = registryIndex.filter((item) => {
           for (const file of item.files ?? []) {
             const filePath = path.resolve(
               targetDir,
-              typeof file === "string" ? file : file.path
-            )
+              typeof file === "string" ? file : file.path,
+            );
             if (existsSync(filePath)) {
-              return true
+              return true;
             }
           }
 
-          return false
-        })
+          return false;
+        });
 
         // Check for updates.
-        const componentsWithUpdates = []
+        const componentsWithUpdates = [];
         for (const component of projectComponents) {
-          const changes = await diffComponent(component, config)
+          const changes = await diffComponent(component, config);
           if (changes.length) {
             componentsWithUpdates.push({
               name: component.name,
               changes,
-            })
+            });
           }
         }
 
         if (!componentsWithUpdates.length) {
-          logger.info("No updates found.")
-          process.exit(0)
+          logger.info("No updates found.");
+          process.exit(0);
         }
 
-        logger.info("The following components have updates available:")
+        logger.info("The following components have updates available:");
         for (const component of componentsWithUpdates) {
-          logger.info(`- ${component.name}`)
+          logger.info(`- ${component.name}`);
           for (const change of component.changes) {
-            logger.info(`  - ${change.filePath}`)
+            logger.info(`  - ${change.filePath}`);
           }
         }
-        logger.break()
+        logger.break();
         logger.info(
-          `Run ${highlighter.success(`diff <component>`)} to see the changes.`
-        )
-        process.exit(0)
+          `Run ${highlighter.success(`diff <component>`)} to see the changes.`,
+        );
+        process.exit(0);
       }
 
       // Show diff for a single component.
       const component = registryIndex.find(
-        (item) => item.name === options.component
-      )
+        (item) => item.name === options.component,
+      );
 
       if (!component) {
         logger.error(
           `The component ${highlighter.success(
-            options.component
-          )} does not exist.`
-        )
-        process.exit(1)
+            options.component,
+          )} does not exist.`,
+        );
+        process.exit(1);
       }
 
-      const changes = await diffComponent(component, config)
+      const changes = await diffComponent(component, config);
 
       if (!changes.length) {
-        logger.info(`No updates found for ${options.component}.`)
-        process.exit(0)
+        logger.info(`No updates found for ${options.component}.`);
+        process.exit(0);
       }
 
       for (const change of changes) {
-        logger.info(`- ${change.filePath}`)
-        await printDiff(change.patch)
-        logger.info("")
+        logger.info(`- ${change.filePath}`);
+        await printDiff(change.patch);
+        logger.info("");
       }
     } catch (error) {
-      handleError(error)
+      handleError(error);
     }
-  })
+  });
 
 async function diffComponent(
   component: z.infer<typeof registryIndexSchema>[number],
-  config: Config
+  config: Config,
 ) {
-  const payload = await fetchTree(config.style, [component])
-  const baseColor = await getRegistryBaseColor(config.tailwind.baseColor)
+  const payload = await fetchTree(config.style, [component]);
+  const baseColor = await getRegistryBaseColor(config.tailwind.baseColor);
 
   if (!payload) {
-    return []
+    return [];
   }
 
-  const changes = []
+  const changes = [];
 
   for (const item of payload) {
-    const targetDir = await getItemTargetPath(config, item)
+    const targetDir = await getItemTargetPath(config, item);
 
     if (!targetDir) {
-      continue
+      continue;
     }
 
     for (const file of item.files ?? []) {
       const filePath = path.resolve(
         targetDir,
-        typeof file === "string" ? file : file.path
-      )
+        typeof file === "string" ? file : file.path,
+      );
 
       if (!existsSync(filePath)) {
-        continue
+        continue;
       }
 
-      const fileContent = await fs.readFile(filePath, "utf8")
+      const fileContent = await fs.readFile(filePath, "utf8");
 
       if (typeof file === "string" || !file.content) {
-        continue
+        continue;
       }
 
       const registryContent = await transform({
@@ -185,32 +185,32 @@ async function diffComponent(
         raw: file.content,
         config,
         baseColor,
-      })
+      });
 
-      const patch = diffLines(registryContent as string, fileContent)
+      const patch = diffLines(registryContent as string, fileContent);
       if (patch.length > 1) {
         changes.push({
           filePath,
           patch,
-        })
+        });
       }
     }
   }
 
-  return changes
+  return changes;
 }
 
 async function printDiff(diff: Change[]) {
   diff.forEach((part) => {
     if (part) {
       if (part.added) {
-        return process.stdout.write(highlighter.success(part.value))
+        return process.stdout.write(highlighter.success(part.value));
       }
       if (part.removed) {
-        return process.stdout.write(highlighter.error(part.value))
+        return process.stdout.write(highlighter.error(part.value));
       }
 
-      return process.stdout.write(part.value)
+      return process.stdout.write(part.value);
     }
-  })
+  });
 }

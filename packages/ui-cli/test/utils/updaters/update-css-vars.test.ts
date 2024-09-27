@@ -1,6 +1,6 @@
-import { describe, expect, test } from "vitest"
+import { describe, expect, test } from "vitest";
 
-import { transformCssVars } from "../../../src/utils/updaters/update-css-vars"
+import { transformCssVars } from "../../../src/utils/updaters/update-css-vars";
 
 describe("transformCssVars", () => {
   test("should add light and dark css vars if not present", async () => {
@@ -24,8 +24,8 @@ describe("transformCssVars", () => {
           tailwind: {
             cssVariables: true,
           },
-        }
-      )
+        },
+      ),
     ).toMatchInlineSnapshot(`
       "@tailwind base;
       @tailwind components;
@@ -49,8 +49,8 @@ describe("transformCssVars", () => {
         }
       }
         "
-    `)
-  })
+    `);
+  });
 
   test("should update light and dark css vars if present", async () => {
     expect(
@@ -82,8 +82,8 @@ describe("transformCssVars", () => {
           tailwind: {
             cssVariables: true,
           },
-        }
-      )
+        },
+      ),
     ).toMatchInlineSnapshot(`
       "@tailwind base;
       @tailwind components;
@@ -110,8 +110,8 @@ describe("transformCssVars", () => {
         }
       }
         "
-    `)
-  })
+    `);
+  });
 
   test("should not add the base layer if it is already present", async () => {
     expect(
@@ -144,8 +144,8 @@ describe("transformCssVars", () => {
           tailwind: {
             cssVariables: true,
           },
-        }
-      )
+        },
+      ),
     ).toMatchInlineSnapshot(`
       "@tailwind base;
       @tailwind components;
@@ -170,6 +170,6 @@ describe("transformCssVars", () => {
         }
       }
         "
-    `)
-  })
-})
+    `);
+  });
+});

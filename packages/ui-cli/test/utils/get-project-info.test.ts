@@ -1,8 +1,8 @@
-import path from "path"
-import { describe, expect, test } from "vitest"
+import path from "path";
+import { describe, expect, test } from "vitest";
 
-import { FRAMEWORKS } from "../../src/utils/frameworks"
-import { getProjectInfo } from "../../src/utils/get-project-info"
+import { FRAMEWORKS } from "../../src/utils/frameworks";
+import { getProjectInfo } from "../../src/utils/get-project-info";
 
 describe("get project info", async () => {
   test.each([
@@ -105,8 +105,8 @@ describe("get project info", async () => {
   ])(`getProjectType($name) -> $type`, async ({ name, type }) => {
     expect(
       await getProjectInfo(
-        path.resolve(__dirname, `../fixtures/frameworks/${name}`)
-      )
-    ).toStrictEqual(type)
-  })
-})
+        path.resolve(__dirname, `../fixtures/frameworks/${name}`),
+      ),
+    ).toStrictEqual(type);
+  });
+});

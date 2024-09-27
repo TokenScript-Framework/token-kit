@@ -1,24 +1,24 @@
-import path from "path"
-import { FRAMEWORKS, Framework } from "@/src/utils/frameworks"
+import path from "path";
+import { FRAMEWORKS, Framework } from "@/src/utils/frameworks";
 import {
   Config,
   RawConfig,
   getConfig,
   resolveConfigPaths,
-} from "@/src/utils/get-config"
-import fg from "fast-glob"
-import fs from "fs-extra"
-import { loadConfig } from "tsconfig-paths"
+} from "@/src/utils/get-config";
+import fg from "fast-glob";
+import fs from "fs-extra";
+import { loadConfig } from "tsconfig-paths";
 
 type ProjectInfo = {
-  framework: Framework
-  isSrcDir: boolean
-  isRSC: boolean
-  isTsx: boolean
-  tailwindConfigFile: string | null
-  tailwindCssFile: string | null
-  aliasPrefix: string | null
-}
+  framework: Framework;
+  isSrcDir: boolean;
+  isRSC: boolean;
+  isTsx: boolean;
+  tailwindConfigFile: string | null;
+  tailwindCssFile: string | null;
+  aliasPrefix: string | null;
+};
 
 const PROJECT_SHARED_IGNORE = [
   "**/node_modules/**",
@@ -26,7 +26,7 @@ const PROJECT_SHARED_IGNORE = [
   "public",
   "dist",
   "build",
-]
+];
 
 export async function getProjectInfo(cwd: string): Promise<ProjectInfo | null> {
   const [
@@ -47,11 +47,11 @@ export async function getProjectInfo(cwd: string): Promise<ProjectInfo | null> {
     getTailwindConfigFile(cwd),
     getTailwindCssFile(cwd),
     getTsConfigAliasPrefix(cwd),
-  ])
+  ]);
 
   const isUsingAppDir = await fs.pathExists(
-    path.resolve(cwd, `${isSrcDir ? "src/" : ""}app`)
-  )
+    path.resolve(cwd, `${isSrcDir ? "src/" : ""}app`),
+  );
 
   const type: ProjectInfo = {
     framework: FRAMEWORKS["manual"],
@@ -61,37 +61,37 @@ export async function getProjectInfo(cwd: string): Promise<ProjectInfo | null> {
     tailwindConfigFile,
     tailwindCssFile,
     aliasPrefix,
-  }
+  };
 
   if (!configFiles.length) {
-    return type
+    return type;
   }
 
   // Next.js.
   if (configFiles.find((file) => file.startsWith("next.config."))?.length) {
     type.framework = isUsingAppDir
       ? FRAMEWORKS["next-app"]
-      : FRAMEWORKS["next-pages"]
-    type.isRSC = isUsingAppDir
-    return type
+      : FRAMEWORKS["next-pages"];
+    type.isRSC = isUsingAppDir;
+    return type;
   }
 
   // Astro.
   if (configFiles.find((file) => file.startsWith("astro.config."))?.length) {
-    type.framework = FRAMEWORKS["astro"]
-    return type
+    type.framework = FRAMEWORKS["astro"];
+    return type;
   }
 
   // Gatsby.
   if (configFiles.find((file) => file.startsWith("gatsby-config."))?.length) {
-    type.framework = FRAMEWORKS["gatsby"]
-    return type
+    type.framework = FRAMEWORKS["gatsby"];
+    return type;
   }
 
   // Laravel.
   if (configFiles.find((file) => file.startsWith("composer.json"))?.length) {
-    type.framework = FRAMEWORKS["laravel"]
-    return type
+    type.framework = FRAMEWORKS["laravel"];
+    return type;
   }
 
   // Vite and Remix.
@@ -100,11 +100,11 @@ export async function getProjectInfo(cwd: string): Promise<ProjectInfo | null> {
     // We'll assume that if the project has an app dir, it's a Remix project.
     // Otherwise, it's a Vite project.
     // TODO: Maybe check for `@remix-run/react` in package.json?
-    type.framework = isUsingAppDir ? FRAMEWORKS["remix"] : FRAMEWORKS["vite"]
-    return type
+    type.framework = isUsingAppDir ? FRAMEWORKS["remix"] : FRAMEWORKS["vite"];
+    return type;
   }
 
-  return type
+  return type;
 }
 
 export async function getTailwindCssFile(cwd: string) {
@@ -112,21 +112,21 @@ export async function getTailwindCssFile(cwd: string) {
     cwd,
     deep: 5,
     ignore: PROJECT_SHARED_IGNORE,
-  })
+  });
 
   if (!files.length) {
-    return null
+    return null;
   }
 
   for (const file of files) {
-    const contents = await fs.readFile(path.resolve(cwd, file), "utf8")
+    const contents = await fs.readFile(path.resolve(cwd, file), "utf8");
     // Assume that if the file contains `@tailwind base` it's the main css file.
     if (contents.includes("@tailwind base")) {
-      return file
+      return file;
     }
   }
 
-  return null
+  return null;
 }
 
 export async function getTailwindConfigFile(cwd: string) {
@@ -134,20 +134,20 @@ export async function getTailwindConfigFile(cwd: string) {
     cwd,
     deep: 3,
     ignore: PROJECT_SHARED_IGNORE,
-  })
+  });
 
   if (!files.length) {
-    return null
+    return null;
   }
 
-  return files[0]
+  return files[0];
 }
 
 export async function getTsConfigAliasPrefix(cwd: string) {
-  const tsConfig = await loadConfig(cwd)
+  const tsConfig = await loadConfig(cwd);
 
   if (tsConfig?.resultType === "failed" || !tsConfig?.paths) {
-    return null
+    return null;
   }
 
   // This assume that the first alias is the prefix.
@@ -158,11 +158,11 @@ export async function getTsConfigAliasPrefix(cwd: string) {
       paths.includes("./app/*") ||
       paths.includes("./resources/js/*") // Laravel.
     ) {
-      return alias.at(0) ?? null
+      return alias.at(0) ?? null;
     }
   }
 
-  return null
+  return null;
 }
 
 export async function isTypeScriptProject(cwd: string) {
@@ -170,29 +170,29 @@ export async function isTypeScriptProject(cwd: string) {
     cwd,
     deep: 1,
     ignore: PROJECT_SHARED_IGNORE,
-  })
+  });
 
-  return files.length > 0
+  return files.length > 0;
 }
 
 export async function getTsConfig() {
   try {
-    const tsconfigPath = path.join("tsconfig.json")
-    const tsconfig = await fs.readJSON(tsconfigPath)
+    const tsconfigPath = path.join("tsconfig.json");
+    const tsconfig = await fs.readJSON(tsconfigPath);
 
     if (!tsconfig) {
-      throw new Error("tsconfig.json is missing")
+      throw new Error("tsconfig.json is missing");
     }
 
-    return tsconfig
+    return tsconfig;
   } catch (error) {
-    return null
+    return null;
   }
 }
 
 export async function getProjectConfig(
   cwd: string,
-  defaultProjectInfo: ProjectInfo | null = null
+  defaultProjectInfo: ProjectInfo | null = null,
 ): Promise<Config | null> {
   // Check for existing component config.
   const [existingConfig, projectInfo] = await Promise.all([
@@ -200,10 +200,10 @@ export async function getProjectConfig(
     !defaultProjectInfo
       ? getProjectInfo(cwd)
       : Promise.resolve(defaultProjectInfo),
-  ])
+  ]);
 
   if (existingConfig) {
-    return existingConfig
+    return existingConfig;
   }
 
   if (
@@ -211,7 +211,7 @@ export async function getProjectConfig(
     !projectInfo.tailwindConfigFile ||
     !projectInfo.tailwindCssFile
   ) {
-    return null
+    return null;
   }
 
   const config: RawConfig = {
@@ -233,7 +233,7 @@ export async function getProjectConfig(
       lib: `${projectInfo.aliasPrefix}/lib`,
       utils: `${projectInfo.aliasPrefix}/lib/utils`,
     },
-  }
+  };
 
-  return await resolveConfigPaths(cwd, config)
+  return await resolveConfigPaths(cwd, config);
 }
