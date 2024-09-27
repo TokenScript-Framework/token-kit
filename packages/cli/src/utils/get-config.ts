@@ -1,11 +1,12 @@
 import path from "path";
+import { highlighter } from "@/src/utils/highlighter";
 import { resolveImport } from "@/src/utils/resolve-import";
 import { cosmiconfig } from "cosmiconfig";
 import { loadConfig } from "tsconfig-paths";
 import { z } from "zod";
 
 export const DEFAULT_STYLE = "default";
-export const DEFAULT_COMPONENTS = "@/components/token-kit";
+export const DEFAULT_COMPONENTS = "@/components";
 export const DEFAULT_UTILS = "@/lib/utils";
 export const DEFAULT_TAILWIND_CSS = "app/globals.css";
 export const DEFAULT_TAILWIND_CONFIG = "tailwind.config.js";
@@ -41,6 +42,8 @@ export const rawConfigSchema = z
       components: z.string(),
       utils: z.string(),
       ui: z.string().optional(),
+      lib: z.string().optional(),
+      hooks: z.string().optional(),
     }),
   })
   .strict();
@@ -49,10 +52,13 @@ export type RawConfig = z.infer<typeof rawConfigSchema>;
 
 export const configSchema = rawConfigSchema.extend({
   resolvedPaths: z.object({
+    cwd: z.string(),
     tailwindConfig: z.string(),
     tailwindCss: z.string(),
     utils: z.string(),
     components: z.string(),
+    lib: z.string(),
+    hooks: z.string(),
     ui: z.string(),
   }),
 });
@@ -87,13 +93,34 @@ export async function resolveConfigPaths(cwd: string, config: RawConfig) {
   return configSchema.parse({
     ...config,
     resolvedPaths: {
+      cwd,
       tailwindConfig: path.resolve(cwd, config.tailwind.config),
       tailwindCss: path.resolve(cwd, config.tailwind.css),
       utils: await resolveImport(config.aliases["utils"], tsConfig),
       components: await resolveImport(config.aliases["components"], tsConfig),
       ui: config.aliases["ui"]
         ? await resolveImport(config.aliases["ui"], tsConfig)
-        : await resolveImport(config.aliases["components"], tsConfig),
+        : path.resolve(
+            (await resolveImport(config.aliases["components"], tsConfig)) ??
+              cwd,
+            "ui",
+          ),
+      // TODO: Make this configurable.
+      // For now, we assume the lib and hooks directories are one level up from the components directory.
+      lib: config.aliases["lib"]
+        ? await resolveImport(config.aliases["lib"], tsConfig)
+        : path.resolve(
+            (await resolveImport(config.aliases["utils"], tsConfig)) ?? cwd,
+            "..",
+          ),
+      hooks: config.aliases["hooks"]
+        ? await resolveImport(config.aliases["hooks"], tsConfig)
+        : path.resolve(
+            (await resolveImport(config.aliases["components"], tsConfig)) ??
+              cwd,
+            "..",
+            "hooks",
+          ),
     },
   });
 }
@@ -114,8 +141,9 @@ export async function getRawConfig(
 
     return rawConfigSchema.parse(configResult.config);
   } catch (error) {
+    const componentPath = `${cwd}/${type === "token-kit" ? CONFIG_FILE_NAME : SHADCN_CONFIG_FILE_NAME}`;
     throw new Error(
-      `Invalid configuration found in ${cwd}/${type === "token-kit" ? CONFIG_FILE_NAME : SHADCN_CONFIG_FILE_NAME}.`,
+      `Invalid configuration found in ${highlighter.info(componentPath)}.`,
     );
   }
 }

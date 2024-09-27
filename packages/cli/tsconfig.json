@@ -8,18 +8,19 @@
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "inlineSources": false,
-    "isolatedModules": false,
     "moduleResolution": "node",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "preserveWatchOutput": true,
     "skipLibCheck": true,
-    "baseUrl": ".",
     "strict": true,
+    "isolatedModules": false,
+    "resolveJsonModule": true,
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./*"]
     }
   },
   "include": ["src/**/*.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "test/fixtures"]
 }

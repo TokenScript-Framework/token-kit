@@ -2,6 +2,7 @@ import { existsSync, promises as fs } from "fs";
 import path from "path";
 import { Config, CONFIG_FILE_NAME, getConfig } from "@/src/utils/get-config";
 import { handleError } from "@/src/utils/handle-error";
+import { highlighter } from "@/src/utils/highlighter";
 import { logger } from "@/src/utils/logger";
 import {
   fetchTree,
@@ -11,7 +12,6 @@ import {
 } from "@/src/utils/registry";
 import { registryIndexSchema } from "@/src/utils/registry/schema";
 import { transform } from "@/src/utils/transformers";
-import chalk from "chalk";
 import { Command } from "commander";
 import { diffLines, type Change } from "diff";
 import { z } from "zod";
@@ -50,7 +50,7 @@ export const diff = new Command()
       const config = await getConfig(cwd);
       if (!config) {
         logger.warn(
-          `Configuration is missing. Please run ${chalk.green(
+          `Configuration is missing. Please run ${highlighter.success(
             `init`,
           )} to create a ${CONFIG_FILE_NAME} file.`,
         );
@@ -67,13 +67,21 @@ export const diff = new Command()
 
       const registryIndex = await getRegistryIndex();
 
+      if (!registryIndex) {
+        handleError(new Error("Failed to fetch registry index."));
+        process.exit(1);
+      }
+
       if (!options.component) {
         const targetDir = config.resolvedPaths.components;
 
         // Find all components that exist in the project.
         const projectComponents = registryIndex.filter((item) => {
-          for (const file of item.files) {
-            const filePath = path.resolve(targetDir, file);
+          for (const file of item.files ?? []) {
+            const filePath = path.resolve(
+              targetDir,
+              typeof file === "string" ? file : file.path,
+            );
             if (existsSync(filePath)) {
               return true;
             }
@@ -85,7 +93,7 @@ export const diff = new Command()
         // Check for updates.
         const componentsWithUpdates = [];
         for (const component of projectComponents) {
-          const changes = await diffComponent(component, config);
+          const changes = await diffComponent(component, config, shadcnConfig);
           if (changes.length) {
             componentsWithUpdates.push({
               name: component.name,
@@ -108,7 +116,7 @@ export const diff = new Command()
         }
         logger.break();
         logger.info(
-          `Run ${chalk.green(`diff <component>`)} to see the changes.`,
+          `Run ${highlighter.success(`diff <component>`)} to see the changes.`,
         );
         process.exit(0);
       }
@@ -120,7 +128,9 @@ export const diff = new Command()
 
       if (!component) {
         logger.error(
-          `The component ${chalk.green(options.component)} does not exist.`,
+          `The component ${highlighter.success(
+            options.component,
+          )} does not exist.`,
         );
         process.exit(1);
       }
@@ -150,6 +160,10 @@ async function diffComponent(
   const payload = await fetchTree(config.style, [component]);
   const baseColor = await getRegistryBaseColor(config.tailwind.baseColor);
 
+  if (!payload) {
+    return [];
+  }
+
   const changes = [];
 
   for (const item of payload) {
@@ -159,8 +173,11 @@ async function diffComponent(
       continue;
     }
 
-    for (const file of item.files) {
-      const filePath = path.resolve(targetDir, file.name);
+    for (const file of item.files ?? []) {
+      const filePath = path.resolve(
+        targetDir,
+        typeof file === "string" ? file : file.path,
+      );
 
       if (!existsSync(filePath)) {
         continue;
@@ -168,8 +185,12 @@ async function diffComponent(
 
       const fileContent = await fs.readFile(filePath, "utf8");
 
+      if (typeof file === "string" || !file.content) {
+        continue;
+      }
+
       const registryContent = await transform({
-        filename: file.name,
+        filename: file.path,
         raw: file.content,
         config,
         shadcnConfig,
@@ -179,7 +200,6 @@ async function diffComponent(
       const patch = diffLines(registryContent as string, fileContent);
       if (patch.length > 1) {
         changes.push({
-          file: file.name,
           filePath,
           patch,
         });
@@ -194,10 +214,10 @@ async function printDiff(diff: Change[]) {
   diff.forEach((part) => {
     if (part) {
       if (part.added) {
-        return process.stdout.write(chalk.green(part.value));
+        return process.stdout.write(highlighter.success(part.value));
       }
       if (part.removed) {
-        return process.stdout.write(chalk.red(part.value));
+        return process.stdout.write(highlighter.error(part.value));
       }
 
       return process.stdout.write(part.value);
