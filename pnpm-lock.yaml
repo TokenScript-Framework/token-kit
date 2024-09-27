@@ -755,9 +755,6 @@ importers:
       rimraf:
         specifier: ^6.0.1
         version: 6.0.1
-      tsup:
-        specifier: ^6.6.3
-        version: 6.7.0(@swc/core@1.3.78)(postcss@8.4.47)(typescript@4.9.5)
       type-fest:
         specifier: ^3.8.0
         version: 3.13.1
@@ -5844,12 +5841,6 @@ packages:
   builtins@5.1.0:
     resolution: {integrity: sha512-SW9lzGTLvWTP1AY8xeAMZimqDrIaSdLQUcVr9DMef51niJ022Ri87SwRRKYm4A6iHfkPaiVUu/Duw2Wc4J7kKg==}
 
-  bundle-require@4.2.1:
-    resolution: {integrity: sha512-7Q/6vkyYAwOmQNRw75x+4yRtZCZJXUDmHHlFdkiV0wgv/reNjtJwpu1jPJ0w2kbEpIM0uoKI3S4/f39dU7AjSA==}
-    engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
-    peerDependencies:
-      esbuild: '>=0.17'
-
   bundle-require@5.0.0:
     resolution: {integrity: sha512-GuziW3fSSmopcx4KRymQEJVbZUfqlCqcq7dvs6TYwKRZiegK/2buMxQTPs6MGlNv50wms1699qYO54R8XfRX4w==}
     engines: {node: ^12.20.0 || ^14.13.1 || >=16.0.0}
@@ -10740,18 +10731,6 @@ packages:
     peerDependencies:
       postcss: ^8.2
 
-  postcss-load-config@3.1.4:
-    resolution: {integrity: sha512-6DiM4E7v4coTE4uzA8U//WhtPwyhiim3eyjEMFCnUpzbrkK9wJHgKDT2mR+HbtSrd/NubVaYTOpSpjUl8NQeRg==}
-    engines: {node: '>= 10'}
-    peerDependencies:
-      postcss: '>=8.0.9'
-      ts-node: '>=9.0.0'
-    peerDependenciesMeta:
-      postcss:
-        optional: true
-      ts-node:
-        optional: true
-
   postcss-load-config@4.0.2:
     resolution: {integrity: sha512-bSVhyJGL00wMVoPUzAVAnbEoWyqRxkjv64tUl427SKnPrENtq6hJwUojroMz2VB+Q1edmi4IfrAPpami5VVgMQ==}
     engines: {node: '>= 14'}
@@ -11703,11 +11682,6 @@ packages:
   rollup@2.79.1:
     resolution: {integrity: sha512-uKxbd0IhMZOhjAiD5oAFp7BqvkA4Dv47qpOCtaNvng4HBwdbWtdOh8f5nZNuk2rp51PMGk3bzfWu5oayNEuYnw==}
     engines: {node: '>=10.0.0'}
-    hasBin: true
-
-  rollup@3.29.5:
-    resolution: {integrity: sha512-GVsDdsbJzzy4S/v3dqWPJ7EfvZJfCHiDqe80IyrF59LYuP+e6U1LJoUqeuqRbwAWoMNoXivMNeNAOf5E22VA1w==}
-    engines: {node: '>=14.18.0', npm: '>=8.0.0'}
     hasBin: true
 
   rollup@4.22.4:
@@ -12668,22 +12642,6 @@ packages:
 
   tslib@2.7.0:
     resolution: {integrity: sha512-gLXCKdN1/j47AiHiOkJN69hJmcbGTHI0ImLmbYLHykhgeN0jVGola9yVjFgzCUklsZQMW55o+dW7IXv3RCXDzA==}
-
-  tsup@6.7.0:
-    resolution: {integrity: sha512-L3o8hGkaHnu5TdJns+mCqFsDBo83bJ44rlK7e6VdanIvpea4ArPcU3swWGsLVbXak1PqQx/V+SSmFPujBK+zEQ==}
-    engines: {node: '>=14.18'}
-    hasBin: true
-    peerDependencies:
-      '@swc/core': ^1
-      postcss: ^8.4.12
-      typescript: '>=4.1.0'
-    peerDependenciesMeta:
-      '@swc/core':
-        optional: true
-      postcss:
-        optional: true
-      typescript:
-        optional: true
 
   tsup@8.3.0:
     resolution: {integrity: sha512-ALscEeyS03IomcuNdFdc0YWGVIkwH1Ws7nfTbAPuoILvEV2hpGQAY72LIOjglGo4ShWpZfpBqP/jpQVCzqYQag==}
@@ -20528,11 +20486,6 @@ snapshots:
     dependencies:
       semver: 7.6.3
 
-  bundle-require@4.2.1(esbuild@0.17.19):
-    dependencies:
-      esbuild: 0.17.19
-      load-tsconfig: 0.2.5
-
   bundle-require@5.0.0(esbuild@0.23.1):
     dependencies:
       esbuild: 0.23.1
@@ -26924,13 +26877,6 @@ snapshots:
       postcss: 8.4.47
       postcss-value-parser: 4.2.0
 
-  postcss-load-config@3.1.4(postcss@8.4.47):
-    dependencies:
-      lilconfig: 2.1.0
-      yaml: 1.10.2
-    optionalDependencies:
-      postcss: 8.4.47
-
   postcss-load-config@4.0.2(postcss@8.4.47):
     dependencies:
       lilconfig: 3.1.2
@@ -28224,10 +28170,6 @@ snapshots:
     optionalDependencies:
       fsevents: 2.3.3
 
-  rollup@3.29.5:
-    optionalDependencies:
-      fsevents: 2.3.3
-
   rollup@4.22.4:
     dependencies:
       '@types/estree': 1.0.5
@@ -29362,30 +29304,6 @@ snapshots:
   tslib@2.4.0: {}
 
   tslib@2.7.0: {}
-
-  tsup@6.7.0(@swc/core@1.3.78)(postcss@8.4.47)(typescript@4.9.5):
-    dependencies:
-      bundle-require: 4.2.1(esbuild@0.17.19)
-      cac: 6.7.14
-      chokidar: 3.6.0
-      debug: 4.3.7
-      esbuild: 0.17.19
-      execa: 5.1.1
-      globby: 11.1.0
-      joycon: 3.1.1
-      postcss-load-config: 3.1.4(postcss@8.4.47)
-      resolve-from: 5.0.0
-      rollup: 3.29.5
-      source-map: 0.8.0-beta.0
-      sucrase: 3.35.0
-      tree-kill: 1.2.2
-    optionalDependencies:
-      '@swc/core': 1.3.78(@swc/helpers@0.5.11)
-      postcss: 8.4.47
-      typescript: 4.9.5
-    transitivePeerDependencies:
-      - supports-color
-      - ts-node
 
   tsup@8.3.0(@swc/core@1.3.78)(jiti@2.0.0)(postcss@8.4.47)(tsx@4.19.1)(typescript@5.6.2)(yaml@2.5.1):
     dependencies:
