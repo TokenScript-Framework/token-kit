@@ -12,6 +12,7 @@ import { updateTailwindConfig } from "@/src/utils/updaters/update-tailwind-confi
 export async function addComponents(
   components: string[],
   config: Config,
+  shadcnConfig: Config,
   options: {
     overwrite?: boolean;
     silent?: boolean;
@@ -51,7 +52,7 @@ export async function addComponents(
     silent: options.silent,
   });
 
-  await updateFiles(tree.files, config, {
+  await updateFiles(tree.files, config, shadcnConfig, {
     overwrite: options.overwrite,
     silent: options.silent,
   });

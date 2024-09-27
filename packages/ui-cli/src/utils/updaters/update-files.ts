@@ -33,6 +33,7 @@ export function resolveTargetDir(
 export async function updateFiles(
   files: RegistryItem["files"],
   config: Config,
+  shadcnConfig: Config,
   options: {
     overwrite?: boolean;
     force?: boolean;
@@ -111,6 +112,7 @@ export async function updateFiles(
         filename: file.path,
         raw: file.content,
         config,
+        shadcnConfig,
         baseColor,
         transformJsx: !config.tsx,
       },

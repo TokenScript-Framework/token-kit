@@ -1,13 +1,18 @@
 import { Config } from "@/src/utils/get-config";
 import { Transformer } from "@/src/utils/transformers";
 
-export const transformImport: Transformer = async ({ sourceFile, config }) => {
+export const transformImport: Transformer = async ({
+  sourceFile,
+  config,
+  shadcnConfig,
+}) => {
   const importDeclarations = sourceFile.getImportDeclarations();
 
   for (const importDeclaration of importDeclarations) {
     const moduleSpecifier = updateImportAliases(
       importDeclaration.getModuleSpecifierValue(),
       config,
+      shadcnConfig,
     );
 
     importDeclaration.setModuleSpecifier(moduleSpecifier);
@@ -27,11 +32,54 @@ export const transformImport: Transformer = async ({ sourceFile, config }) => {
   return sourceFile;
 };
 
-function updateImportAliases(moduleSpecifier: string, config: Config) {
+function updateImportAliases(
+  moduleSpecifier: string,
+  config: Config,
+  shadcnConfig: Config,
+) {
   // Not a local import.
   if (!moduleSpecifier.startsWith("@/")) {
     return moduleSpecifier;
   }
+
+  // transform shadcn imports
+  if (moduleSpecifier.match(/^@\/components\/ui/)) {
+    return moduleSpecifier.replace(
+      /^@\/components\/ui/,
+      shadcnConfig.aliases.ui ?? `${shadcnConfig.aliases.components}/ui`,
+    );
+  }
+
+  if (
+    shadcnConfig.aliases.components &&
+    moduleSpecifier.match(/^@\/components\/components/)
+  ) {
+    return moduleSpecifier.replace(
+      /^@\/components\/components/,
+      shadcnConfig.aliases.components,
+    );
+  }
+
+  if (
+    shadcnConfig.aliases.lib &&
+    moduleSpecifier.match(/^@\/components\/lib/)
+  ) {
+    return moduleSpecifier.replace(
+      /^@\/components\/lib/,
+      shadcnConfig.aliases.lib,
+    );
+  }
+
+  if (
+    shadcnConfig.aliases.hooks &&
+    moduleSpecifier.match(/^@\/components\/hooks/)
+  ) {
+    return moduleSpecifier.replace(
+      /^@\/components\/hooks/,
+      shadcnConfig.aliases.hooks,
+    );
+  }
+  // end of transform shadcn imports
 
   // Not a registry import.
   if (!moduleSpecifier.startsWith("@/registry/")) {

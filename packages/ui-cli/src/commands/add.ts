@@ -81,7 +81,7 @@ export const add = new Command()
         options.components = await promptForRegistryComponents(options);
       }
 
-      let { errors, config } = await preFlightAdd(options);
+      let { errors, config, shadcnConfig } = await preFlightAdd(options);
 
       // No component.json file. Prompt the user to run init.
       if (errors[ERRORS.MISSING_CONFIG]) {
@@ -140,13 +140,13 @@ export const add = new Command()
           !!options.components[0].match(/\/chat\/b\//);
       }
 
-      if (!config) {
+      if (!config || !shadcnConfig) {
         throw new Error(
           `Failed to read config at ${highlighter.info(options.cwd)}.`,
         );
       }
 
-      await addComponents(options.components, config, options);
+      await addComponents(options.components, config, shadcnConfig, options);
 
       // If we're adding a single component and it's from the v0 registry,
       // let's update the app/page.tsx file to import the component.

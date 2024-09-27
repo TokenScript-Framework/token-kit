@@ -13,11 +13,16 @@ export const DEFAULT_TAILWIND_CONFIG = "tailwind.config.js";
 export const DEFAULT_TAILWIND_BASE_COLOR = "slate";
 
 export const CONFIG_FILE_NAME = "token-kit-ui-components.json";
+export const SHADCN_CONFIG_FILE_NAME = "components.json";
 
 // TODO: Figure out if we want to support all cosmiconfig formats.
 // A simple token-kit-ui-components.json file would be nice.
-const explorer = cosmiconfig("components", {
+const explorer = cosmiconfig("token-kit-ui-components", {
   searchPlaces: [CONFIG_FILE_NAME],
+});
+
+const shadcnExplorer = cosmiconfig("components", {
+  searchPlaces: [SHADCN_CONFIG_FILE_NAME],
 });
 
 export const rawConfigSchema = z
@@ -60,8 +65,11 @@ export const configSchema = rawConfigSchema.extend({
 
 export type Config = z.infer<typeof configSchema>;
 
-export async function getConfig(cwd: string) {
-  const config = await getRawConfig(cwd);
+export async function getConfig(
+  cwd: string,
+  type: "token-kit" | "shadcn" = "token-kit",
+) {
+  const config = await getRawConfig(cwd, type);
 
   if (!config) {
     return null;
@@ -117,9 +125,15 @@ export async function resolveConfigPaths(cwd: string, config: RawConfig) {
   });
 }
 
-export async function getRawConfig(cwd: string): Promise<RawConfig | null> {
+export async function getRawConfig(
+  cwd: string,
+  type: "token-kit" | "shadcn",
+): Promise<RawConfig | null> {
   try {
-    const configResult = await explorer.search(cwd);
+    const configResult =
+      type === "token-kit"
+        ? await explorer.search(cwd)
+        : await shadcnExplorer.search(cwd);
 
     if (!configResult) {
       return null;
@@ -127,7 +141,7 @@ export async function getRawConfig(cwd: string): Promise<RawConfig | null> {
 
     return rawConfigSchema.parse(configResult.config);
   } catch (error) {
-    const componentPath = `${cwd}/component.json`;
+    const componentPath = `${cwd}/${type === "token-kit" ? CONFIG_FILE_NAME : SHADCN_CONFIG_FILE_NAME}`;
     throw new Error(
       `Invalid configuration found in ${highlighter.info(componentPath)}.`,
     );
