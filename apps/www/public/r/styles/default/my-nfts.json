@@ -1,7 +1,16 @@
 {
   "name": "my-nfts",
   "type": "registry:ui",
-  "dependencies": [],
+  "dependencies": [
+    "@tanstack/react-query",
+    "@token-kit/onchain"
+  ],
+  "registryDependencies": [
+    "token-card"
+  ],
+  "shadcnDependencies": [
+    "scroll-area"
+  ],
   "files": [
     {
       "path": "ui/my-nfts.tsx",

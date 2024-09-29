@@ -41,7 +41,7 @@ export const Index: Record<string, any> = {
     "my-nfts": {
       name: "my-nfts",
       type: "registry:ui",
-      registryDependencies: undefined,
+      registryDependencies: ["token-card"],
       files: ["registry/default/ui/my-nfts.tsx"],
       component: React.lazy(() => import("@/registry/default/ui/my-nfts.tsx")),
       source: "",

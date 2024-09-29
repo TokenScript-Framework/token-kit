@@ -1,7 +1,15 @@
 {
   "name": "token-card",
   "type": "registry:ui",
-  "dependencies": [],
+  "dependencies": [
+    "@tanstack/react-query",
+    "wagmi",
+    "viem"
+  ],
+  "shadcnDependencies": [
+    "card",
+    "skeleton"
+  ],
   "files": [
     {
       "path": "ui/token-card.tsx",

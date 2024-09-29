@@ -1,7 +1,14 @@
 {
   "name": "token-thumbnail",
   "type": "registry:ui",
-  "dependencies": [],
+  "dependencies": [
+    "lucide-react"
+  ],
+  "shadcnDependencies": [
+    "avatar",
+    "card",
+    "tooltip"
+  ],
   "files": [
     {
       "path": "ui/token-thumbnail.tsx",
