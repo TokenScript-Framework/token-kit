@@ -4,10 +4,9 @@ export const ABI = [
 
 export const UNDEFINED = "undefined";
 
-export const VIEWER_ROOT =
-  process.env.VIEWER_ROOT || "https://viewer-staging.tokenscript.org";
+export const VIEWER_ROOT = "https://viewer.tokenscript.org";
 
-export const COMMON_API_ROOT =
-  process.env.COMMON_API_ROOT || "https://doobtvjcpb8dc.cloudfront.net";
+export const COMMON_API_ROOT = "https://api.smarttokenlabs.com";
 
-export const API_KEY = process.env.API_KEY || "default-key";
+export const API_KEY =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0IjoibXVsdGktY2hhbm5lbC1yZW5kZXJpbmctc25hcCIsImlhdCI6MTcyNzI0MDQ0NH0.WYv7ZpHm40VDIVQWD6JE6l_aJy-HYMHq49iIlCiEYmE";
