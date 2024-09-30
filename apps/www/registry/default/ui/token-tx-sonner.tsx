@@ -2,7 +2,7 @@
 
 import { toast } from "sonner";
 import { waitForTransactionReceipt } from "@wagmi/core";
-import { wagmiActionChainConfig } from "@/config/wagmi-config";
+import { wagmiActionChainConfig } from "@/registry/default/lib/utils";
 
 type TxError = {
   message: string;

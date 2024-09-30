@@ -3,12 +3,14 @@
   "type": "registry:lib",
   "dependencies": [
     "clsx",
-    "tailwind-merge"
+    "tailwind-merge",
+    "@wagmi/core",
+    "wagmi"
   ],
   "files": [
     {
       "path": "lib/utils.ts",
-      "content": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n",
+      "content": "import { clsx, type ClassValue } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\nimport { createConfig as actionConfig } from \"@wagmi/core\";\nimport { createConfig, http } from \"wagmi\";\nimport { baseSepolia, mainnet, polygon, sepolia } from \"wagmi/chains\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n\nconst parameters = {\n  chains: [mainnet, sepolia, polygon, baseSepolia],\n  transports: {\n    [mainnet.id]: http(),\n    [sepolia.id]: http(),\n    [polygon.id]: http(),\n    [baseSepolia.id]: http(\"https://sepolia.base.org\"),\n  },\n} as const;\n\nexport const config = createConfig(parameters);\nexport const wagmiActionChainConfig = actionConfig(parameters);\n",
       "type": "registry:lib"
     }
   ]
