@@ -7,7 +7,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { config } from "@/config/wagmi-config";
+import { config } from "@/registry/default/lib/utils";
 
 const queryClient = new QueryClient();
 
