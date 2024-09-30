@@ -28,16 +28,6 @@ This project uses `@metamask/snaps-sdk` to develop the Snap. The features are:
 - `tsconfig.json`: TypeScript configuration file
 - `package.json`: Project dependencies and scripts
 
-## Setting enviroment
-
-There are three params for env:
-
-1. COMMON_API_ROOT: The root url for getting metadata
-2. API_KEY: The api key for COMMON_API_ROOT
-3. VIEWER_ROOT: The root url for token actions
-
-You can copy `.env.example` and rename to `.env`, then set your own env params.
-
 ## Usage
 
 1. Run `npm run install` to install dependencies
