@@ -1,5 +1,5 @@
 {
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "This snap allows Tapp users to save their Tapps in MetaMask",
   "proposedName": "Tapp",
   "repository": {
@@ -7,7 +7,7 @@
     "url": "https://github.com/TokenScript-Framework/token-kit/tree/main/packages/tapp-snap"
   },
   "source": {
-    "shasum": "w0a3OIRz//70JLtszwvKQFT6uJ9BlwKJk6a1pr9vXP4=",
+    "shasum": "2dngDF7smvhq8M1qMs1hnYNO2ZmKvYTOlHc1V8UyfCw=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",
