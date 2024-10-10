@@ -3,7 +3,8 @@
   "license": "GPL-3.0-only",
   "scripts": {
     "build": "pnpm -r build",
-    "lint": "pnpm -r lint"
+    "lint": "pnpm -r lint",
+    "dev:www": "turbo dev --filter=www --filter={./packages/*}"
   },
   "devDependencies": {
     "@eslint/js": "^9.10.0",
