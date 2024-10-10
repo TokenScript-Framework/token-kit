@@ -52,23 +52,16 @@ npm install @radix-ui/react-accordion
 ## Usage
 
 ```tsx
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
+import { TokenCard } from "@/registry/default/ui/token-card";
 ```
 
 ```tsx
-<Accordion type="single" collapsible>
-  <AccordionItem value="item-1">
-    <AccordionTrigger>Is it accessible?</AccordionTrigger>
-    <AccordionContent>
-      Yes. It adheres to the WAI-ARIA design pattern.
-    </AccordionContent>
-  </AccordionItem>
-</Accordion>
+<TokenCard
+  type="ERC721"
+  chainId={137}
+  tokenId="1649017156"
+  contract="0xD5cA946AC1c1F24Eb26dae9e1A53ba6a02bd97Fe"
+/>
 ```
 
 ## Examples
