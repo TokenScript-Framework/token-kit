@@ -49,6 +49,17 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
+    "tapp-card": {
+      name: "tapp-card",
+      type: "registry:ui",
+      registryDependencies: undefined,
+      files: ["registry/default/ui/tapp-card.tsx"],
+      component: React.lazy(() => import("@/registry/default/ui/tapp-card.tsx")),
+      source: "",
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
     "token-card-erc20-demo": {
       name: "token-card-erc20-demo",
       type: "registry:example",
@@ -110,6 +121,17 @@ export const Index: Record<string, any> = {
       registryDependencies: ["token-tx-sonner"],
       files: ["registry/default/example/token-tx-sonner-demo.tsx"],
       component: React.lazy(() => import("@/registry/default/example/token-tx-sonner-demo.tsx")),
+      source: "",
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
+    "tapp-card-demo": {
+      name: "tapp-card-demo",
+      type: "registry:example",
+      registryDependencies: ["tapp-card"],
+      files: ["registry/default/example/tapp-card-demo.tsx"],
+      component: React.lazy(() => import("@/registry/default/example/tapp-card-demo.tsx")),
       source: "",
       category: "undefined",
       subcategory: "undefined",

@@ -37,4 +37,10 @@ export const examples: Registry = [
     registryDependencies: ["token-tx-sonner"],
     files: ["example/token-tx-sonner-demo.tsx"],
   },
+  {
+    name: "tapp-card-demo",
+    type: "registry:example",
+    registryDependencies: ["tapp-card"],
+    files: ["example/tapp-card-demo.tsx"],
+  },
 ];
