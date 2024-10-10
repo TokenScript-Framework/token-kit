@@ -67,6 +67,11 @@ export const docsConfig: DocsConfig = {
           href: "/docs/components/token-tx-sonner",
           items: [],
         },
+        {
+          title: "Tapp Card",
+          href: "/docs/components/tapp-card",
+          items: [],
+        },
       ],
     },
   ],

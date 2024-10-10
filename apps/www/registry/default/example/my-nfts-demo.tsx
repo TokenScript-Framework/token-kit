@@ -7,7 +7,7 @@ const client = createPublicClient({
   transport: http("https://sepolia.base.org"),
 });
 
-export default function TokenThumbnailDemo() {
+export default function MyNftsDemo() {
   return (
     <div className="w-full">
       <MyNfts

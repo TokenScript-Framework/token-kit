@@ -1,0 +1,58 @@
+---
+title: Tapp Card
+description: A card for Tapp.
+component: true
+---
+
+<ComponentPreview
+  name="tapp-card-demo"
+  className="[&_.preview>[data-orientation=vertical]]:sm:max-w-[70%]"
+  description="An accordion with three items"
+/>
+
+## Installation
+
+<Tabs defaultValue="cli">
+
+<TabsList>
+  <TabsTrigger value="cli">CLI</TabsTrigger>
+  <TabsTrigger value="manual">Manual</TabsTrigger>
+</TabsList>
+
+<TabsContent value="cli">
+
+```bash
+npx @token-kit/cli@latest add tapp-card
+```
+
+</TabsContent>
+
+<TabsContent value="manual">
+
+<Steps>
+
+<Step>Copy and paste the following code into your project.</Step>
+
+<ComponentSource name="tapp-card" />
+
+<Step>Update the import paths to match your project setup.</Step>
+
+</Steps>
+
+</TabsContent>
+
+</Tabs>
+
+## Usage
+
+```tsx
+import TappCard from "@/registry/default/ui/tapp-card";
+```
+
+```tsx
+<TappCard
+  chainId={11155111}
+  contract="0x3490FFc64A4E65aBb749317f7860E722Ba65a2b5"
+  tokenId="473843023"
+/>
+```

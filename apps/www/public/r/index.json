@@ -69,5 +69,22 @@
         "type": "registry:ui"
       }
     ]
+  },
+  {
+    "name": "tapp-card",
+    "type": "registry:ui",
+    "dependencies": [
+      "wagmi"
+    ],
+    "shadcnDependencies": [
+      "card",
+      "skeleton"
+    ],
+    "files": [
+      {
+        "path": "ui/tapp-card.tsx",
+        "type": "registry:ui"
+      }
+    ]
   }
 ]

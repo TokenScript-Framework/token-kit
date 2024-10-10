@@ -30,9 +30,9 @@ Now you should be able to see the doc page with url `http://localhost:3333/docs/
 },
 ```
 
-6. Add the example component to the registry under `apps/www/registry/default/example`
+5. Add the example component to the registry under `apps/www/registry/default/example`
 
-7. Add the example to the registry under `apps/www/registry/registry-examples.ts`
+6. Add the example to the registry under `apps/www/registry/registry-examples.ts`
 
 ```ts
 {
@@ -45,6 +45,6 @@ Now you should be able to see the doc page with url `http://localhost:3333/docs/
 
 then `npm run build:registry` to generate the registry files.
 
-8. Implement your component under `apps/www/registry/default/ui/my-component.tsx`
+7. Implement your component under `apps/www/registry/default/ui/my-component.tsx`
 
-9. Implement your preview demo under `apps/www/registry/default/examples/my-component-demo.tsx`
+8. Implement your preview demo under `apps/www/registry/default/example/my-component-demo.tsx`

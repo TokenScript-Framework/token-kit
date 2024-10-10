@@ -29,4 +29,11 @@ export const ui: Registry = [
     registryDependencies: ["token-card"],
     shadcnDependencies: ["scroll-area"],
   },
+  {
+    name: "tapp-card",
+    type: "registry:ui",
+    files: ["ui/tapp-card.tsx"],
+    dependencies: ["wagmi"],
+    shadcnDependencies: ["card", "skeleton"],
+  },
 ];
