@@ -39,8 +39,7 @@ export default function TappCard({
   tokenId,
   cssClass,
 }: TappCardProps) {
-  const NEXT_PUBLIC_VIEWER_ROOT = "https://viewer-staging.tokenscript.org";
-  const url = `${NEXT_PUBLIC_VIEWER_ROOT}/?viewType=sts-token&chain=${chainId}&contract=${contract}&tokenId=${tokenId}`;
+  const url = `https://viewer-staging.tokenscript.org/?viewType=sts-token&chain=${chainId}&contract=${contract}&tokenId=${tokenId}`;
 
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [isLoaded, setIsLoaded] = useState(false);
