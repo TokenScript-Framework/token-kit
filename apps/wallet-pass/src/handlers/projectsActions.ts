@@ -209,9 +209,6 @@ async function updateProjectHandler(
   }
 
   const iv = createIvByProject(project.project);
-  if (config?.ticket?.sk) {
-    config.ticket.sk = encrypt(env.KEY_FOR_DB_CRYPTO, iv, config.ticket.sk);
-  }
 
   if (config?.walletPass?.apple?.key) {
     config.walletPass.apple.key = encrypt(

@@ -7,20 +7,8 @@ import {env} from '../env';
 import {projects} from '../schemas/projects';
 
 export const configSchema = z.object({
-  ticket: z
-    .object({
-      pk: z.string(), // issuer public key
-      sk: z.string(), // issuer secret key
-    })
-    .optional(),
-  mail: z
-    .object({
-      from: z.string(), // sender<sender@mail.com>
-    })
-    .optional(),
   walletPass: z
     .object({
-      ethPassKey: z.string(), // ethpass private key
       webhookUrl: z.string(), // notify client about wallet pass installation and removal
       subscribedEvents: z.array(z.string()),
       google: z // google service account credentials
@@ -78,13 +66,6 @@ export async function findConfig(dbService: DbService, apiKey: string) {
   configCache[apiKey] = config[0].config as ProjectConfig;
 
   const iv = createIvByProject(config[0].project);
-  if (configCache[apiKey].ticket) {
-    configCache[apiKey].ticket!.sk = decrypt(
-      env.KEY_FOR_DB_CRYPTO,
-      iv,
-      configCache[apiKey].ticket!.sk
-    );
-  }
 
   if (configCache[apiKey].walletPass?.apple?.key) {
     configCache[apiKey].walletPass!.apple.key = decrypt(
