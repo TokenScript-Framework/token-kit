@@ -12,6 +12,7 @@
     "useDefineForClassFields": true,
     "skipLibCheck": true,
     "declaration": false,
+    "resolveJsonModule": true,
     "lib": [
       "es2020"
     ]
