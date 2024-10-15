@@ -3,3 +3,62 @@ title: OG
 description: This is the lambda function that generates the Open Graph image for the token.
 component: false
 ---
+
+## Overview
+
+The `lambdas/og/` is an AWS Lambda@Edge function designed to dynamically generate Open Graph images for tokens. It leverages the `@token-kit/og` package to create these images on-the-fly, providing a visual representation of tokens for social media sharing and link previews.
+
+## Build
+
+To set up the lambda function, follow these steps:
+
+1. Install dependencies:
+
+   ```bash
+   pnpm i
+   ```
+
+1. Build the project:
+
+   ```bash
+   pnpm build
+   ```
+
+1. Package the lambda function:
+
+   ```bash
+   pnpm package
+   ```
+
+This process will generate a `token-kit-og-lambda.zip` file that can be uploaded to AWS Lambda.
+
+## Deploy
+
+To deploy the lambda function, follow these steps:
+
+1. Create a new AWS Lambda function in **_us-east-1_** using the `token-kit-og-lambda.zip` file generated in the previous step.
+2. Set the property permissions to AWS Lambda Basic Execution Role (with S3 access).
+3. Publish to your CloudFront **_Origin request_** function associations.
+
+> For more informations about Lambda@Edge, please follow the document [Customize at the edge with Lambda@Edge](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-at-the-edge.html)
+
+## How it works
+
+```txt
+Request  ---->  [CloudFront] [Lambda@Edge] <--- S3 (original html <body>)
+Response <----                         ^----- @token-kit/og (html <head>)
+```
+
+The Lambda@Edge function will merge the original html `<body>` from S3 with the html `<head>` from the `@token-kit/og` package response.
+
+Since Lambda@Edge cannot get the response from the origin (See: [Work with requests and responses](https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-generating-http-responses.html)), so we read the original html from S3 and replace the `<head>` with the `<head>` from the `@token-kit/og` package response.
+
+We expect you use S3 + CloudFront to serve your static files with SPA. If your static files structure is different, you may need to modify the code.
+
+And we expect the URL parameters are:
+
+- `chainId` (number): the chainId of the network, like 1, 137, and so on
+- `contract` (string): the contract address of the token (0x....)
+- `tokenId` (number): the tokenId of the token
+
+Full request URL example: `https://example.com/?chainId=1&contract=0x1234567890123456789012345678901234567890&tokenId=1`
