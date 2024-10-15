@@ -1,0 +1,26 @@
+{
+  "extends": "./node_modules/gts/tsconfig-google.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "moduleResolution": "node",
+    "module": "ESNext",
+    "esModuleInterop": true,
+    "removeComments": true,
+    "newLine": "lf",
+    "noUnusedLocals": false,
+    "useDefineForClassFields": true,
+    "skipLibCheck": true,
+    "declaration": false,
+    "lib": [
+      "es2020"
+    ]
+  },
+  "ts-node": {
+    "compilerOptions": {
+      "module": "CommonJS",
+      "resolveJsonModule": true
+    }
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}

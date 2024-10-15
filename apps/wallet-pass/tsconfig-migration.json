@@ -1,0 +1,10 @@
+{
+  "extends": "./node_modules/gts/tsconfig-google.json",
+  "ts-node": {
+    "compilerOptions": {
+      "esModuleInterop": true,
+      "resolveJsonModule": true
+    }
+  },
+  "include": ["migrations/**/*.ts", "scripts/*.ts"]
+}

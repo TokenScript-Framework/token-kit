@@ -1,0 +1,30 @@
+{
+  "extends": [
+    "./node_modules/gts/",
+    "plugin:security/recommended",
+    "plugin:sonarjs/recommended"
+  ],
+  "plugins": ["sonarjs"],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",
+    "node/no-extraneous-import": [
+      "error",
+      {
+        "allowModules": [
+          "pino",
+          "@ethereum-attestation-service/eas-sdk",
+          "tweetnacl"
+        ]
+      }
+    ],
+    "node/no-unpublished-import": [
+      "error",
+      {"allowModules": ["ava", "drizzle-kit", "@onflow/types", "@ethereum-attestation-service/eas-sdk"]}
+    ],
+    "security/detect-object-injection": "off",
+    "sonarjs/cognitive-complexity": ["error", 20],
+    "no-case-declarations": "off",
+    "sonarjs/no-redundant-jump": "off",
+    "@typescript-eslint/ban-ts-comment": "off"
+  }
+}
