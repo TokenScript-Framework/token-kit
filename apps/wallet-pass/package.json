@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "nodemon src/index.ts",
     "start": "ncc run src/index.ts",
-    "build": "ncc build src/index.ts -sm -e fastify -e pg -e pino",
+    "build": "ncc build src/index.ts -sm",
     "lint": "gts lint",
     "clean": "gts clean",
     "compile": "tsc",
