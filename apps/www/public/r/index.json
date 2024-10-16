@@ -86,5 +86,19 @@
         "type": "registry:ui"
       }
     ]
+  },
+  {
+    "name": "add-to-snap",
+    "type": "registry:ui",
+    "dependencies": [
+      "view"
+    ],
+    "shadcnDependencies": [],
+    "files": [
+      {
+        "path": "ui/add-to-snap.tsx",
+        "type": "registry:ui"
+      }
+    ]
   }
 ]

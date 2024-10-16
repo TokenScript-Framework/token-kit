@@ -36,4 +36,11 @@ export const ui: Registry = [
     dependencies: ["wagmi"],
     shadcnDependencies: ["card", "skeleton"],
   },
+  {
+    name: "add-to-snap",
+    type: "registry:ui",
+    files: ["ui/add-to-snap.tsx"],
+    dependencies: ["view"],
+    shadcnDependencies: [],
+  },
 ];

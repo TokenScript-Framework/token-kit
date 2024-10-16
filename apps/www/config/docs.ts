@@ -80,6 +80,11 @@ export const docsConfig: DocsConfig = {
           href: "/docs/components/tapp-card",
           items: [],
         },
+        {
+          title: "Add To Snap",
+          href: "/docs/components/add-to-snap",
+          items: [],
+        },
       ],
     },
     {
