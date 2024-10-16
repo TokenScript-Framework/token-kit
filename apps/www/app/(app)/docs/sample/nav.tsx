@@ -46,7 +46,7 @@ export function Nav({ links, tokenType, onTokenTypeChange }: NavProps) {
                   buttonVariants({ variant: link.variant, size: "sm" }),
                   link.variant === "default" &&
                     "dark:text-white dark:hover:text-white",
-                  "justify-start w-full",
+                  "w-full justify-start",
                   link.children && "bg-unset hover:bg-unset",
                 )}
               >
@@ -61,7 +61,7 @@ export function Nav({ links, tokenType, onTokenTypeChange }: NavProps) {
                     )}
                     key={index + "span"}
                   >
-                    <ExternalLinkIcon className="w-4 h-4" />
+                    <ExternalLinkIcon className="h-4 w-4" />
                   </span>
                 )}
               </Link>
@@ -74,8 +74,8 @@ export function Nav({ links, tokenType, onTokenTypeChange }: NavProps) {
                       buttonVariants({ variant: child.variant, size: "sm" }),
                       child.variant === "default" &&
                         "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
-                      child.title === tokenType && "dark:bg-muted bg-gray-100",
-                      "justify-start cursor-pointer w-full mb-2",
+                      child.title === tokenType && "bg-gray-100 dark:bg-muted",
+                      "mb-2 w-full cursor-pointer justify-start",
                     )}
                     onClick={() =>
                       childrenClickHandler(child.title as TokenType)

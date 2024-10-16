@@ -110,6 +110,11 @@ export const docsConfig: DocsConfig = {
           href: "/docs/packages/onchain-tools",
           items: [],
         },
+        {
+          title: "Tapp snap",
+          href: "/docs/packages/tapp-snap",
+          items: [],
+        },
       ],
     },
   ],

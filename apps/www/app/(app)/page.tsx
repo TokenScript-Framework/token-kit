@@ -35,7 +35,7 @@ export default function IndexPage() {
           </Button>
         </PageActions>
       </PageHeader>
-      <div className="w-full border-slate-200 border">
+      <div className="w-full border border-slate-200">
         <RainbowKitProvider>
           <Dashboard />
         </RainbowKitProvider>

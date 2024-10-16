@@ -1,0 +1,69 @@
+---
+title: Tapp snap
+description: This is a MetaMask Snap for tapp token.
+component: false
+---
+
+## Features
+
+This project uses `@metamask/snaps-sdk` to develop the Snap. The features are:
+
+- Display Token metadata, including images, attributes, and descriptions
+- Provide Token-related interactive operations
+- Support for multiple chains and contracts
+- Build user interface using React JSX syntax
+
+## Project Structure
+
+- `src/`: Source code directory
+  - `components/`: React components
+    - `Actions.tsx`: Button Action page component
+    - `HomePage.tsx`: HomePage page component
+    - `TokenPage.tsx`: Interactive form component
+  - `libs/`: Library
+    - `constants.ts`: Some const
+    - `types.ts`: Some types
+    - `utils.ts`: Some common functions
+  - `TokenPage.tsx`: Interactive form component
+  - `index.tsx`: Entry file for the Snap
+  - `index.test.tsx`: Test file
+- `tsconfig.json`: TypeScript configuration file
+- `package.json`: Project dependencies and scripts
+
+## Usage
+
+1. Run `npm run install` to install dependencies
+2. Use `npm run build` to build the project
+3. Use `npm run start` to start the project, it will run on `http://localhost:8080`
+4. Use `npm run test` to run tests
+
+## Request snap in local
+
+You can use `ethereum.request` to invoke this snap in local:
+
+```typescript
+await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: {
+        snapId: 'local:http://localhost:8080',
+        request: {
+            method: 'import',
+            params: YOUR_PARAMS,
+        },
+    },
+});
+```
+
+The params are:
+
+- `chain`:  ID of the blockchain network.
+- `contract`: Address of the token contract.
+- `tokenId`: Token ID.
+
+## Testing
+
+The project uses `@metamask/snaps-jest` for testing. The test file is located at `src/index.test.tsx`.
+
+## Installation
+You can use our [AddToSnap](https://token-kit.vercel.app/docs/components/add-to-snap) button or access [MetaMask Snaps Directory](https://snaps.metamask.io/snap/npm/token-kit/tapp-snap/) to install this snap.
+

@@ -148,7 +148,7 @@ const TokenDetails = ({
     }
   }, [token, tokenType]);
   return (
-    <div className="h-full flex flex-col p-4">
+    <div className="flex h-full flex-col p-4">
       {tokenType === "ERC20" ? (
         token && (
           <TokenCard
@@ -161,8 +161,8 @@ const TokenDetails = ({
       ) : (
         <>
           {token && (
-            <div className="mb-4 w-full flex justify-between items-center space-x-2">
-              <div className="w-1/3 flex items-center justify-between space-x-2">
+            <div className="mb-4 flex w-full items-center justify-between space-x-2">
+              <div className="flex w-1/3 items-center justify-between space-x-2">
                 <div className="font-bold">TokenId: </div>
                 <Select value={tokenId} onValueChange={setTokenId}>
                   <SelectTrigger className="w-[200px]">
@@ -204,7 +204,7 @@ const TokenDetails = ({
             </TabsList>
             <TabsContent
               value="token"
-              className="w-2/3 mx-auto h-[calc(100vh-150px)]"
+              className="mx-auto h-[calc(100vh-150px)] w-2/3"
             >
               {token && (
                 <TokenCard
@@ -216,11 +216,11 @@ const TokenDetails = ({
                 />
               )}
             </TabsContent>
-            <TabsContent value="script" className="w-2/3 mx-auto">
+            <TabsContent value="script" className="mx-auto w-2/3">
               {tokenType !== "ERC1155" ? (
                 <>
                   {address && token ? (
-                    <div className="w-full h-[calc(100vh-200px)]">
+                    <div className="h-[calc(100vh-200px)] w-full">
                       <TappCard
                         chainId={token?.chain}
                         contract={token.address}
@@ -229,9 +229,9 @@ const TokenDetails = ({
                       />
                     </div>
                   ) : (
-                    <div className="h-full flex flex-col items-center justify-center mt-10">
-                      <div className="text-center mb-4">
-                        <p className="font-bold text-xl">
+                    <div className="mt-10 flex h-full flex-col items-center justify-center">
+                      <div className="mb-4 text-center">
+                        <p className="text-xl font-bold">
                           Please connect wallet to view more.
                         </p>
                       </div>
@@ -239,9 +239,9 @@ const TokenDetails = ({
                   )}
                 </>
               ) : (
-                <div className="h-full flex flex-col items-center justify-center mt-10">
-                  <div className="text-center mb-4">
-                    <p className="font-bold text-xl">
+                <div className="mt-10 flex h-full flex-col items-center justify-center">
+                  <div className="mb-4 text-center">
+                    <p className="text-xl font-bold">
                       This token has no script.
                     </p>
                   </div>
@@ -272,7 +272,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="flex flex-col h-screen text-sm">
+    <div className="flex h-screen flex-col text-sm">
       <div className="flex-1 overflow-hidden">
         <ResizablePanelGroup direction="horizontal" className="h-screen">
           <ResizablePanel
