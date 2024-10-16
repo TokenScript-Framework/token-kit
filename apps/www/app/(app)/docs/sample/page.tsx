@@ -155,7 +155,7 @@ const TokenDetails = ({
             type={tokenType}
             chainId={token.chain}
             contract={token.address}
-            wallet={address ?? "0x"}
+            wallet={address ?? "0x5814cf68Dcb994e7Ec81bB9097593a8cA540Cf3E"}
           />
         )
       ) : (
