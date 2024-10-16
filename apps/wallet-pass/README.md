@@ -1,57 +1,388 @@
-# Common Api Backend
+# Wallet Pass
 
-> Note:
->
-> This file is only the readme of key information, not a verbose one. Because:
->
-> 1. We try to follow `code as the document` style
-> 1. All documents can be generated from code automatically, as a dev, you won't need to worry about the inconsistence between `interface document` and `code`.
+This is an API service to expose a simple interface for Apple and Google wallet pass management, it handles the complexity of interacting with the vender API, and implemented the necessary callbacks to fullfil the vender designed workflow.
 
-## Workflow
+## Features
 
-1. Apply for your api key for each project
-   - one `api key` for one project.
-   - `post` to `/projects`
-1. Create a config for the project.
-   - `put` to `projects/:id`, see `configSchema` in [the "projects" schema](./src/services/projectService.ts).
-1. Call apis with `apiKey`
+- Create and Update Apple and Google wallet pass
+- Currently storeCard for Apple and generic pass for Google is supported
+- Dynamic barcode URL proxy without need to update the pass content
+- Push notification to user device
 
-## Interfaces
+## Dependencies
 
-- [DB Schema](./src/schemas/)
-- [Enviroment Variables](./src/env.ts)
-- [API Endpoints & JWT Security Rules](./src/controllers.ts)
-- To see swagger documents:
-  - `npm start`
-  - The link: http://127.0.0.1:3006/documentation
+- Postgres DB
+- S3 storage
+- Google developer account
+- Apple developer account
 
-## How to code
+## Configuration
 
-There is a simple framework in this code base, see [how to develop](./README-for-Dev.md)
+### DB provision
 
-## Deployment
+The project use [drizzle-orm](https://orm.drizzle.team/) to manage DB migration, to provision DB
 
-Single instance for this repo.
+1. Create a Postgres database and set the following env vars accordingly
 
-## Don't Miss This!
+- DB_HOST
+- DB_PORT
+- DB_USER
+- DB_PASSWORD
+- DB_DATABASE
 
-### Using Api Key as the index of the project configuration
+2. Run the migration script
+   ```sh
+   > npm run migrate
+   ```
 
-The `apiKey` in each request will be the index of the project configuration, so make sure the project is configured correctly before invocation.
+### Project configuration
 
-### Async Queue
+#### Create a Apple pass and certificate
 
-For each external apis required calling, the request will go to a internal task queue at first. Then each task will be called by a cron job.
+Follow this [instruction](https://developer.apple.com/documentation/walletpasses/building-a-pass)
 
-So, for those called expecting the results, call the api with a `callback` url. It will be called by common apis when the result is ready.
+#### Create a Google pass and key
 
-The reasons why we design like this:
+Follow this [instruction](https://developers.google.com/wallet/generic/use-cases/create)
 
-- Making sure every request can be executed once and only once.
-- Avoid duplicated requests being sent to the extenal apis.
-  - Currently, achive this by deploying a single instance for this repo.
+#### Add a new project configuration
 
-### Encrypted Ticket Issuer Private Key
+1. create new project, `POST /projects` with a name
 
-The `Ticket Issuer Private Key` will be encrypted before saving in DB. So, using configuration api to config it, not by a insert sql!
+```json
+{
+  "project": "your-project"
+}
+```
 
+remember the api key returned in the response
+
+2. update project configuration, `PUT /projects` with `x-stl-key` set to the api key from last step, request body
+
+```json
+{
+  "config": {
+    "walletPass": {
+      "webhookUrl": "string", // the API endpoint to receive subscribed events
+      "subscribedEvents": [
+        "string" // pass:register, pass:unregister, when a pass is installed/removed on a device
+      ],
+      "google": {
+        "issuerId": "string", // from your Google wallet pass setup
+        "passTypeIdentifier": "string", // from your Google wallet pass setup
+        "passType": "string", // "generic" is supported as of now
+        "credentials": "string" // json content of secret key from Google
+      },
+      "apple": {
+        "teamIdentifier": "string", // from your Apple wallet pass setup
+        "passTypeIdentifier": "string", // from your Apple wallet pass setup
+        "passType": "string", // "storeCard" is supported as of now
+        "cert": "string", // certificate content
+        "key": "string", // certificate private key content
+        "keySecret": "string" // key secret if available
+      }
+    }
+  }
+```
+
+### Pass template file
+
+Upload your pass base template file to s3 bucket according to your design, example can be found here
+
+- Google: https://resources.smarttokenlabs.com/wallet-pass/e7e74bbd-5a14-4a43-95a6-cfdf2f8eeb16/google/template.json
+- Apple: https://resources.smarttokenlabs.com/wallet-pass/e7e74bbd-5a14-4a43-95a6-cfdf2f8eeb16/apple/template.zip
+
+The service will try to find the template under `S3_BUCKET/wallet-pass/TEMPLATE_ID/template.{json|zip}`, where `S3_BUCKET` is configurable via env var, and TEMPLATE_ID is provided by the client request when creating the wallet pass
+
+## How to use
+
+### Create wallet pass
+
+`POST /wallet-passes`
+
+for Apple
+
+```json
+{
+  "id": "EXTERNAL_ID", // set an external id to identify a wallet pass, e.g. project-apple-1
+  "callbackUrl": "http://127.0.0.1:3006/webhooks/wallet-pass-created", // callback endpoint when wallet pass details once creation is successful, payload will be explained later
+  "params": {
+    "templateId": "e7e74bbd-5a14-4a43-95a6-cfdf2f8eeb16", // template ID for the template file to use, which is uploaded in previous step
+    "platform": "apple", // "apple" or "google"
+    "barcode": {
+      "redirect": {
+        "url": "XXX" // url for the barcode to show on wallet pass card
+      },
+      "altText": "XXX Pass"
+    },
+    "externalId": "EXTERNAL_ID", // set an external id to identify a wallet pass, e.g. project-apple-1
+    "pass": {
+      // this section depends on your wallet pass design, please check the vendor's offical document for details
+      "description": "XXX",
+      "backFields": [
+        {
+          "key": "note",
+          "value": "XXX"
+        },
+        {
+          "key": "website",
+          "label": "Link",
+          "attributedValue": "XXX",
+          "value": "XXX"
+        }
+      ],
+      "headerFields": [
+        {
+          "label": "XXX",
+          "textAlignment": "PKTextAlignmentRight",
+          "key": "XXX",
+          "value": "XXX"
+        }
+      ],
+      "primaryFields": [],
+      "secondaryFields": [
+        {
+          "label": "XXX",
+          "textAlignment": "PKTextAlignmentLeft",
+          "key": "XXX",
+          "value": "XXX"
+        },
+        {
+          "label": "XXX",
+          "textAlignment": "PKTextAlignmentLeft",
+          "key": "XXX",
+          "value": "XXX"
+        }
+      ]
+    }
+  }
+}
+```
+
+for Google
+
+```json
+{
+  "id": "EXTERNAL_ID", // set an external id to identify a wallet pass, e.g. project-google-1
+  "callbackUrl": "http://127.0.0.1:3006/webhooks/wallet-pass-created", // callback endpoint when wallet pass details once creation is successful, payload will be explained
+  "params": {
+    "templateId": "e7e74bbd-5a14-4a43-95a6-cfdf2f8eeb16", // template ID for the template file to use, which is uploaded in previous step
+    "platform": "google", // "apple" or "google"
+    "barcode": {
+      "redirect": {
+        "url": "XXX" // url for the barcode to show on wallet pass card
+      },
+      "altText": "XXX"
+    },
+    "externalId": "EXTERNAL_ID", // set an external id to identify a wallet pass, e.g. project-apple-1
+    "pass": {
+      // this section depends on your wallet pass design, please check the vendor's offical document for details
+      "logo": {
+        "sourceUri": {
+          "uri": "XXX URL"
+        }
+      },
+      "heroImage": {
+        "sourceUri": {
+          "uri": "XXX URL"
+        }
+      },
+      "linksModuleData": {
+        "uris": [
+          {
+            "description": "XXX",
+            "id": "website",
+            "uri": "XXX URL"
+          }
+        ]
+      },
+      "hexBackgroundColor": "#ffffff",
+      "cardTitle": {
+        "defaultValue": {
+          "language": "en",
+          "value": "XXX"
+        }
+      },
+      "subheader": {
+        "defaultValue": {
+          "language": "en",
+          "value": "XXX"
+        }
+      },
+      "header": {
+        "defaultValue": {
+          "language": "en",
+          "value": "XXX"
+        }
+      },
+      "textModulesData": [
+        {
+          "id": "XXX",
+          "header": "XXX",
+          "body": "XXX"
+        },
+        {
+          "id": "XXX",
+          "header": "XXX",
+          "body": "XXX"
+        }
+      ]
+    }
+  }
+}
+```
+
+for the `callbackUrl`, it will be called when the wallet pass is successfully created, and the payload is like
+
+```json
+{
+  "id": "EXTERNAL_ID", // the external id passed during create request
+  "result": {
+    "id": "XXX", // PRIMARY_KEY in wallet pass db for reference, uuid
+    "fileURL": "${env.ROOT_URL}/link/wallet-pass/${primaryKey}", // the url to install the wallet pass
+    "platform": "XXX", // "apple" or "google"
+    "createdAt": "XXX", // timestamp
+    "externalId": "EXTERNAL_ID" // the external id passed during create request
+  },
+  "signedMessage": "0xXXXXX"
+}
+```
+
+the `signedMessage` is created with ethers wallet crypto signature
+
+```js
+const wallet = new ethers.Wallet(env.SIGNATURE_PRIVATE_KEY);
+const messageToSign = `${task.id}-${JSON.stringify(result.result)}`;
+const signedMessage = await wallet.signMessage(messageToSign);
+```
+
+it's used as an authentication mechanism for client to verify the callback request
+
+### Update wallet pass
+
+`PUT /wallet-passes/`
+
+for Apple
+
+```json
+{
+  "id": "a409cc64-7c12-4f36-97c2-efc0d1a6e206", // PRIMARY_KEY in wallet pass db for reference, uuid
+  "params": {
+    "pass": {
+      // this section depends on your wallet pass design, please check the vendor's offical document for details
+      "backFields": [
+        {
+          "key": "note",
+          "value": "XXX"
+        },
+        {
+          "key": "website",
+          "label": "Link",
+          "attributedValue": "XXX",
+          "value": "XXX"
+        },
+        {
+          // Notification info
+          "key": "notification",
+          "label": "XXX",
+          "value": "XXX",
+          "changeMessage": "%@",
+          "textAlignment": "PKTextAlignmentNatural"
+        }
+      ],
+      "primaryFields": [],
+      "secondaryFields": [
+        {
+          "label": "XXX",
+          "textAlignment": "PKTextAlignmentLeft",
+          "key": "XXX",
+          "value": "XXX"
+        },
+        {
+          "label": "XXX",
+          "textAlignment": "PKTextAlignmentLeft",
+          "key": "XXX",
+          "value": "XXX"
+        }
+      ],
+      "headerFields": [
+        {
+          "label": "XXX",
+          "textAlignment": "PKTextAlignmentRight",
+          "key": "XXX",
+          "value": "XXX"
+        }
+      ]
+    }
+  }
+}
+```
+
+for Google
+
+```json
+{
+  "id": "daf26924-277c-4037-b6a7-c2b3061bb279", // PRIMARY_KEY in wallet pass db for reference, uuid
+  "params": {
+    "message": {
+      // Notification info
+      "header": "XXX",
+      "body": "XXX",
+      "id": "XXX",
+      "message_type": "TEXT_AND_NOTIFY"
+    },
+    "pass": {
+      "logo": {
+        "sourceUri": {
+          "uri": "XXX URL"
+        }
+      },
+      "heroImage": {
+        "sourceUri": {
+          "uri": "XXX URL"
+        }
+      },
+      "linksModuleData": {
+        "uris": [
+          {
+            "description": "XXX",
+            "id": "website",
+            "uri": "XXX URL"
+          }
+        ]
+      },
+      "hexBackgroundColor": "#ffffff",
+      "cardTitle": {
+        "defaultValue": {
+          "language": "en",
+          "value": "XXX"
+        }
+      },
+      "subheader": {
+        "defaultValue": {
+          "language": "en",
+          "value": "XXX"
+        }
+      },
+      "textModulesData": [
+        {
+          "id": "XXX",
+          "header": "XXX",
+          "body": "XXX"
+        },
+        {
+          "id": "XXX",
+          "header": "XXX",
+          "body": "XXX"
+        }
+      ],
+      "header": {
+        "defaultValue": {
+          "language": "en",
+          "value": "XXX"
+        }
+      }
+    }
+  }
+}
+```

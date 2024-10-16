@@ -24,7 +24,7 @@ export async function findTemplate(templateId: string, platform: string) {
   if (templateCache[cacheKey]) return templateCache[cacheKey];
 
   const getCommand = new GetObjectCommand({
-    Bucket: 'smarttokenlabs-resources',
+    Bucket: env.S3_BUCKET,
     Key: `wallet-pass/${templateId}/${platform}/${
       templateFileKey[platform as 'apple' | 'google']
     }`,

@@ -23,6 +23,7 @@ export const env = createEnv({
       .default('Eqz95UpfjkWUbYq5sMWIUcxmVliIug0ItM5UrhDnioA='),
     S3_ACCESS_KEY_ID: z.string(),
     S3_SECRET_ACCESS_KEY: z.string(),
+    S3_BUCKET: z.string(),
     SIGNATURE_PRIVATE_KEY: z.string(),
     ROOT_URL: z.string().default('http://127.0.0.1:3005'),
     PASSKIT_AUTH_TOKEN: z.string(),
