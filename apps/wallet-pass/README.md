@@ -1,4 +1,4 @@
-# Wallet Pass
+# @token-kit/wallet-pass
 
 This is an API service to expose a simple interface for Apple and Google wallet pass management, it handles the complexity of interacting with the vender API, and implemented the necessary callbacks to fullfil the vender designed workflow.
 
@@ -71,14 +71,14 @@ remember the api key returned in the response
         "issuerId": "string", // from your Google wallet pass setup
         "passTypeIdentifier": "string", // from your Google wallet pass setup
         "passType": "string", // "generic" is supported as of now
-        "credentials": "string" // json content of secret key from Google
+        "credentials": "string" // json content of secret key from Google, the private key will be encrypted when storing in DB
       },
       "apple": {
         "teamIdentifier": "string", // from your Apple wallet pass setup
         "passTypeIdentifier": "string", // from your Apple wallet pass setup
         "passType": "string", // "storeCard" is supported as of now
         "cert": "string", // certificate content
-        "key": "string", // certificate private key content
+        "key": "string", // certificate private key content, the key will be encrypted when storing in DB
         "keySecret": "string" // key secret if available
       }
     }
