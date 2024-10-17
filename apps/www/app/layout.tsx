@@ -26,11 +26,11 @@ export const metadata: Metadata = {
   ],
   authors: [
     {
-      name: "shadcn",
-      url: "https://shadcn.com",
+      name: "STL",
+      url: "https://smarttokenlabs.com/",
     },
   ],
-  creator: "shadcn",
+  creator: "STL",
   openGraph: {
     type: "website",
     locale: "en_US",

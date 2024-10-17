@@ -95,6 +95,11 @@ export const docsConfig: DocsConfig = {
           href: "/docs/lambdas/og",
           items: [],
         },
+        {
+          title: "Farcaster",
+          href: "/docs/lambdas/farcaster",
+          items: [],
+        },
       ],
     },
     {
