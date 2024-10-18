@@ -43,4 +43,10 @@ export const examples: Registry = [
     registryDependencies: ["tapp-card"],
     files: ["example/tapp-card-demo.tsx"],
   },
+  {
+    name: "add-to-snap-demo",
+    type: "registry:example",
+    registryDependencies: ["add-to-snap"],
+    files: ["example/add-to-snap-demo.tsx"],
+  },
 ];

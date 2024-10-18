@@ -16,6 +16,14 @@ export const docsConfig: DocsConfig = {
       title: "Components",
       href: "/docs/components/token-card",
     },
+    {
+      title: "Lambdas",
+      href: "/docs/lambdas/og",
+    },
+    {
+      title: "Packages",
+      href: "/docs/packages/hooks",
+    },
   ],
   sidebarNav: [
     {
@@ -70,6 +78,46 @@ export const docsConfig: DocsConfig = {
         {
           title: "Tapp Card",
           href: "/docs/components/tapp-card",
+          items: [],
+        },
+        {
+          title: "Add To Snap",
+          href: "/docs/components/add-to-snap",
+          items: [],
+        },
+      ],
+    },
+    {
+      title: "Lambdas",
+      items: [
+        {
+          title: "OG",
+          href: "/docs/lambdas/og",
+          items: [],
+        },
+        {
+          title: "Farcaster",
+          href: "/docs/lambdas/farcaster",
+          items: [],
+        },
+      ],
+    },
+    {
+      title: "Packages",
+      items: [
+        {
+          title: "Hooks",
+          href: "/docs/packages/hooks",
+          items: [],
+        },
+        {
+          title: "Onchain Tools",
+          href: "/docs/packages/onchain-tools",
+          items: [],
+        },
+        {
+          title: "Tapp snap",
+          href: "/docs/packages/tapp-snap",
           items: [],
         },
       ],

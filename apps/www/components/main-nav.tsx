@@ -40,6 +40,30 @@ export function MainNav() {
         >
           Components
         </Link>
+        <Link
+          href="/docs/lambdas/og"
+          className={cn(
+            "transition-colors hover:text-foreground/80",
+            pathname?.startsWith("/docs/lambdas") &&
+              !pathname?.startsWith("/docs/component/chart")
+              ? "text-foreground"
+              : "text-foreground/60",
+          )}
+        >
+          Lambdas
+        </Link>
+        <Link
+          href="/docs/packages/hooks"
+          className={cn(
+            "transition-colors hover:text-foreground/80",
+            pathname?.startsWith("/docs/packages") &&
+              !pathname?.startsWith("/docs/component/chart")
+              ? "text-foreground"
+              : "text-foreground/60",
+          )}
+        >
+          Packages
+        </Link>
       </nav>
     </div>
   );

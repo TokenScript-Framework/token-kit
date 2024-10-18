@@ -8,6 +8,8 @@ import {
 } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
+import Dashboard from "./docs/sample/page";
+import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 
 export default function IndexPage() {
   return (
@@ -33,6 +35,11 @@ export default function IndexPage() {
           </Button>
         </PageActions>
       </PageHeader>
+      <div className="w-full border border-slate-200">
+        <RainbowKitProvider>
+          <Dashboard />
+        </RainbowKitProvider>
+      </div>
     </div>
   );
 }
