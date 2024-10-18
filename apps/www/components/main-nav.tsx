@@ -64,6 +64,18 @@ export function MainNav() {
         >
           Packages
         </Link>
+        <Link
+          href="/docs/apps/farcaster-token-frame"
+          className={cn(
+            "transition-colors hover:text-foreground/80",
+            pathname?.startsWith("/docs/apps") &&
+              !pathname?.startsWith("/docs/component/chart")
+              ? "text-foreground"
+              : "text-foreground/60",
+          )}
+        >
+          Apps
+        </Link>
       </nav>
     </div>
   );

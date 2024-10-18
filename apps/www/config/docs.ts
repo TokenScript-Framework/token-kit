@@ -24,6 +24,10 @@ export const docsConfig: DocsConfig = {
       title: "Packages",
       href: "/docs/packages/hooks",
     },
+    {
+      title: "Apps",
+      href: "/docs/apps/farcaster-token-frame",
+    },
   ],
   sidebarNav: [
     {
@@ -118,6 +122,21 @@ export const docsConfig: DocsConfig = {
         {
           title: "Tapp snap",
           href: "/docs/packages/tapp-snap",
+          items: [],
+        },
+      ],
+    },
+    {
+      title: "Apps",
+      items: [
+        {
+          title: "Farcaster Token Frame",
+          href: "/docs/apps/farcaster-token-frame",
+          items: [],
+        },
+        {
+          title: "Wallet Pass",
+          href: "/docs/apps/wallet-pass",
           items: [],
         },
       ],
