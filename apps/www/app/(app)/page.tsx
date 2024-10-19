@@ -15,10 +15,13 @@ export default function IndexPage() {
   return (
     <div className="container relative">
       <PageHeader>
-        <PageHeaderHeading>Build your web3 component library</PageHeaderHeading>
+        <PageHeaderHeading>
+          Token Kit: A toolkit built for Tokens
+        </PageHeaderHeading>
         <PageHeaderDescription>
-          Beautifully designed components that you can copy and paste into your
-          web3 apps.
+          Token Kit is a comprehensive set of reusable utility and UI components
+          specifically designed for token-related features in Ethereum
+          development.
         </PageHeaderDescription>
         <PageActions>
           <Button asChild size="sm">

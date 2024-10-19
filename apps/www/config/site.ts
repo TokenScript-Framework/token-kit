@@ -3,7 +3,7 @@ export const siteConfig = {
   url: "https://token-kit.vercel.app/",
   ogImage: "https://token-kit.vercel.app/og.png",
   description:
-    "Beautifully designed components that you can copy and paste into your web3 apps.",
+    "Token-Kit is a comprehensive set of reusable utility and UI components specifically designed for token-related features in Ethereum development.",
   links: {
     github: "https://github.com/tokenScript-Framework/token-kit/",
   },
