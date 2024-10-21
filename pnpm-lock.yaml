@@ -52,7 +52,7 @@ importers:
         version: 1.2.1
       frog:
         specifier: ^0.15.9
-        version: 0.15.9(@types/node@20.16.9)(hono@4.6.3)(terser@5.33.0)(typescript@5.6.2)
+        version: 0.15.9(@types/node@20.16.9)(hono@4.6.5)(terser@5.33.0)(typescript@5.6.2)
       next:
         specifier: 14.2.5
         version: 14.2.5(@opentelemetry/api@1.9.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -356,8 +356,8 @@ importers:
         specifier: ^1.2.2
         version: 1.3.1(next@14.3.0-canary.43(@babel/core@7.25.2)(@opentelemetry/api@1.9.0)(babel-plugin-macros@3.1.0)(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react@18.3.1)
       '@vercel/og':
-        specifier: ^0.0.21
-        version: 0.0.21
+        specifier: ^0.6.3
+        version: 0.6.3
       '@wagmi/core':
         specifier: ^2.13.7
         version: 2.13.7(@tanstack/query-core@5.56.2)(@types/react@18.3.9)(immer@9.0.21)(react@18.3.1)(typescript@5.6.2)(viem@2.21.10(bufferutil@4.0.8)(typescript@5.6.2)(utf-8-validate@5.0.10)(zod@3.23.8))
@@ -749,7 +749,7 @@ importers:
         version: 1.7.7
       hono:
         specifier: ^4.5.11
-        version: 4.6.3
+        version: 4.6.5
       jsdom:
         specifier: ^22.1.0
         version: 22.1.0(bufferutil@4.0.8)(utf-8-validate@5.0.10)
@@ -2469,11 +2469,9 @@ packages:
   '@hapi/topo@5.1.0':
     resolution: {integrity: sha512-foQZKJig7Ob0BMAYBfcJk8d77QtOe7Wo4ox7ff1lQYoNNAb6jwcY1ncdoy2e9wQZzvNy7ODZCYJkK8kzmcAnAg==}
 
-  '@hono/node-server@1.13.1':
-    resolution: {integrity: sha512-TSxE6cT5RHnawbjnveexVN7H2Dpn1YaLxQrCOLCUwD+hFbqbFsnJBgdWcYtASqtWVjA+Qgi8uqFug39GsHjo5A==}
+  '@hono/node-server@1.11.2':
+    resolution: {integrity: sha512-JhX0nUC66GeDxpIdMKWDRMEwtQBa64CY907iAF1sYqb4m2p2PdSU7zkbnNhAZLg/6IjSlTuj6CF307JlBXVvpg==}
     engines: {node: '>=18.14.1'}
-    peerDependencies:
-      hono: ^4
 
   '@hono/valibot-validator@0.3.0':
     resolution: {integrity: sha512-EcGJKzLt11SK4K11yKHrhI93ECtKeSHAnnENHw5tCL0ZhyDIx96avc3Ua8/ri4fwVvRPuOzFQ2OBRsVvwZuqeQ==}
@@ -4469,10 +4467,6 @@ packages:
       react-redux:
         optional: true
 
-  '@resvg/resvg-wasm@2.0.0-alpha.4':
-    resolution: {integrity: sha512-pWIG9a/x1ky8gXKRhPH1OPKpHFoMN1ISLbJ+O+gPXQHIAKhNd5I28RlWf7q576hAOQA9JZTlo3p/M2uyLzJmmw==}
-    engines: {node: '>= 10'}
-
   '@resvg/resvg-wasm@2.4.0':
     resolution: {integrity: sha512-C7c51Nn4yTxXFKvgh2txJFNweaVcfUPQxwEUFw4aWsCmfiBDJsTSwviIF8EcwjQ6k8bPyMWCl1vw4BdxE569Cg==}
     engines: {node: '>= 10'}
@@ -5278,9 +5272,6 @@ packages:
   '@types/yargs@17.0.33':
     resolution: {integrity: sha512-WpxBCKWPLr4xSsHgz511rFJAM+wS28w2zEO1QDNY5zM/S8ok70NNfztH0xwhqKyaK0OHCbN98LDAZuy1ctxDkA==}
 
-  '@types/yoga-layout@1.9.2':
-    resolution: {integrity: sha512-S9q47ByT2pPvD65IvrWp7qppVMpk9WGMbVq9wbWZOHg6tnXSD4vyhao6nOSBwwfDdV2p3Kx9evA9vI+XWTfDvw==}
-
   '@typescript-eslint/eslint-plugin@5.62.0':
     resolution: {integrity: sha512-TiZzBSJja/LbhNPvk6yc0JrX9XqhQ0hdh6M2svYfsHGejaKFIAGd9MQ+ERIMzLGlN/kZoYIgdxFV0PuljTKXag==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
@@ -5432,10 +5423,6 @@ packages:
     resolution: {integrity: sha512-NHxohEqad6Ra/r4lGknO52uc/GrWILXAMs1BB4401GTqww0fw1bAqzpG1XHuDO+dprg4GvsD9ZLLSsdo78p9hQ==}
     engines: {node: '>=16'}
     hasBin: true
-
-  '@vercel/og@0.0.21':
-    resolution: {integrity: sha512-WgMahG5c8UM7xtn/mT+ljUpDMSDnSlu8AXL52JtTwxb1odrd0GWqZg2N1X38wulPj+sCccNpDdFmmAuw0GLc+Q==}
-    engines: {node: '>=16'}
 
   '@vercel/og@0.6.3':
     resolution: {integrity: sha512-aoCrC9FqkeA+WEEb9CwSmjD0rGlFeNqbUsI41JPmKWR9Hx6FFn86tvH96O5HZMF6VAXTGHxa3nPH3BokROpdgA==}
@@ -8663,8 +8650,8 @@ packages:
     peerDependencies:
       hono: '>=3'
 
-  hono@4.6.3:
-    resolution: {integrity: sha512-0LeEuBNFeSHGqZ9sNVVgZjB1V5fmhkBSB0hZrpqStSMLOWgfLy0dHOvrjbJh0H2khsjet6rbHfWTHY0kpYThKQ==}
+  hono@4.6.5:
+    resolution: {integrity: sha512-qsmN3V5fgtwdKARGLgwwHvcdLKursMd+YOt69eGpl1dUCJb8mCd7hZfyZnBYjxCegBG7qkJRQRUy2oO25yHcyQ==}
     engines: {node: '>=16.9.0'}
 
   hosted-git-info@2.8.9:
@@ -11836,10 +11823,6 @@ packages:
   safer-buffer@2.1.2:
     resolution: {integrity: sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==}
 
-  satori@0.0.44:
-    resolution: {integrity: sha512-WKUxXC2qeyno6J3ucwwLozPL6j1HXOZiN5wIUf7iqAhlx1RUC/6ePIKHi7iPc3Cy6DYuZcJriZXxXkSdo2FQHg==}
-    engines: {node: '>=16'}
-
   satori@0.10.14:
     resolution: {integrity: sha512-abovcqmwl97WKioxpkfuMeZmndB1TuDFY/R+FymrZyiGP+pMYomvgSzVPnbNMWHHESOPosVHGL352oFbdAnJcA==}
     engines: {node: '>=16'}
@@ -13577,13 +13560,6 @@ packages:
   yocto-queue@1.1.1:
     resolution: {integrity: sha512-b4JR1PFR10y1mKjhHY9LaGo6tmrgjit7hxVIeAmyMw3jegXR4dhYqLaQF5zMXZxY7tLpMyJeLjr1C4rLmkVe8g==}
     engines: {node: '>=12.20'}
-
-  yoga-layout-prebuilt@1.10.0:
-    resolution: {integrity: sha512-YnOmtSbv4MTf7RGJMK0FvZ+KD8OEe/J5BNnR0GHhD8J/XcG/Qvxgszm0Un6FTHWW4uHlTgP0IztiXQnGyIR45g==}
-    engines: {node: '>=8'}
-
-  yoga-wasm-web@0.1.2:
-    resolution: {integrity: sha512-8SkgawHcA0RUbMrnhxbaQkZDBi8rMed8pQHixkFF9w32zGhAwZ9/cOHWlpYfr6RCx42Yp3siV45/jPEkJxsk6w==}
 
   yoga-wasm-web@0.3.3:
     resolution: {integrity: sha512-N+d4UJSJbt/R3wqY7Coqs5pcV0aUj2j9IaQ3rNj9bVCLld8tTGKRa2USARjnvZJWVx1NDmQev8EknoczaOQDOA==}
@@ -15877,13 +15853,11 @@ snapshots:
     dependencies:
       '@hapi/hoek': 9.3.0
 
-  '@hono/node-server@1.13.1(hono@4.6.3)':
-    dependencies:
-      hono: 4.6.3
+  '@hono/node-server@1.11.2': {}
 
-  '@hono/valibot-validator@0.3.0(hono@4.6.3)(valibot@0.31.1)':
+  '@hono/valibot-validator@0.3.0(hono@4.6.5)(valibot@0.31.1)':
     dependencies:
-      hono: 4.6.3
+      hono: 4.6.5
       valibot: 0.31.1
 
   '@hookform/resolvers@3.9.0(react-hook-form@7.53.0(react@18.3.1))':
@@ -18756,8 +18730,6 @@ snapshots:
     optionalDependencies:
       react: 18.3.1
 
-  '@resvg/resvg-wasm@2.0.0-alpha.4': {}
-
   '@resvg/resvg-wasm@2.4.0': {}
 
   '@resvg/resvg-wasm@2.6.2': {}
@@ -19724,9 +19696,7 @@ snapshots:
     dependencies:
       '@types/yargs-parser': 21.0.3
 
-  '@types/yoga-layout@1.9.2': {}
-
-  '@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0)(typescript@5.6.2)':
+  '@typescript-eslint/eslint-plugin@5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.6.2))(eslint@8.57.0)(typescript@5.6.2)':
     dependencies:
       '@eslint-community/regexpp': 4.11.1
       '@typescript-eslint/parser': 5.62.0(eslint@8.57.0)(typescript@5.6.2)
@@ -20016,12 +19986,6 @@ snapshots:
     transitivePeerDependencies:
       - encoding
       - supports-color
-
-  '@vercel/og@0.0.21':
-    dependencies:
-      '@resvg/resvg-wasm': 2.0.0-alpha.4
-      satori: 0.0.44
-      yoga-wasm-web: 0.1.2
 
   '@vercel/og@0.6.3':
     dependencies:
@@ -23174,7 +23138,7 @@ snapshots:
       resolve: 1.22.8
       semver: 7.6.3
 
-  eslint-plugin-prettier@5.1.3(@types/eslint@9.6.1)(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.2.5):
+  eslint-plugin-prettier@5.1.3(@types/eslint@9.6.1)(eslint-config-prettier@9.1.0(eslint@8.57.1))(eslint@8.57.0)(prettier@3.2.5):
     dependencies:
       eslint: 8.57.0
       prettier: 3.2.5
@@ -24013,11 +23977,11 @@ snapshots:
 
   fresh@0.5.2: {}
 
-  frog@0.15.9(@types/node@20.16.9)(hono@4.6.3)(terser@5.33.0)(typescript@5.6.2):
+  frog@0.15.9(@types/node@20.16.9)(hono@4.6.5)(terser@5.33.0)(typescript@5.6.2):
     dependencies:
       '@bufbuild/protobuf': 1.10.0
-      '@hono/node-server': 1.13.1(hono@4.6.3)
-      '@hono/valibot-validator': 0.3.0(hono@4.6.3)(valibot@0.31.1)
+      '@hono/node-server': 1.11.2
+      '@hono/valibot-validator': 0.3.0(hono@4.6.5)(valibot@0.31.1)
       '@noble/curves': 1.6.0
       '@noble/hashes': 1.5.0
       cac: 6.7.14
@@ -24026,8 +23990,8 @@ snapshots:
       dom-parser: 1.1.5
       fast-glob: 3.3.2
       fs-extra: 11.2.0
-      hono: 4.6.3
-      hono-og: 0.0.27(hono@4.6.3)
+      hono: 4.6.5
+      hono-og: 0.0.27(hono@4.6.5)
       jose: 5.9.3
       lz-string: 1.5.0
       path-browserify: 1.0.1
@@ -24323,13 +24287,13 @@ snapshots:
 
   gts@5.3.1(@types/eslint@9.6.1)(typescript@5.6.2):
     dependencies:
-      '@typescript-eslint/eslint-plugin': 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.0)(typescript@5.6.2))(eslint@8.57.0)(typescript@5.6.2)
+      '@typescript-eslint/eslint-plugin': 5.62.0(@typescript-eslint/parser@5.62.0(eslint@8.57.1)(typescript@5.6.2))(eslint@8.57.0)(typescript@5.6.2)
       '@typescript-eslint/parser': 5.62.0(eslint@8.57.0)(typescript@5.6.2)
       chalk: 4.1.2
       eslint: 8.57.0
       eslint-config-prettier: 9.1.0(eslint@8.57.0)
       eslint-plugin-n: 15.7.0(eslint@8.57.0)
-      eslint-plugin-prettier: 5.1.3(@types/eslint@9.6.1)(eslint-config-prettier@9.1.0(eslint@8.57.0))(eslint@8.57.0)(prettier@3.2.5)
+      eslint-plugin-prettier: 5.1.3(@types/eslint@9.6.1)(eslint-config-prettier@9.1.0(eslint@8.57.1))(eslint@8.57.0)(prettier@3.2.5)
       execa: 5.1.1
       inquirer: 7.3.3
       json5: 2.2.3
@@ -24578,13 +24542,13 @@ snapshots:
       minimalistic-assert: 1.0.1
       minimalistic-crypto-utils: 1.0.1
 
-  hono-og@0.0.27(hono@4.6.3):
+  hono-og@0.0.27(hono@4.6.5):
     dependencies:
       '@vercel/og': 0.6.3
-      hono: 4.6.3
+      hono: 4.6.5
       workers-og: 0.0.25
 
-  hono@4.6.3: {}
+  hono@4.6.5: {}
 
   hosted-git-info@2.8.9: {}
 
@@ -28724,16 +28688,6 @@ snapshots:
 
   safer-buffer@2.1.2: {}
 
-  satori@0.0.44:
-    dependencies:
-      '@shuding/opentype.js': 1.4.0-beta.0
-      css-background-parser: 0.1.0
-      css-box-shadow: 1.0.0-3
-      css-to-react-native: 3.2.0
-      emoji-regex: 10.4.0
-      postcss-value-parser: 4.2.0
-      yoga-layout-prebuilt: 1.10.0
-
   satori@0.10.14:
     dependencies:
       '@shuding/opentype.js': 1.4.0-beta.0
@@ -30785,12 +30739,6 @@ snapshots:
   yocto-queue@0.1.0: {}
 
   yocto-queue@1.1.1: {}
-
-  yoga-layout-prebuilt@1.10.0:
-    dependencies:
-      '@types/yoga-layout': 1.9.2
-
-  yoga-wasm-web@0.1.2: {}
 
   yoga-wasm-web@0.3.3: {}
 
