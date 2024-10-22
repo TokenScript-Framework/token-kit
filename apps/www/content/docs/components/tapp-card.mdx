@@ -4,10 +4,20 @@ description: A card for Tapp.
 component: true
 ---
 
+## For TS Viewer
+
 <ComponentPreview
   name="tapp-card-demo"
   className="[&_.preview>[data-orientation=vertical]]:sm:max-w-[70%]"
-  description="An accordion with three items"
+  description="An tapp card for TS Viewer"
+/>
+
+## For Farcaster
+
+<ComponentPreview
+  name="tapp-card-farcaster-demo"
+  className="[&_.preview>[data-orientation=vertical]]:sm:max-w-[70%]"
+  description="An tapp card for Farcaster"
 />
 
 ## Installation
@@ -56,3 +66,56 @@ import TappCard from "@/registry/default/ui/tapp-card";
   tokenId="473843023"
 />
 ```
+
+## Custome Frame Proxy
+
+For farcaster frame, we use `@frames.js/render`, it need proxies for routing frame requests.
+
+```typescript
+ const frameState = useFrame({
+    homeframeUrl: `https://farcaster-tokenscript-frame.vercel.app/api/view/${chainId}/${contract}?tokenId=${tokenId}`,
+    frameActionProxy: "http://localhost:3000/frames",   // <-- proxy
+    frameGetProxy: "http://localhost:3000/frames",    // <-- proxy
+    connectedAddress: undefined,
+    frameContext: fallbackFrameContext,
+    signerState,
+  });
+
+```
+
+We provide a default proxy that cannot be used as a product environment. You can create your own proxy. You can add `app/frames/route.tsx`.
+
+```typescript
+import {
+  GET as originalGET,
+  POST as originalPOST,
+} from "@frames.js/render/next";
+import { NextRequest, NextResponse } from "next/server";
+
+export function OPTIONS() {
+  return NextResponse.json(
+    {},
+    {
+      headers: {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type",
+      },
+    },
+  );
+}
+
+const handleRequest =
+  (handler: (req: NextRequest) => Promise<Response>) =>
+  async (req: NextRequest) => {
+    const response = await handler(req);
+    response.headers.set("Access-Control-Allow-Origin", "*");
+    return response;
+  };
+
+export const GET = handleRequest(originalGET);
+export const POST = handleRequest(originalPOST);
+
+```
+
+For more details about Frame Render, please access [Display Frames](https://framesjs.org/guides/apps/display-frames).

@@ -11,12 +11,14 @@ export default function TappCardDemo() {
         <ConnectButton showBalance={false} />
       </div>
       {address && (
-        <TappCard
-          chainId={11155111}
-          contract="0x3490FFc64A4E65aBb749317f7860E722Ba65a2b5"
-          tokenId="473843023"
-          cssClass="h-[800px] border"
-        />
+        <>
+          <TappCard
+            chainId={11155111}
+            contract="0x3490FFc64A4E65aBb749317f7860E722Ba65a2b5"
+            tokenId="473843023"
+            cssClass="h-[800px] border"
+          />
+        </>
       )}
     </RainbowKitProvider>
   );

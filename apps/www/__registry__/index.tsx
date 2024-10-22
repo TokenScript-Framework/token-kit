@@ -148,6 +148,17 @@ export const Index: Record<string, any> = {
       subcategory: "undefined",
       chunks: []
     },
+    "tapp-card-farcaster-demo": {
+      name: "tapp-card-farcaster-demo",
+      type: "registry:example",
+      registryDependencies: ["tapp-card"],
+      files: ["registry/default/example/tapp-card-farcaster-demo.tsx"],
+      component: React.lazy(() => import("@/registry/default/example/tapp-card-farcaster-demo.tsx")),
+      source: "",
+      category: "undefined",
+      subcategory: "undefined",
+      chunks: []
+    },
     "add-to-snap-demo": {
       name: "add-to-snap-demo",
       type: "registry:example",

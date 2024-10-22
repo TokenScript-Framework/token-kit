@@ -1,9 +1,34 @@
 "use client";
 import React, { useRef, useState, RefObject, useEffect } from "react";
-import { useWalletClient } from "wagmi";
+import { useReadContracts, useWalletClient } from "wagmi";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/registry/default/lib/utils";
+import { useFarcasterIdentity } from "@frames.js/render/identity/farcaster";
+import { useFrame } from "@frames.js/render/use-frame";
+import { fallbackFrameContext } from "@frames.js/render";
+import {
+  FrameUI,
+  type FrameUIComponents,
+  type FrameUITheme,
+} from "@frames.js/render/ui";
+import { WebStorage } from "@frames.js/render/identity/storage";
+
+const ERC5169_ABI = [
+  {
+    inputs: [],
+    name: "scriptURI",
+    outputs: [
+      {
+        internalType: "string[]",
+        name: "",
+        type: "string[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+] as const;
 
 export function TappCardSkeleton(props: { className?: string }) {
   return (
@@ -33,16 +58,68 @@ interface TappCardProps {
   tokenId: string;
   cssClass?: string;
 }
+
 export default function TappCard({
   chainId,
   contract,
   tokenId,
   cssClass,
 }: TappCardProps) {
-  const url = `https://viewer-staging.tokenscript.org/?viewType=sts-token&chain=${chainId}&contract=${contract}&tokenId=${tokenId}`;
+  const [scriptURI, setScriptURI] = useState<string | null>(null);
+  const [viewerType, setViewerType] = useState<string | null>(null);
 
-  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const { data } = useReadContracts({
+    allowFailure: false,
+    contracts: [
+      {
+        chainId,
+        address: contract,
+        abi: ERC5169_ABI,
+        functionName: "scriptURI",
+        args: [],
+      },
+    ],
+  });
+
+  useEffect(() => {
+    if (data?.[0]) {
+      if (data?.[0].length > 0) {
+        setScriptURI(data[0] as unknown as string);
+        const parsedURI = new URL(data[0] as unknown as string);
+        setViewerType(
+          parsedURI.hostname.startsWith("viewer") ? "ts" : "farcaster",
+        );
+      } else {
+        throw new Error("No scriptURI");
+      }
+    }
+  }, [data]);
+
+  if (!scriptURI) {
+    return <TappCardSkeleton />;
+  }
+
+  return viewerType === "ts" ? (
+    <TsViewer
+      chainId={chainId}
+      contract={contract}
+      tokenId={tokenId}
+      cssClass={cssClass}
+    />
+  ) : (
+    <FarcasterFrame chainId={chainId} contract={contract} tokenId={tokenId} />
+  );
+}
+
+export function TsViewer({
+  chainId,
+  contract,
+  tokenId,
+  cssClass,
+}: TappCardProps) {
   const [isLoaded, setIsLoaded] = useState(false);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const url = `https://viewer-staging.tokenscript.org/?viewType=sts-token&chain=${chainId}&contract=${contract}&tokenId=${tokenId}`;
   useIframePostMessage(iframeRef, url);
 
   const handleIframeLoad = () => {
@@ -62,6 +139,56 @@ export default function TappCard({
         onLoad={handleIframeLoad}
       ></iframe>
     </>
+  );
+}
+
+export function FarcasterFrame({ chainId, contract, tokenId }: TappCardProps) {
+  type StylingProps = {
+    className?: string;
+    style?: React.CSSProperties;
+  };
+
+  const components: FrameUIComponents<StylingProps> = {};
+
+  const theme: FrameUITheme<StylingProps> = {
+    Root: {
+      className:
+        "flex flex-col max-w-[600px] gap-2 border rounded-lg ovrflow-hidden bg-white relative",
+    },
+    LoadingScreen: {
+      className: "absolute top-0 left-0 right-0 bottom-0 bg-gray-300 z-10",
+    },
+    ImageContainer: {
+      className: "relative w-full border-b border-gray-300 overflow-hidden",
+      style: {
+        aspectRatio: "var(--frame-image-aspect-ratio)",
+      },
+    },
+    ButtonsContainer: {
+      className: "flex justify-evenly space-x-2 px-2 pb-2",
+    },
+    Button: {
+      className:
+        "bg-gray-100 border-gray-200 flex items-center justify-center flex-row text-sm rounded-lg border cursor-pointer gap-1.5 h-10 py-2 px-4 w-full ",
+    },
+  };
+
+  const signerState = useFarcasterIdentity({
+    onMissingIdentity: () => signerState.createSigner(),
+    storage: new WebStorage(),
+  });
+
+  const frameState = useFrame({
+    homeframeUrl: `https://farcaster-tokenscript-frame.vercel.app/api/view/${chainId}/${contract}?tokenId=${tokenId}`,
+    frameActionProxy: "http://localhost:3000/frames",
+    frameGetProxy: "http://localhost:3000/frames",
+    connectedAddress: undefined,
+    frameContext: fallbackFrameContext,
+    signerState,
+  });
+
+  return (
+    <FrameUI frameState={frameState} components={components} theme={theme} />
   );
 }
 

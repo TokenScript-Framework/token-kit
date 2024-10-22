@@ -16,7 +16,8 @@
     "react": "^18",
     "react-dom": "^18",
     "sharp": "^0.33.4",
-    "tailwind-merge": "^1.14.0"
+    "tailwind-merge": "^1.14.0",
+    "@frames.js/render": "^0.3.16"
   },
   "devDependencies": {
     "@types/node": "^20",

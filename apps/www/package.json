@@ -19,8 +19,8 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache"
   },
   "dependencies": {
-    "@token-kit/onchain": "workspace:*",
     "@faker-js/faker": "^8.2.0",
+    "@frames.js/render": "^0.3.16",
     "@hookform/resolvers": "^3.1.0",
     "@radix-ui/react-accessible-icon": "^1.0.3",
     "@radix-ui/react-accordion": "^1.2.0",
@@ -55,6 +55,7 @@
     "@rainbow-me/rainbowkit": "^2.1.6",
     "@tanstack/react-query": "^5.50.1",
     "@tanstack/react-table": "^8.9.1",
+    "@token-kit/onchain": "workspace:*",
     "@vercel/analytics": "^1.2.2",
     "@vercel/og": "^0.6.3",
     "@wagmi/core": "^2.13.7",
