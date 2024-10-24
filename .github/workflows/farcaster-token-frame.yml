@@ -1,0 +1,41 @@
+name: "farcaster-token-frame CI"
+
+on:
+  push:
+    paths:
+      - "apps/farcaster-token-frame/**"
+  pull_request:
+    paths:
+      - "apps/farcaster-token-frame/**"
+  workflow_dispatch:
+
+env:
+  ALIAS_DOMAIN_PREV: "token-kit-farcaster-token-frame.vercel.app"
+  ALIAS_DOMAIN_PROD: "token-kit-farcaster-token-frame.vercel.app"
+  PROJ_PATH: "apps/farcaster-token-frame"
+
+permissions: write-all
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    if: ${{ contains(
+      fromJson('["push", "workflow_dispatch"]'),
+      github.event_name) &&
+      contains(
+      fromJson('["main"]'),
+      github.ref_name)
+      }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Deploy to Vercel Action
+        uses: BetaHuhn/deploy-to-vercel-action@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_FARCASTER_FRAME_PROJECT_ID }}
+          GITHUB_DEPLOYMENT_ENV: production
+          PRODUCTION: true
+          ALIAS_DOMAINS: ${{ env.ALIAS_DOMAIN_PROD }}
+          VERCEL_SCOPE: "smart-token-labs"
