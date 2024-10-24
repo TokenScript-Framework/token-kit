@@ -50,7 +50,8 @@ app.frame("/view/:chain/:contract", async (c) => {
       ? `${imagePath}.${imagePostfix}`
       : imagePath
     : undefined;
-  const imageUrl = tokenMetadata?.image || meta.imageUrl || customImage;
+  const imageUrl =
+    tokenMetadata?.image || meta.imageUrl || meta.iconUrl || customImage;
 
   return c.res({
     image: (
