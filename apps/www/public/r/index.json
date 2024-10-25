@@ -76,7 +76,8 @@
     "dependencies": [
       "wagmi",
       "@frames.js/render",
-      "@neynar/react"
+      "@neynar/react",
+      "viem"
     ],
     "shadcnDependencies": [
       "card",

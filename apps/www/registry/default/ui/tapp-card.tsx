@@ -39,6 +39,21 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import {
+  mainnet,
+  goerli,
+  sepolia,
+  polygon,
+  polygonMumbai,
+  bsc,
+  bscTestnet,
+  arbitrum,
+  arbitrumGoerli,
+  optimism,
+  optimismGoerli,
+  base,
+  baseSepolia,
+} from "viem/chains";
 
 const ERC5169_ABI = [
   {
@@ -92,9 +107,6 @@ export default function TappCard({
   tokenId,
   cssClass,
 }: TappCardProps) {
-  const [scriptURI, setScriptURI] = useState<string | null>(null);
-  const [viewerType, setViewerType] = useState<string | null>(null);
-
   const { data } = useReadContracts({
     allowFailure: false,
     contracts: [
@@ -108,19 +120,12 @@ export default function TappCard({
     ],
   });
 
-  useEffect(() => {
-    if (data?.[0]) {
-      if (data?.[0].length > 0) {
-        setScriptURI(data[0] as unknown as string);
-        const parsedURI = new URL(data[0] as unknown as string);
-        setViewerType(
-          parsedURI.hostname.startsWith("viewer") ? "ts" : "farcaster",
-        );
-      } else {
-        throw new Error("No scriptURI");
-      }
-    }
-  }, [data]);
+  const scriptURI = data?.[0][0] || "";
+  const viewerType = data?.[0]
+    ? new URL(data[0] as unknown as string).hostname.startsWith("viewer")
+      ? "ts"
+      : "farcaster"
+    : "farcaster";
 
   if (!scriptURI) {
     return <TappCardSkeleton />;
@@ -372,37 +377,25 @@ export function FarcasterFrame({
     </>
   );
 }
+
 function getBlockExplorerUrl(chainId: number): string {
-  switch (chainId) {
-    case 1:
-      return "https://etherscan.io";
-    case 5:
-      return "https://goerli.etherscan.io";
-    case 11155111:
-      return "https://sepolia.etherscan.io";
-    case 137:
-      return "https://polygonscan.com";
-    case 80001:
-      return "https://mumbai.polygonscan.com";
-    case 56:
-      return "https://bscscan.com";
-    case 97:
-      return "https://testnet.bscscan.com";
-    case 42161:
-      return "https://arbiscan.io";
-    case 421613:
-      return "https://goerli.arbiscan.io";
-    case 10:
-      return "https://optimistic.etherscan.io";
-    case 420:
-      return "https://goerli-optimism.etherscan.io";
-    case 8453:
-      return "https://basescan.org";
-    case 84532:
-      return "https://sepolia.basescan.org";
-    default:
-      return "https://etherscan.io";
-  }
+  const chain = [
+    mainnet,
+    goerli,
+    sepolia,
+    polygon,
+    polygonMumbai,
+    bsc,
+    bscTestnet,
+    arbitrum,
+    arbitrumGoerli,
+    optimism,
+    optimismGoerli,
+    base,
+    baseSepolia,
+  ].find((c) => c.id === chainId);
+
+  return chain?.blockExplorers?.default?.url || "https://etherscan.io";
 }
 
 export const useIframePostMessage = (
