@@ -8,7 +8,7 @@ import {
 } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site";
-import Dashboard from "./docs/sample/page";
+import Dashboard from "../../components/dashboard";
 import { RainbowKitProvider } from "@rainbow-me/rainbowkit";
 
 export default function IndexPage() {

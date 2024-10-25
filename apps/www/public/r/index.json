@@ -74,7 +74,10 @@
     "name": "tapp-card",
     "type": "registry:ui",
     "dependencies": [
-      "wagmi"
+      "wagmi",
+      "@frames.js/render",
+      "@neynar/react",
+      "viem"
     ],
     "shadcnDependencies": [
       "card",

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { LucideIcon, ExternalLinkIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { TokenType } from "./page";
+import { TokenType } from ".";
 
 interface NavProps {
   links: {

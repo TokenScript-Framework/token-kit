@@ -19,9 +19,10 @@
     "format:check": "prettier --check \"**/*.{ts,tsx,mdx}\" --cache"
   },
   "dependencies": {
-    "@token-kit/onchain": "workspace:*",
     "@faker-js/faker": "^8.2.0",
+    "@frames.js/render": "^0.3.16",
     "@hookform/resolvers": "^3.1.0",
+    "@neynar/react": "^0.9.6",
     "@radix-ui/react-accessible-icon": "^1.0.3",
     "@radix-ui/react-accordion": "^1.2.0",
     "@radix-ui/react-alert-dialog": "^1.0.4",
@@ -55,6 +56,7 @@
     "@rainbow-me/rainbowkit": "^2.1.6",
     "@tanstack/react-query": "^5.50.1",
     "@tanstack/react-table": "^8.9.1",
+    "@token-kit/onchain": "workspace:*",
     "@vercel/analytics": "^1.2.2",
     "@vercel/og": "^0.6.3",
     "@wagmi/core": "^2.13.7",
@@ -73,7 +75,7 @@
     "lodash.template": "^4.5.0",
     "lucide-react": "0.359.0",
     "markdown-wasm": "^1.2.0",
-    "next": "14.3.0-canary.43",
+    "next": "14.1.4",
     "next-contentlayer2": "^0.4.6",
     "next-themes": "^0.2.1",
     "react": "^18.3.1",

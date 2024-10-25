@@ -6,7 +6,6 @@ component: false
 
 ## Installation
 
-
 <Tabs defaultValue="npm">
 
 <TabsList>
@@ -15,17 +14,9 @@ component: false
   <TabsTrigger value="yarn">yarn</TabsTrigger>
 </TabsList>
 
-<TabsContent value="npm">
-```bash
-npm i @token-kit/hooks
-```
-</TabsContent>
+<TabsContent value="npm">```bash npm i @token-kit/hooks ```</TabsContent>
 
-<TabsContent value="pnpm">
-```bash
-pnpm add @token-kit/hooks
-```
-</TabsContent>
+<TabsContent value="pnpm">```bash pnpm add @token-kit/hooks ```</TabsContent>
 
 <TabsContent value="yarn">
 ```bash
@@ -35,6 +26,7 @@ yarn i @token-kit/hooks
 </Tabs>
 
 ## useApproval
+
 A custom React hook that detect whether the operator is approved to opertrate for the token.
 
 ```tsx
@@ -44,7 +36,7 @@ function TokenApproval() {
     contract: "0xdac17f958d2ee523a2206206994597c13d831ec7", // Contract address
     owner: "0x04B07Ab1970898FF7e4e6a487530515129deF530", // Owner address
     operator: "0x04B07Ab1970898FF7e4e6a487530515129deF530", // Operator address
-    tokenType: "ERC1155",  // Token type, it can be ERC721 or ERC1155, if the type is ERC721, you should also add tokenId into params
+    tokenType: "ERC1155", // Token type, it can be ERC721 or ERC1155, if the type is ERC721, you should also add tokenId into params
   });
 
   if (status === "pending") return <div>Loading...</div>;
@@ -58,20 +50,16 @@ function TokenApproval() {
 }
 ```
 
-
-
 The `useApproval` hook accepts an object with the following properties:
 
-| Property   | Type          | Description                                 |
-| ---------- | ------------- | ------------------------------------------- |
-| chainId    | number        | The ID of the blockchain network            |
-| contract   | `0x${string}` | The token contract address            |
-| owner      | `0x${string}` | The token owner address   |
-| operator   | `0x${string}` | The operator address to check the approval for |
-| tokenId    | string        | The token Id |
-| tokenType  | string        | The token type, it supports ERC721, ERC1155 |
-
-
+| Property  | Type          | Description                                    |
+| --------- | ------------- | ---------------------------------------------- |
+| chainId   | number        | The ID of the blockchain network               |
+| contract  | `0x${string}` | The token contract address                     |
+| owner     | `0x${string}` | The token owner address                        |
+| operator  | `0x${string}` | The operator address to check the approval for |
+| tokenId   | string        | The token Id                                   |
+| tokenType | string        | The token type, it supports ERC721, ERC1155    |
 
 The hook returns an object with the following structure:
 
@@ -89,7 +77,9 @@ The hook returns an object with the following structure:
 ```
 
 ## useERC20Allowance
+
 A custom React hook that detect the wallet address has allowance to operate the ERC20 token.
+
 ```tsx
 function TokenAllowance() {
   const { status, data } = useERC20Allowance({
@@ -108,19 +98,15 @@ function TokenAllowance() {
 }
 ```
 
-
-
 The `useAllowance` hook accepts an object with the following properties:
 
-| Property   | Type          | Description                                        |
-| ---------- | ------------- | -------------------------------------------------- |
-| chainId    | number        | The ID of the blockchain network                   |
-| contract   | `0x${string}` | The ERC20 token contract address                   |
-| owner      | `0x${string}` | The owner address of the token                     |
-| spender    | `0x${string}` | The spender address to check the allowance for     |
-| amount     | string        | The amount                        |
-
-
+| Property | Type          | Description                                    |
+| -------- | ------------- | ---------------------------------------------- |
+| chainId  | number        | The ID of the blockchain network               |
+| contract | `0x${string}` | The ERC20 token contract address               |
+| owner    | `0x${string}` | The owner address of the token                 |
+| spender  | `0x${string}` | The spender address to check the allowance for |
+| amount   | string        | The amount                                     |
 
 The hook returns an object with the following structure:
 
@@ -136,7 +122,9 @@ The hook returns an object with the following structure:
     }
   }
 ```
+
 ## useERC20Balance
+
 A custom React hook that fetches the balance of an ERC20 token for a given wallet address, together with the token's name, symbol, and decimals.
 
 ```tsx
@@ -162,8 +150,6 @@ function TokenBalance() {
 }
 ```
 
-
-
 The `useERC20Balance` hook accepts an object with the following properties:
 
 | Property | Type          | Description                                 |
@@ -171,8 +157,6 @@ The `useERC20Balance` hook accepts an object with the following properties:
 | chainId  | number        | The ID of the blockchain network            |
 | contract | `0x${string}` | The ERC20 token contract address            |
 | wallet   | `0x${string}` | The wallet address to check the balance for |
-
-
 
 The hook returns an object with the following structure:
 
@@ -192,8 +176,11 @@ The hook returns an object with the following structure:
     }
   }
 ```
+
 ## useERC721Allowance
+
 A custom React hook that detect the wallet address has allowance to operate the ERC721 token
+
 ```tsx
 function TokenAllowance() {
   const { status, data } = useERC721Allowance({
@@ -211,18 +198,14 @@ function TokenAllowance() {
 }
 ```
 
-
-
 The `useERC721Allowance` hook accepts an object with the following properties:
 
-| Property   | Type          | Description                                        |
-| ---------- | ------------- | -------------------------------------------------- |
-| chainId    | number        | The ID of the blockchain network                   |
-| contract   | `0x${string}` | The ERC tok721en contract address                   |
-| owner      | `0x${string}` | The owner address of the token                     |
-| tokenId    | string        | The token Id          |
-
-
+| Property | Type          | Description                       |
+| -------- | ------------- | --------------------------------- |
+| chainId  | number        | The ID of the blockchain network  |
+| contract | `0x${string}` | The ERC tok721en contract address |
+| owner    | `0x${string}` | The owner address of the token    |
+| tokenId  | string        | The token Id                      |
 
 The hook returns an object with the following structure:
 
@@ -240,7 +223,9 @@ The hook returns an object with the following structure:
 ```
 
 ## useERC1155Allowance
+
 A custom React hook that detect the wallet address has allowance to operate the ERC1155 token
+
 ```tsx
 function TokenAllowance() {
   const { status, data } = useERC1155Allowance({
@@ -259,19 +244,15 @@ function TokenAllowance() {
 }
 ```
 
-
-
 The `useERC1155Allowance` hook accepts an object with the following properties:
 
-| Property   | Type          | Description                                        |
-| ---------- | ------------- | -------------------------------------------------- |
-| chainId    | number        | The ID of the blockchain network                   |
-| contract   | `0x${string}` | The ERC1155 token contract address                   |
-| owner      | `0x${string}` | The owner address of the token                     |
-| tokenId    | string        | The token Id          |
-| amount     | string        | The amount                        |
-
-
+| Property | Type          | Description                        |
+| -------- | ------------- | ---------------------------------- |
+| chainId  | number        | The ID of the blockchain network   |
+| contract | `0x${string}` | The ERC1155 token contract address |
+| owner    | `0x${string}` | The owner address of the token     |
+| tokenId  | string        | The token Id                       |
+| amount   | string        | The amount                         |
 
 The hook returns an object with the following structure:
 
@@ -287,8 +268,11 @@ The hook returns an object with the following structure:
     }
   }
 ```
+
 ## useOwner
+
 A custom React hook that fetches the owner of a token.
+
 ```tsx
 function TokenOwner() {
   const { status, data } = useOwner({
@@ -308,17 +292,13 @@ function TokenOwner() {
 }
 ```
 
-
-
 The `useOwner` hook accepts an object with the following properties:
 
-| Property | Type          | Description                                 |
-| -------- | ------------- | ------------------------------------------- |
-| chainId  | number        | The ID of the blockchain network            |
-| contract | `0x${string}` | The token contract address                  |
-| tokenId  | string        | The token Id to check the owner for         |
-
-
+| Property | Type          | Description                         |
+| -------- | ------------- | ----------------------------------- |
+| chainId  | number        | The ID of the blockchain network    |
+| contract | `0x${string}` | The token contract address          |
+| tokenId  | string        | The token Id to check the owner for |
 
 The hook returns an object with the following structure:
 
@@ -334,4 +314,3 @@ The hook returns an object with the following structure:
     }
   }
 ```
-
