@@ -33,7 +33,7 @@ export const ui: Registry = [
     name: "tapp-card",
     type: "registry:ui",
     files: ["ui/tapp-card.tsx"],
-    dependencies: ["wagmi", "@frames.js/render"],
+    dependencies: ["wagmi", "@frames.js/render", "@neynar/react"],
     shadcnDependencies: ["card", "skeleton"],
   },
   {

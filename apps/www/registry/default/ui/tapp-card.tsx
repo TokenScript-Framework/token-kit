@@ -1,18 +1,44 @@
 "use client";
-import React, { useRef, useState, RefObject, useEffect } from "react";
-import { useReadContracts, useWalletClient } from "wagmi";
+import React, {
+  useRef,
+  useState,
+  RefObject,
+  useEffect,
+  useMemo,
+  useCallback,
+} from "react";
+import {
+  useAccount,
+  useReadContracts,
+  useWalletClient,
+  useConnect,
+  useConnectors,
+} from "wagmi";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/registry/default/lib/utils";
 import { useFarcasterIdentity } from "@frames.js/render/identity/farcaster";
 import { useFrame } from "@frames.js/render/use-frame";
-import { fallbackFrameContext } from "@frames.js/render";
+import {
+  fallbackFrameContext,
+  OnTransactionArgs,
+  signFrameAction,
+} from "@frames.js/render";
 import {
   FrameUI,
   type FrameUIComponents,
   type FrameUITheme,
 } from "@frames.js/render/ui";
 import { WebStorage } from "@frames.js/render/identity/storage";
+import { NeynarContextProvider, Theme, useNeynarContext } from "@neynar/react";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 const ERC5169_ABI = [
   {
@@ -56,6 +82,7 @@ interface TappCardProps {
   chainId: number;
   contract: `0x${string}`;
   tokenId: string;
+  scriptURI?: string;
   cssClass?: string;
 }
 
@@ -107,7 +134,25 @@ export default function TappCard({
       cssClass={cssClass}
     />
   ) : (
-    <FarcasterFrame chainId={chainId} contract={contract} tokenId={tokenId} />
+    <>
+      <NeynarContextProvider
+        settings={{
+          clientId: process.env.NEXT_PUBLIC_NEYNAR_CLIENT_ID || "",
+          defaultTheme: Theme.Light,
+          eventsCallbacks: {
+            onAuthSuccess: () => {},
+            onSignout() {},
+          },
+        }}
+      >
+        <FarcasterFrame
+          chainId={chainId}
+          contract={contract}
+          tokenId={tokenId}
+          scriptURI={scriptURI}
+        />
+      </NeynarContextProvider>
+    </>
   );
 }
 
@@ -142,7 +187,12 @@ export function TsViewer({
   );
 }
 
-export function FarcasterFrame({ chainId, contract, tokenId }: TappCardProps) {
+export function FarcasterFrame({
+  chainId,
+  contract,
+  tokenId,
+  scriptURI,
+}: TappCardProps) {
   type StylingProps = {
     className?: string;
     style?: React.CSSProperties;
@@ -172,24 +222,187 @@ export function FarcasterFrame({ chainId, contract, tokenId }: TappCardProps) {
         "bg-gray-100 border-gray-200 flex items-center justify-center flex-row text-sm rounded-lg border cursor-pointer gap-1.5 h-10 py-2 px-4 w-full ",
     },
   };
-
+  const { user } = useNeynarContext();
+  const connectors = useConnectors();
+  const { connect } = useConnect();
+  const { address } = useAccount();
+  const { data: walletClient } = useWalletClient();
+  const [error, setError] = useState<string | null>(null);
+  const [txHash, setTxHash] = useState<string | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [dialogContent, setDialogContent] = useState({
+    title: "",
+    description: "",
+    link: "",
+  });
+  const storage = useMemo(() => new WebStorage(), []);
   const signerState = useFarcasterIdentity({
-    onMissingIdentity: () => signerState.createSigner(),
-    storage: new WebStorage(),
+    storage,
+    onMissingIdentity: useCallback(() => {
+      if (user && typeof user === "object" && user.fid) {
+        return signerState.impersonateUser(user.fid);
+      }
+      return signerState.createSigner();
+    }, [user]),
   });
 
-  const frameState = useFrame({
-    homeframeUrl: `https://farcaster-tokenscript-frame.vercel.app/api/view/${chainId}/${contract}?tokenId=${tokenId}`,
-    frameActionProxy: "http://localhost:3000/frames",
-    frameGetProxy: "http://localhost:3000/frames",
-    connectedAddress: undefined,
-    frameContext: fallbackFrameContext,
-    signerState,
-  });
+  const frameConfig = useMemo(
+    () => ({
+      homeframeUrl: scriptURI,
+      frameActionProxy:
+        process.env.NEXT_PUBLIC_FRAME_RENDER_URL ||
+        "http://localhost:3000/frames",
+      frameGetProxy:
+        process.env.NEXT_PUBLIC_FRAME_RENDER_URL ||
+        "http://localhost:3000/frames",
+      frameContext: fallbackFrameContext,
+      signerState,
+      signFrameAction,
+      connectedAddress: address,
+      async onConnectWallet() {
+        try {
+          const connector = connectors[0];
+          connect({ connector, chainId: chainId });
+        } catch (error) {
+          console.error("Error for connect wallet:", error);
+          setError("Error for connect wallet");
+        }
+      },
+      async onTransaction(arg: OnTransactionArgs) {
+        try {
+          setError("");
+          if (!address) {
+            throw new Error("No wallet connected");
+          }
+
+          if (!walletClient) {
+            throw new Error("Can't get the wallet client.");
+          }
+
+          if (!arg.transactionData || typeof arg.transactionData !== "object") {
+            throw new Error("Wrong transactioin data.");
+          }
+
+          const { params } = arg.transactionData;
+
+          const txHash = await walletClient.sendTransaction({
+            account: address,
+            to: params.to as `0x${string}`,
+            data: params.data as `0x${string}`,
+            gas: BigInt(6000000),
+            value: BigInt(params.value ?? 0),
+          });
+
+          setTxHash(txHash);
+
+          return txHash;
+        } catch (error: unknown) {
+          if (error instanceof Error) {
+            if (error.message.includes("rejected")) {
+              setError("User rejected the transaction.");
+            } else {
+              setError("Error for wallet, please check wallet or refresh");
+            }
+          } else {
+            setError(String(error));
+          }
+          throw error;
+        }
+      },
+      onLinkButtonClick(event: {
+        action: string;
+        label: string;
+        target: string;
+      }) {
+        setDialogContent({
+          title: "Confirm",
+          description: `Do you confirm to open the link: ${event.target}`,
+          link: event.target,
+        });
+        setDialogOpen(true);
+      },
+    }),
+    [chainId, contract, tokenId, signerState],
+  );
+
+  const frameState = useFrame(frameConfig);
 
   return (
-    <FrameUI frameState={frameState} components={components} theme={theme} />
+    <>
+      <FrameUI frameState={frameState} components={components} theme={theme} />
+      {error && (
+        <div className="text-red-500 mb-4 p-2 bg-red-100 rounded mt-4 max-w-[600px] break-words">
+          Error: {error}
+        </div>
+      )}
+      {txHash && (
+        <div className="text-green-500 mb-4 p-2 bg-green-100 rounded mt-4 max-w-[600px] break-words">
+          Transaction is submitted. For more details, please access:
+          <a
+            href={`${getBlockExplorerUrl(chainId)}/tx/${txHash}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            {txHash}
+          </a>
+        </div>
+      )}
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{dialogContent.title}</DialogTitle>
+            <DialogDescription>{dialogContent.description}</DialogDescription>
+          </DialogHeader>
+          <div className="flex justify-end space-x-2">
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                window.open(dialogContent.link);
+                setDialogOpen(false);
+              }}
+            >
+              Confirm
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
+}
+function getBlockExplorerUrl(chainId: number): string {
+  switch (chainId) {
+    case 1:
+      return "https://etherscan.io";
+    case 5:
+      return "https://goerli.etherscan.io";
+    case 11155111:
+      return "https://sepolia.etherscan.io";
+    case 137:
+      return "https://polygonscan.com";
+    case 80001:
+      return "https://mumbai.polygonscan.com";
+    case 56:
+      return "https://bscscan.com";
+    case 97:
+      return "https://testnet.bscscan.com";
+    case 42161:
+      return "https://arbiscan.io";
+    case 421613:
+      return "https://goerli.arbiscan.io";
+    case 10:
+      return "https://optimistic.etherscan.io";
+    case 420:
+      return "https://goerli-optimism.etherscan.io";
+    case 8453:
+      return "https://basescan.org";
+    case 84532:
+      return "https://sepolia.basescan.org";
+    default:
+      return "https://etherscan.io";
+  }
 }
 
 export const useIframePostMessage = (

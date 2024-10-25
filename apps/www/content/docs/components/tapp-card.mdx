@@ -67,9 +67,16 @@ import TappCard from "@/registry/default/ui/tapp-card";
 />
 ```
 
+## Environment
+
+There are two environment usde in this component:
+
+1. `NEXT_PUBLIC_NEYNAR_CLIENT_ID`, for signing Warpcast, you can access it in [Neynar website](https://neynar.com/).
+2. `NEXT_PUBLIC_FRAME_RENDER_URL`, for rendering frame, you can set your own proxy.
+
 ## Custome Frame Proxy
 
-For farcaster frame, we use `@frames.js/render`, it need proxies for routing frame requests.
+For farcaster frame, we use `@frames.js/render`, it need proxies for routing frame requests. 
 
 ```typescript
  const frameState = useFrame({
@@ -83,7 +90,7 @@ For farcaster frame, we use `@frames.js/render`, it need proxies for routing fra
 
 ```
 
-We provide a default proxy that cannot be used as a product environment. You can create your own proxy. You can add `app/frames/route.tsx`.
+We provide a default proxy (`https://frame-render.vercel.app/frames`) that cannot be used as a product environment. You can create your own proxy. You can add `app/frames/route.tsx`.
 
 ```typescript
 import {
@@ -118,4 +125,9 @@ export const POST = handleRequest(originalPOST);
 
 ```
 
-For more details about Frame Render, please access [Display Frames](https://framesjs.org/guides/apps/display-frames).
+## Attachments
+
+For more details about Frame Render and Neynar Sign button, please access the following link:
+
+1. [Display Frames](https://framesjs.org/guides/apps/display-frames)
+2. [Neynar Sign button](https://docs.neynar.com/docs/react-implementation)

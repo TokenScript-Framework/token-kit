@@ -75,7 +75,8 @@
     "type": "registry:ui",
     "dependencies": [
       "wagmi",
-      "@frames.js/render"
+      "@frames.js/render",
+      "@neynar/react"
     ],
     "shadcnDependencies": [
       "card",
