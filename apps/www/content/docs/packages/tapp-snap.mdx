@@ -43,20 +43,20 @@ You can use `ethereum.request` to invoke this snap in local:
 
 ```typescript
 await window.ethereum.request({
-    method: 'wallet_invokeSnap',
-    params: {
-        snapId: 'local:http://localhost:8080',
-        request: {
-            method: 'import',
-            params: YOUR_PARAMS,
-        },
+  method: "wallet_invokeSnap",
+  params: {
+    snapId: "local:http://localhost:8080",
+    request: {
+      method: "import",
+      params: YOUR_PARAMS,
     },
+  },
 });
 ```
 
 The params are:
 
-- `chain`:  ID of the blockchain network.
+- `chain`: ID of the blockchain network.
 - `contract`: Address of the token contract.
 - `tokenId`: Token ID.
 
@@ -65,5 +65,5 @@ The params are:
 The project uses `@metamask/snaps-jest` for testing. The test file is located at `src/index.test.tsx`.
 
 ## Installation
-You can use our [AddToSnap](https://token-kit.vercel.app/docs/components/add-to-snap) button or access [MetaMask Snaps Directory](https://snaps.metamask.io/snap/npm/token-kit/tapp-snap/) to install this snap.
 
+You can use our [AddToSnap](https://token-kit.vercel.app/docs/components/add-to-snap) button or access [MetaMask Snaps Directory](https://snaps.metamask.io/snap/npm/token-kit/tapp-snap/) to install this snap.

@@ -4,6 +4,8 @@ description: A card for Tapp.
 component: true
 ---
 
+This component support two types of card, TS Viewer and Farcaster.
+
 ## For TS Viewer
 
 <ComponentPreview
@@ -67,27 +69,26 @@ import TappCard from "@/registry/default/ui/tapp-card";
 />
 ```
 
-## Environment
+## Environment Variables
 
-There are two environment usde in this component:
+There are two environment used in this component, espacially for farcaster:
 
 1. `NEXT_PUBLIC_NEYNAR_CLIENT_ID`, for signing Warpcast, you can access it in [Neynar website](https://neynar.com/).
 2. `NEXT_PUBLIC_FRAME_RENDER_URL`, for rendering frame, you can set your own proxy.
 
 ## Custome Frame Proxy
 
-For farcaster frame, we use `@frames.js/render`, it need proxies for routing frame requests. 
+For farcaster frame, we use `@frames.js/render`, it need proxies for routing frame requests.
 
 ```typescript
- const frameState = useFrame({
-    homeframeUrl: `https://farcaster-tokenscript-frame.vercel.app/api/view/${chainId}/${contract}?tokenId=${tokenId}`,
-    frameActionProxy: "http://localhost:3000/frames",   // <-- proxy
-    frameGetProxy: "http://localhost:3000/frames",    // <-- proxy
-    connectedAddress: undefined,
-    frameContext: fallbackFrameContext,
-    signerState,
-  });
-
+const frameState = useFrame({
+  homeframeUrl: `https://farcaster-tokenscript-frame.vercel.app/api/view/${chainId}/${contract}?tokenId=${tokenId}`,
+  frameActionProxy: "http://localhost:3000/frames", // <-- proxy
+  frameGetProxy: "http://localhost:3000/frames", // <-- proxy
+  connectedAddress: undefined,
+  frameContext: fallbackFrameContext,
+  signerState,
+});
 ```
 
 We provide a default proxy (`https://frame-render.vercel.app/frames`) that cannot be used as a product environment. You can create your own proxy. You can add `app/frames/route.tsx`.
@@ -122,7 +123,6 @@ const handleRequest =
 
 export const GET = handleRequest(originalGET);
 export const POST = handleRequest(originalPOST);
-
 ```
 
 ## Attachments
