@@ -101,6 +101,14 @@ interface TappCardProps {
   cssClass?: string;
 }
 
+const VIEWER_PATTERNS = [
+  "viewer",
+  "viewer-staging",
+  "https://ipfs.io/ipfs",
+  "ipfs://ipfs",
+  "ipfs://",
+];
+
 export default function TappCard({
   chainId,
   contract,
@@ -122,7 +130,11 @@ export default function TappCard({
 
   const scriptURI = data?.[0][0] || "";
   const viewerType = data?.[0]
-    ? new URL(data[0] as unknown as string).hostname.startsWith("viewer")
+    ? VIEWER_PATTERNS.some((pattern) =>
+        pattern === "viewer"
+          ? new URL(data[0] as unknown as string).hostname.startsWith(pattern)
+          : data[0].toString().toLowerCase().startsWith(pattern),
+      )
       ? "ts"
       : "farcaster"
     : "farcaster";
