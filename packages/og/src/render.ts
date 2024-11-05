@@ -205,9 +205,22 @@ export default class TsRender {
 
     return new TsRender({
       metadata: tokenViewData.tsMetadata,
-      image: await imageUrl2Buffer(tokenViewData.tokenMetadata!.image),
-      name: tokenViewData.tokenMetadata!.name,
-      description: tokenViewData.tokenMetadata!.description,
+      image: await imageUrl2Buffer(
+        tokenViewData.tokenMetadata?.image ??
+          tokenViewData.tsMetadata?.meta?.imageUrl ??
+          tokenViewData.tsMetadata?.meta?.iconUrl ??
+          "",
+      ),
+      name:
+        tokenViewData.tokenMetadata?.name ??
+        tokenViewData.tsMetadata.name ??
+        params.contract,
+      description:
+        tokenViewData.tokenMetadata?.description ??
+        tokenViewData.tsMetadata.meta?.description ??
+        tokenViewData.tsMetadata.label ??
+        tokenViewData.tsMetadata.name ??
+        params.contract,
     });
   }
 

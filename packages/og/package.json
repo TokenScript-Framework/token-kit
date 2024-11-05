@@ -1,7 +1,7 @@
 {
   "name": "@token-kit/og",
   "license": "GPL-3.0-only",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "token-kit opengraph image generator",
   "type": "module",
   "main": "./dist/index.cjs",
@@ -32,15 +32,15 @@
   },
   "devDependencies": {
     "@types/jsdom": "^21.1.7",
-    "@types/node": "^22.7.0"
+    "@types/node": "^22.9.0"
   },
   "peerDependencies": {
     "hono": "^4.5.11"
   },
   "dependencies": {
     "axios": "^1.7.7",
-    "jsdom": "^22.1.0",
-    "satori": "^0.10.14",
+    "jsdom": "^25.0.1",
+    "satori": "^0.11.3",
     "sharp": "^0.33.5"
   }
 }
