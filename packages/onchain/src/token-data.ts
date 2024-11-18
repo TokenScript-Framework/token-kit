@@ -72,7 +72,7 @@ async function enrichMetadata(
 ) {
   if (opts.includeTokenMetadata) {
     if (tokenURI.startsWith("data:application/json;base64,")) {
-      result.tokenMetadata = atob(tokenURI.split(",")[1]);
+      result.tokenMetadata = JSON.parse(atob(tokenURI.split(",")[1]));
     } else {
       result.tokenMetadata = await opts.fetchHandler(tokenURI);
     }
@@ -82,7 +82,7 @@ async function enrichMetadata(
     const contractURI = await fetchOpenseaContractURI(client, address);
     if (contractURI) {
       if (tokenURI.startsWith("data:application/json;base64,")) {
-        result.contractMetadata = atob(contractURI.split(",")[1]);
+        result.contractMetadata = JSON.parse(atob(contractURI.split(",")[1]));
       } else {
         result.contractMetadata = await opts.fetchHandler(contractURI);
       }
