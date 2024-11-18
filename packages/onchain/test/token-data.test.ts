@@ -2,7 +2,7 @@ import test from "ava";
 import { getRPCURL } from "./_utils";
 import { createPublicClient, http, PublicClient } from "viem";
 
-import { mainnet, polygon } from "viem/chains";
+import { base, mainnet, polygon } from "viem/chains";
 import { tokenData } from "../src/token-data";
 import {
   ERC1155TokenData,
@@ -61,6 +61,22 @@ test("ERC721 - should fetch token metadata when includeTokenMetadata is true", a
   const result = (await tokenData(
     client as PublicClient,
     "0xbc4ca0eda7647a8ab7c2061c2e118a18a936f13d", // BAYC
+    1,
+    { includeTokenMetadata: true },
+  )) as ERC721TokenData;
+
+  t.truthy(result.tokenMetadata);
+});
+
+test("ERC721 - should parse embedded base64 metadata", async (t) => {
+  const client = createPublicClient({
+    chain: base,
+    transport: http(getRPCURL(8453)),
+  });
+
+  const result = (await tokenData(
+    client as PublicClient,
+    "0x9bf1f7c9228baab6ffa2d17df5b7803ef6e585b2",
     1,
     { includeTokenMetadata: true },
   )) as ERC721TokenData;
