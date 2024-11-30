@@ -224,6 +224,22 @@ export default class TsRender {
     });
   }
 
+  get metadata() {
+    return this.params.metadata;
+  }
+
+  get image() {
+    return this.params.image;
+  }
+
+  get name() {
+    return this.params.name;
+  }
+
+  get description() {
+    return this.params.description;
+  }
+
   async toDocument() {
     const cards = this.params.metadata.actions;
     const featuredCard = cards?.find((card) => card.buttonClass === "featured");
